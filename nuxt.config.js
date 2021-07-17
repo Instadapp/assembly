@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'assembly-nuxt',
+    title: 'Assembly',
     htmlAttrs: {
       lang: 'en'
     },
@@ -25,6 +25,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    "~/plugins/v-click-outside.js"
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -36,7 +37,16 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/composition-api/module',   
+    // Doc: https://github.com/nuxt-community/google-fonts-module
+    "@nuxtjs/google-fonts",
+    "@nuxtjs/svg",
   ],
+  googleFonts: {
+    families: {
+      Montserrat: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+    }
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
