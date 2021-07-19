@@ -20,9 +20,23 @@
     </div>
 
     <div class="flex items-center space-x-2.5">
-      <button class="bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded-[6px] h-9 flex items-center justify-center w-40">
+      <button
+        v-if="!active"
+        @click="activate"
+        class="bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded-[6px] h-9 flex items-center justify-center w-40"
+      >
         Connect
       </button>
+
+      <button
+        v-else
+        @click="deactivate"
+        class="bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded-[6px] h-9 flex items-center justify-center w-40"
+      >
+        Disonnect
+      </button>
+
+      <AccountSwitcher v-if="active" />
 
       <NetworkSwitcher />
     </div>
@@ -30,8 +44,17 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "@nuxtjs/composition-api";
+import { useWeb3 } from "~/composables/useWeb3";
 
 export default defineComponent({
-  setup() {}
+  setup() {
+    const { active, activate, deactivate } = useWeb3();
+
+    return {
+      active,
+      activate,
+      deactivate
+    };
+  }
 });
 </script>

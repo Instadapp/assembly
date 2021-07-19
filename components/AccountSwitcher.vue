@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-[148px]" v-click-outside="hide">
+  <div class="relative w-[162px]" v-click-outside="hide" v-if="activeAccount">
     <button
       type="button"
       class="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0846E4] focus:border-[#0846E4] sm:text-sm"
@@ -8,10 +8,13 @@
       aria-labelledby="listbox-label"
       @click="show = !show"
     >
-      <span class="flex items-center capitalize">
-        <component :is="activeNetwork.icon" class="w-6 h-6 mr-2" />
-
-        {{ activeNetwork.name }}
+      <span
+        class="flex items-center capitalize text-primary-blue-dark text-sm font-medium"
+      >
+        <span class="text-primary-gray text-xs mr-2.5">
+          Account
+        </span>
+        #{{ activeAccount.id }}
       </span>
       <span
         class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none"
@@ -56,27 +59,20 @@
         Highlighted: "text-white bg-indigo-600", Not Highlighted: "text-gray-900"
       -->
         <li
-          v-for="network in networks"
-          :key="network.id"
-          class="cursor-pointer select-none relative py-2 pl-3 pr-9"
+          v-for="account in accounts"
+          :key="account.id"
+          @click="setAccount(account)"
+          class="cursor-pointer select-none relative py-3 pl-3 pr-9  hover:bg-primary-blue-dark/[0.07]"
           id="listbox-option-0"
           role="option"
-          @click="setActiveNetwork(network.id)"
         >
           <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
-          <span class="flex items-center">
-            <component :is="network.icon" class="w-6 h-6 mr-2" />
-
-            {{ network.name }}
+          <span class="flex items-center text-primary-blue-dark">
+            #{{ account.id }}
           </span>
 
-          <!--
-          Checkmark, only display for selected option.
-
-          Highlighted: "text-white", Not Highlighted: "text-indigo-600"
-        -->
           <span
-            v-if="activeNetwork.id === network.id"
+            v-if="activeAccount.id === account.id"
             class="text-primary-blue-dark absolute inset-y-0 right-0 flex items-center pr-4"
           >
             <svg
@@ -93,45 +89,47 @@
             </svg>
           </span>
         </li>
+
+        <li
+          @click="createAccount"
+          class="cursor-pointer select-none relative py-3 px-3 hover:bg-primary-blue-dark/[0.07]"
+          id="listbox-option-0"
+          role="option"
+        >
+          <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
+          <span class="flex items-center text-xs justify-center">
+            <span class="text-primary-blue-dark mr-1">+</span> Create New
+          </span>
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
-import MainnetSVG from '~/assets/icons/mainnet.svg?inline'
-import PolygonSVG from '~/assets/icons/polygon.svg?inline'
-
-const networks = [
-  { id: 'mainnet', name: 'Mainnet', icon: MainnetSVG },
-  { id: 'polygon', name: 'Polygon', icon: PolygonSVG }
-]
+import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
+import { useDSA } from "~/composables/useDSA";
 
 export default defineComponent({
   setup() {
+    const { accounts, activeAccount, createAccount, creatingAccount, setAccount } = useDSA()
+
     const show = ref(false)
-
-    const activeNetworkId = ref('mainnet');
-
-    const activeNetwork = computed(() => networks.find(n => n.id === activeNetworkId.value) || networks[0])
-
-    const setActiveNetwork = networkId => {
-      activeNetworkId.value = networkId;
-      show.value = false
-    }
 
     const hide = () => {
       show.value = false
     }
 
+    watch(activeAccount, hide);
+
     return {
       hide,
       show,
-      networks,
-      activeNetwork,
-      setActiveNetwork,
-      activeNetworkId,
+      accounts,
+      activeAccount,
+      createAccount,
+      creatingAccount,
+      setAccount,
     }
 
   },

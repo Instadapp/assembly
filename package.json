@@ -11,9 +11,15 @@
   "dependencies": {
     "@nuxtjs/composition-api": "^0.24.7",
     "@tailwindcss/forms": "^0.3.3",
+    "@vueuse/core": "^5.1.4",
+    "@walletconnect/web3-provider": "^1.4.1",
     "core-js": "^3.15.1",
+    "dsa-connect": "^0.4.2",
     "nuxt": "^2.15.7",
-    "v-click-outside": "^3.1.2"
+    "v-click-outside": "^3.1.2",
+    "walletlink": "^2.1.6",
+    "web3": "^1.4.0",
+    "web3modal": "^1.9.3"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.7",
