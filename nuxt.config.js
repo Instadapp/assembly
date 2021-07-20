@@ -23,9 +23,15 @@ export default {
   css: [
   ],
 
+  publicRuntimeConfig: {
+    INFURA_ID: process.env.INFURA_ID,
+    PORTIS_ID: process.env.PORTIS_ID,
+  },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    "~/plugins/v-click-outside.js"
+    "~/plugins/v-click-outside.js",
+    "~/plugins/web3modal.js",
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

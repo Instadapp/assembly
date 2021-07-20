@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nuxtjs/composition-api": "^0.24.7",
+    "@portis/web3": "^4.0.5",
     "@tailwindcss/forms": "^0.3.3",
     "@vueuse/core": "^5.1.4",
     "@walletconnect/web3-provider": "^1.4.1",
