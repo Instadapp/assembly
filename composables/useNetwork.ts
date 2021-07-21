@@ -15,8 +15,6 @@ const networks = [
   { id: "polygon", chainId: 136, name: "Polygon", icon: PolygonSVG }
 ];
 
-console.log(Network.Polygon)
-
 const activeNetworkId = ref<Network>(Network.Polygon);
 const activeNetwork = computed(
   () => networks.find(n => n.id === activeNetworkId.value) || networks[0]

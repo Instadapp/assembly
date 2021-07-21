@@ -57,20 +57,34 @@
             <p class="mt-4 text-primary-gray font-medium">Borrowed</p>
           </div>
           <div class="flex items-center">
-       <svg width="27" height="28" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M1.34511 11C0.601893 11 0 11.6019 0 12.3451V25.8051C0 26.5483 0.601893 27.1502 1.34511 27.1502H25.5722C26.3155 27.1502 26.9186 26.5483 26.9186 25.8051V12.3451C26.9186 11.6019 26.3155 11 25.5722 11H1.34511ZM3.91924 13.6915H22.9981C23.0985 13.9746 23.2609 14.2317 23.4733 14.4441C23.6857 14.6565 23.9428 14.8188 24.2259 14.9192V23.2309C23.943 23.3315 23.6861 23.4939 23.474 23.7063C23.2618 23.9187 23.0997 24.1757 22.9994 24.4587H3.91924C3.81898 24.1755 3.6567 23.9183 3.44428 23.7059C3.23186 23.4935 2.97466 23.3312 2.69148 23.2309V14.9192C2.97466 14.819 3.23186 14.6567 3.44428 14.4443C3.6567 14.2319 3.81898 13.9747 3.91924 13.6915ZM13.4587 15.0379C12.3878 15.0379 11.3607 15.4633 10.6035 16.2205C9.84624 16.9778 9.42082 18.0048 9.42082 19.0757C9.42082 20.1466 9.84624 21.1737 10.6035 21.9309C11.3607 22.6882 12.3878 23.1136 13.4587 23.1136C14.5296 23.1136 15.5566 22.6882 16.3139 21.9309C17.0711 21.1737 17.4965 20.1466 17.4965 19.0757C17.4965 18.0048 17.0711 16.9778 16.3139 16.2205C15.5566 15.4633 14.5296 15.0379 13.4587 15.0379ZM6.72934 17.7293C6.37259 17.7293 6.03046 17.8711 5.7782 18.1233C5.52594 18.3756 5.38423 18.7177 5.38423 19.0744C5.38423 19.4312 5.52594 19.7733 5.7782 20.0256C6.03046 20.2778 6.37259 20.4196 6.72934 20.4196C7.08608 20.4196 7.42822 20.2778 7.68048 20.0256C7.93273 19.7733 8.07445 19.4312 8.07445 19.0744C8.07445 18.7177 7.93273 18.3756 7.68048 18.1233C7.42822 17.8711 7.08608 17.7293 6.72934 17.7293ZM20.188 17.7293C19.8311 17.7293 19.4888 17.8711 19.2364 18.1235C18.9841 18.3759 18.8423 18.7182 18.8423 19.0751C18.8423 19.432 18.9841 19.7743 19.2364 20.0267C19.4888 20.279 19.8311 20.4208 20.188 20.4208C20.5449 20.4208 20.8872 20.279 21.1396 20.0267C21.392 19.7743 21.5338 19.432 21.5338 19.0751C21.5338 18.7182 21.392 18.3759 21.1396 18.1235C20.8872 17.8711 20.5449 17.7293 20.188 17.7293Z" fill="#CA8700"/>
-<path d="M17.5573 3.7854H10.6173C10.0946 3.7854 9.6709 4.20911 9.6709 4.73177C9.6709 5.25444 10.0946 5.67815 10.6173 5.67815H17.5573C18.08 5.67815 18.5037 5.25444 18.5037 4.73177C18.5037 4.20911 18.08 3.7854 17.5573 3.7854Z" fill="#CA8700"/>
-<path d="M17.5573 0H10.6173C10.0946 0 9.6709 0.423705 9.6709 0.946372C9.6709 1.46904 10.0946 1.89274 10.6173 1.89274H17.5573C18.08 1.89274 18.5037 1.46904 18.5037 0.946372C18.5037 0.423705 18.08 0 17.5573 0Z" fill="#CA8700"/>
-</svg>
-
+            <svg
+              width="27"
+              height="28"
+              viewBox="0 0 27 28"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1.34511 11C0.601893 11 0 11.6019 0 12.3451V25.8051C0 26.5483 0.601893 27.1502 1.34511 27.1502H25.5722C26.3155 27.1502 26.9186 26.5483 26.9186 25.8051V12.3451C26.9186 11.6019 26.3155 11 25.5722 11H1.34511ZM3.91924 13.6915H22.9981C23.0985 13.9746 23.2609 14.2317 23.4733 14.4441C23.6857 14.6565 23.9428 14.8188 24.2259 14.9192V23.2309C23.943 23.3315 23.6861 23.4939 23.474 23.7063C23.2618 23.9187 23.0997 24.1757 22.9994 24.4587H3.91924C3.81898 24.1755 3.6567 23.9183 3.44428 23.7059C3.23186 23.4935 2.97466 23.3312 2.69148 23.2309V14.9192C2.97466 14.819 3.23186 14.6567 3.44428 14.4443C3.6567 14.2319 3.81898 13.9747 3.91924 13.6915ZM13.4587 15.0379C12.3878 15.0379 11.3607 15.4633 10.6035 16.2205C9.84624 16.9778 9.42082 18.0048 9.42082 19.0757C9.42082 20.1466 9.84624 21.1737 10.6035 21.9309C11.3607 22.6882 12.3878 23.1136 13.4587 23.1136C14.5296 23.1136 15.5566 22.6882 16.3139 21.9309C17.0711 21.1737 17.4965 20.1466 17.4965 19.0757C17.4965 18.0048 17.0711 16.9778 16.3139 16.2205C15.5566 15.4633 14.5296 15.0379 13.4587 15.0379ZM6.72934 17.7293C6.37259 17.7293 6.03046 17.8711 5.7782 18.1233C5.52594 18.3756 5.38423 18.7177 5.38423 19.0744C5.38423 19.4312 5.52594 19.7733 5.7782 20.0256C6.03046 20.2778 6.37259 20.4196 6.72934 20.4196C7.08608 20.4196 7.42822 20.2778 7.68048 20.0256C7.93273 19.7733 8.07445 19.4312 8.07445 19.0744C8.07445 18.7177 7.93273 18.3756 7.68048 18.1233C7.42822 17.8711 7.08608 17.7293 6.72934 17.7293ZM20.188 17.7293C19.8311 17.7293 19.4888 17.8711 19.2364 18.1235C18.9841 18.3759 18.8423 18.7182 18.8423 19.0751C18.8423 19.432 18.9841 19.7743 19.2364 20.0267C19.4888 20.279 19.8311 20.4208 20.188 20.4208C20.5449 20.4208 20.8872 20.279 21.1396 20.0267C21.392 19.7743 21.5338 19.432 21.5338 19.0751C21.5338 18.7182 21.392 18.3759 21.1396 18.1235C20.8872 17.8711 20.5449 17.7293 20.188 17.7293Z"
+                fill="#CA8700"
+              />
+              <path
+                d="M17.5573 3.7854H10.6173C10.0946 3.7854 9.6709 4.20911 9.6709 4.73177C9.6709 5.25444 10.0946 5.67815 10.6173 5.67815H17.5573C18.08 5.67815 18.5037 5.25444 18.5037 4.73177C18.5037 4.20911 18.08 3.7854 17.5573 3.7854Z"
+                fill="#CA8700"
+              />
+              <path
+                d="M17.5573 0H10.6173C10.0946 0 9.6709 0.423705 9.6709 0.946372C9.6709 1.46904 10.0946 1.89274 10.6173 1.89274H17.5573C18.08 1.89274 18.5037 1.46904 18.5037 0.946372C18.5037 0.423705 18.08 0 17.5573 0Z"
+                fill="#CA8700"
+              />
+            </svg>
           </div>
         </div>
 
         <div class="shadow rounded-lg py-8 px-6 flex">
           <div class="flex-1">
             <h3 class="text-2xl text-primary-black font-medium">
-              {{ formatPercent(status) }} - 
-              {{ formatPercent(position.maxLiquidation)}}
+              {{ formatPercent(status) }} -
+              {{ formatPercent(position.maxLiquidation) }}
             </h3>
             <p class="mt-4 text-primary-gray font-medium">D/C (%)</p>
           </div>
@@ -99,34 +113,82 @@
     </div>
 
     <div class="mt-[60px]">
-      <h2 class="text-primary-gray text-lg font-semibold">Your Positions</h2>
+      <div
+        class="flex flex-col mt-6 sm:flex-row sm:items-center sm:justify-between xxl:mt-4"
+      >
+        <h2 class="text-primary-gray text-lg font-semibold">Your Positions</h2>
 
-      <pre>{{ position }}</pre>
+        <div class="w-full mt-4 sm:mt-0 sm:w-40">
+          <SearchInput
+            v-model.trim="search"
+            dense
+            placeholder="Search position"
+          />
+        </div>
+      </div>
+      <div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content">
+        <div v-for="item in filteredPositions" :key="item.key">
+          <CardAave
+            :token-key="item.key"
+            :supply="item.supply"
+            :supply-usd="item.supplyUsd"
+            :supply-rate="item.supplyRate"
+            :borrow="item.borrow"
+            :borrow-usd="item.borrowUsd"
+            :borrow-rate="item.borrowRate"
+            :type="item.type"
+            :supply-reward-rate="item.supplyRewardRate"
+            :borrow-reward-rate="item.borrowRewardRate"
+            reward-token-name="MATIC"
+            reward-currency="matic"
+            :cf="item.cf"
+            :ll="item.ll"
+            :borrow-enabled="item.borrowEnabled"
+            :price-in-usd="item.priceInUsd"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@nuxtjs/composition-api";
+import { defineComponent } from "@nuxtjs/composition-api";
 // @ts-ignore
 import BackIcon from "~/assets/icons/back.svg?inline";
 import { useAaveV2Position } from "~/composables/useAaveV2Position";
 import { useFormatting } from "~/composables/useFormatting";
+import { useSearchFilter } from "~/composables/useSearchFilter";
 
 export default defineComponent({
   components: {
     BackIcon
   },
   setup() {
-    const { position, totalSupply, totalBorrow, status } = useAaveV2Position();
+    const {
+      position,
+      displayPositions,
+      totalSupply,
+      totalBorrow,
+      status
+    } = useAaveV2Position();
     const { formatUsd, formatPercent } = useFormatting();
+
+    const { filtered: filteredPositions, search } = useSearchFilter(
+      displayPositions,
+      "key",
+      "type"
+    );
+
     return {
       position,
+      filteredPositions,
+      search,
       totalSupply,
       totalBorrow,
       status,
       formatUsd,
-      formatPercent,
+      formatPercent
     };
   }
 });

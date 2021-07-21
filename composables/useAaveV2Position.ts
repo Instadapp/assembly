@@ -9,7 +9,11 @@ import atokensV2 from "~/constant/atokensV2";
 import tokens from "~/constant/tokens";
 import { Network } from "./useNetwork";
 import { useBigNumber } from "./useBigNumber";
-const { times, isZero, div, max } = useBigNumber();
+import { usePosition } from "./usePosition";
+import { useToken } from "./useToken";
+
+const { times, isZero, div, max, gt, minus, ensureValue } = useBigNumber();
+const { getType } = usePosition();
 
 const position = ref<any>({
   totalSupplyInEth: new BigNumber(0),
@@ -18,7 +22,8 @@ const position = ref<any>({
   totalBorrowVariableInEth: new BigNumber(0),
   maxBorrowLimitInEth: new BigNumber(0),
   maxBorrowLiquidityLimitInEth: new BigNumber(0),
-  ethPriceInUsd: "0"
+  ethPriceInUsd: "0",
+  data: []
 });
 const totalSupply = computed(() =>
   position.value
@@ -59,6 +64,7 @@ const status = computed(() => {
 export function useAaveV2Position() {
   const { web3, chainId, networkName } = useWeb3();
   const { activeAccount } = useDSA();
+  const { getTokenByKey, allATokensV2 } = useToken();
 
   const resolver =
     chainId.value === 1
@@ -112,7 +118,120 @@ export function useAaveV2Position() {
     { immediate: true }
   );
 
+  const rewardTokenPriceInUsd = computed(() => {
+    if (networkName.value === Network.Polygon) {
+      return ensureValue(
+        position.value.data.find(position => position.key === "matic")
+          ?.priceInUsd
+      );
+    }
+    return ensureValue(
+      position.value.data.find(position => position.key === "aave")?.priceInUsd
+    );
+  });
+
+  const displayPositions = computed(() => {
+    if (!position.value) {
+      return [];
+    }
+
+    return allATokensV2.value
+      .flatMap(atoken => {
+        const token = getTokenByKey(atoken.root);
+
+        const atokenPosition = position.value.data.find(
+          x => x.key === atoken.root
+        );
+
+        const p = getPositionOrDefaultPosition(token, atokenPosition);
+
+        if (gt(p.supply, "0") && gt(p.borrow, "0")) {
+          return [
+            { ...p, type: "supply" },
+            { ...p, type: "borrow" }
+          ];
+        } else {
+          return [p];
+        }
+      })
+      .sort((a, b) =>
+        minus(
+          max(b.supplyUsd, b.borrowUsd),
+          max(a.supplyUsd, a.borrowUsd)
+        ).toNumber()
+      );
+  });
+
+  function getPositionOrDefaultPosition(token, position) {
+    if (!position) {
+      const defaultPosition = {
+        key: token.key,
+        aTokenKey: "",
+        aTokenBal: "0",
+        aDecimals: "0",
+        cf: "0",
+        ll: "0",
+        supply: "0",
+        supplyUsd: "0",
+        supplyRate: "0",
+        borrow: "0",
+        borrowUsd: "0",
+        borrowRate: "0",
+        type: "no",
+        isEnabledAsCollateral: true,
+        borrowEnabled: true,
+        availableLiquidity: "0",
+        stableBorrowEnabled: true,
+        borrowStable: "0",
+        borrowStableRate: "0",
+        supplyRewardRate: "0",
+        borrowRewardRate: "0"
+      };
+
+      return defaultPosition;
+    }
+
+    return {
+      key: token.key,
+      aTokenKey: position.aTokenKey,
+      aTokenBal: position.aTokenBal,
+      aDecimals: position.aDecimals,
+      cf: position.factor,
+      ll: position.liquidation,
+      factor: position.factor,
+      liquidation: position.liquidation,
+      supply: position.supply,
+      supplyUsd: times(position.supply, position.priceInUsd).toFixed(),
+      supplyRate: position.supplyRate,
+      borrow: position.borrow,
+      borrowUsd: times(position.borrow, position.priceInUsd).toFixed(),
+      borrowRate: position.borrowRate,
+      priceInEth: position.priceInEth,
+      type: getType(position),
+      isEnabledAsCollateral: position.isEnabledAsCollateral,
+      borrowEnabled: position.borrowEnabled,
+      availableLiquidity: position.availableLiquidity,
+      borrowStableUsd: times(
+        position.borrowStable,
+        position.priceInUsd
+      ).toFixed(),
+      stableBorrowEnabled: position.stableBorrowEnabled,
+      borrowStable: position.borrowStable,
+      borrowStableRate: position.borrowStableRate,
+      priceInUsd: position.priceInUsd,
+      supplyRewardRate: times(
+        position.supplyRewardRate,
+        rewardTokenPriceInUsd.value
+      ).toFixed(),
+      borrowRewardRate: times(
+        position.borrowRewardRate,
+        rewardTokenPriceInUsd.value
+      ).toFixed()
+    };
+  }
+
   return {
+    displayPositions,
     position,
     fetchPosition,
     totalSupply,
