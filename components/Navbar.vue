@@ -2,7 +2,7 @@
   <div
     class="h-[68px] px-8 py-5 border border-b-[#E7E8F1] flex items-center justify-between"
   >
-    <div class="flex items-center">
+    <nuxt-link to="/" class="flex items-center">
       <svg
         width="28"
         height="28"
@@ -17,7 +17,7 @@
       </svg>
 
       <span class="ml-2 font-extrabold text-lg">ASSEMBLY</span>
-    </div>
+    </nuxt-link>
 
     <div class="flex items-center space-x-2.5">
       <button

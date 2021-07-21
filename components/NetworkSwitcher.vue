@@ -99,22 +99,14 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
-import MainnetSVG from '~/assets/icons/mainnet.svg?inline'
-import PolygonSVG from '~/assets/icons/polygon.svg?inline'
-
-const networks = [
-  { id: 'mainnet', name: 'Mainnet', icon: MainnetSVG },
-  { id: 'polygon', name: 'Polygon', icon: PolygonSVG }
-]
+import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { useNetwork } from '~/composables/useNetwork'
 
 export default defineComponent({
   setup() {
     const show = ref(false)
 
-    const activeNetworkId = ref('mainnet');
-
-    const activeNetwork = computed(() => networks.find(n => n.id === activeNetworkId.value) || networks[0])
+    const { networks, activeNetworkId, activeNetwork } = useNetwork()
 
     const setActiveNetwork = networkId => {
       activeNetworkId.value = networkId;

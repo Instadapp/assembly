@@ -1,14 +1,32 @@
-import { onMounted, ref } from "@nuxtjs/composition-api";
+import { computed, onMounted, ref } from "@nuxtjs/composition-api";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
+import { Network } from "./useNetwork";
 
 let web3Modal: Web3Modal;
 let web3Provider: any;
 
 let providerOptions = {};
 
+const chains = [
+  {
+    name: "mainnet" as Network,
+    chainId: 1,
+    displayName: "Mainnet"
+  },
+  {
+    name: "polygon" as Network,
+    chainId: 137,
+    node: "https://rpc-mainnet.matic.network",
+    displayName: "Polygon"
+  }
+];
+
 const active = ref(false);
 const chainId = ref<number>();
+const networkName = computed<Network>(
+  () => chains.find(c => c.chainId === chainId.value)?.name || Network.Mainnet
+);
 const account = ref<string>();
 const web3 = ref<Web3>();
 
@@ -71,6 +89,7 @@ export function useWeb3() {
     web3,
     active,
     activate,
-    deactivate
+    deactivate,
+    networkName
   };
 }

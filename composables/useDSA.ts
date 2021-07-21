@@ -60,5 +60,7 @@ export function useDSA() {
     createAccount,
     creatingAccount,
     setAccount,
+    web3,
+    chainId
   };
 }
