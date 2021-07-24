@@ -1,7 +1,7 @@
 <template>
   <div class="relative flex items-center w-full">
     <input
-      class="w-full pr-4"
+      class="w-full pr-4 form-input"
       type="text"
       v-bind="$attrs"
       :class="{ 'pl-9 py-1': dense, 'pl-12': !dense }"
@@ -13,7 +13,7 @@
 
 <script>
 import { defineComponent, computed } from '@nuxtjs/composition-api'
-import SVGSearch from '~/assets/icons/search.svg?inline'
+import SVGSearch from '@/assets/icons/search.svg?inline'
 
 export default defineComponent({
   props: {
@@ -37,3 +37,37 @@ export default defineComponent({
   },
 })
 </script>
+<style scoped>
+.search-icon {
+  @apply text-grey-light;
+  @apply transition;
+  @apply duration-150;
+}
+
+.dark .search-icon {
+  @apply text-grey-pure;
+}
+
+input {
+  @apply transition;
+  @apply duration-150;
+}
+
+input:focus {
+  @apply outline-none;
+  @apply border-ocean-blue-pure;
+}
+
+.dark input:focus {
+  @apply outline-none;
+  @apply border-lightest;
+}
+
+input:focus ~ .search-icon {
+  @apply text-ocean-blue-pure;
+}
+
+.dark input:focus ~ .search-icon {
+  @apply text-lightest;
+}
+</style>

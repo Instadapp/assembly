@@ -1,5 +1,5 @@
 <template>
-  <dive class="flex-shrink-0 shadow bg-white relative flex flex-col flex-1 px-4 pt-4 pb-6 dark:bg-dark-500">
+  <div class="flex-shrink-0 shadow bg-white relative flex flex-col flex-1 px-4 pt-4 pb-6 dark:bg-dark-500">
     <div class="flex items-center h-14">
       <div class="flex mr-4 -space-x-3 overflow-hidden">
         <IconCurrency :currency="tokenKey" class="w-12 h-12" no-height />
@@ -147,7 +147,7 @@
         >Payback</Button
       >
     </div>
-  </dive>
+  </div>
 </template>
 
 <script>

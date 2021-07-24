@@ -32,6 +32,7 @@ export default {
   plugins: [
     "~/plugins/v-click-outside.js",
     "~/plugins/web3modal.js",
+    { src: '~/plugins/v-tooltip', mode: 'client' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
