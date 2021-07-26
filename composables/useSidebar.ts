@@ -15,6 +15,7 @@ import { useWeb3 } from "./useWeb3";
 // import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAaveV2Withdraw.vue'
 
 const sidebars = {
+  "/polygon/aave-v2": { component: null },
   "/polygon/aave-v2#overview": { component: null },
   "/polygon/aave-v2#supply": { component: SidebarAaveV2Supply },
   "/polygon/aave-v2#borrow": { component: null },
@@ -45,7 +46,7 @@ export function init() {
       const hasDsaChanged = dsa !== oldDsa;
 
       const [hash, params] = route.hash.split("?");
-
+      
       if (hasPathChanged){
         router.push({ hash: null })
         return

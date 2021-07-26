@@ -1,12 +1,13 @@
 <template>
-  <div class="flex flex-col items-start">
-    <ValueDisplayLabel class="flex mb-2"
-      >{{ label }} <Info v-if="tooltip" :text="tooltip" class="ml-1" />
-    </ValueDisplayLabel>
-    <div class="h-6 font-medium text-19">
+  <div class="flex flex-col items-center">
+    <div class="h-6 font-medium text-24">
       <Spinner v-if="loading" class="w-5 h-5" />
       <slot v-else name="default" />
     </div>
+
+    <value-display-label class="flex mb-2 mt-3"
+      >{{ label }} <Info v-if="tooltip" :text="tooltip" class="ml-1" />
+    </value-display-label>
 
     <transition
       enter-active-class="duration-200 ease-out"
@@ -27,8 +28,10 @@
 
 <script>
 import { defineComponent } from '@nuxtjs/composition-api'
+import ValueDisplayLabel from './ValueDisplayLabel.vue'
 
 export default defineComponent({
+  components: { ValueDisplayLabel },
   props: {
     label: { type: String, default: null },
     loading: { type: Boolean, default: false },

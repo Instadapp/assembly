@@ -3,7 +3,7 @@
     <SidebarContextHeader><slot name="title" /></SidebarContextHeader>
 
     <div class="overflow-y-scroll scrollbar-hover">
-      <div class="mx-auto" style="max-width: 296px">
+      <div class="mx-auto max-w-[385px]">
         <div class="py-2 sm:py-4">
           <slot />
         </div>

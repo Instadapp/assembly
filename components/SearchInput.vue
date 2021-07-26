@@ -1,7 +1,7 @@
 <template>
   <div class="relative flex items-center w-full">
     <input
-      class="w-full pr-4 form-input"
+      class="w-full pr-4 rounded-[6px] border border-grey-dark border-opacity-[0.15]"
       type="text"
       v-bind="$attrs"
       :class="{ 'pl-9 py-1': dense, 'pl-12': !dense }"

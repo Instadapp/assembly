@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute inset-y-0 right-0 z-10 flex flex-col w-full overflow-hidden transform shadow-xs xxl:translate-x-0 dark:shadow-none xxl-transform-none xxl:relative dark:bg-dark-500 bg-background"
+    class="absolute inset-y-0 right-0 z-10 flex flex-col w-full overflow-hidden transform shadow bg-white"
     style="max-width: clamp(var(--min-width-app), var(--width-sidebar-context), 100%)"
     :class="{
       'translate-x-0 duration-300': isOpen,

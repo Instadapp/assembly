@@ -1,26 +1,26 @@
 <template>
-  <div
-    class="flex flex-shrink-0 w-full border-b items border-grey-light dark:border-dark-600 h-navbar"
-    style="min-height: var(--height-navbar)"
-  >
-    <div class="flex items-center w-full mx-auto" style="max-width: 296px">
+  <div class="flex-shrink-0 w-full mx-auto max-w-[385px] p-4">
+    <div class="flex justify-between items-center w-full">
       <button
-        class="flex items-center justify-center py-2 mt-1 mr-5 text-opacity-50 group hover:text-opacity-100 focus:hover:text-opacity-100 text-grey-pure focus:outline-none dark:text-light dark:text-opacity-84"
+        class="flex items-center justify-center text-opacity-50 group hover:text-opacity-100 focus:hover:text-opacity-100 text-grey-pure focus:outline-none"
         @click="back"
       >
         <SVGArrowLeft
           class="transition-transform duration-75 ease-out transform group-hover:-translate-x-1"
         />
       </button>
-      <div class="w-full mt-1 font-semibold text-14"><slot /></div>
+
+      <button
+        class="flex items-center justify-center text-opacity-50 group hover:text-opacity-100 focus:hover:text-opacity-100 text-grey-pure focus:outline-none"
+        @click="close"
+      >
+        <SVGClose class="w-3 h-3" />
+      </button>
     </div>
-    <!-- <button
-      v-if="!!close"
-      class="flex items-center justify-center p-2 mt-1 text-opacity-50 group hover:text-opacity-100 focus:hover:text-opacity-100 text-grey-pure focus:outline-none"
-      @click="close"
-    >
-      <SVGClose />
-    </button> -->
+
+    <div>
+      <div class="w-full my-5 text-center text-primary-gray font-semibold text-lg"><slot /></div>
+    </div>
   </div>
 </template>
 
@@ -36,8 +36,8 @@ export default defineComponent({
     SVGArrowLeft,
   },
   setup() {
-    const { back } = useSidebar()
-    return { back }
+    const { back, close } = useSidebar()
+    return { back, close }
   },
 })
 </script>

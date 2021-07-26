@@ -1,83 +1,55 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Supply SYMBOL</template>
+    <template #title>Supply {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon class="mt-6" label="Token Balance">
-      <template #icon><IconCurrency :currency="rootTokenKey"/></template>
-      <template #value>BALANCE</template>
+    <SidebarSectionValueWithIcon class="mt-2" label="Token Balance">
+      <template #icon
+        ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
+      /></template>
+      <template #value>{{ balance }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
 
-    <hr />
-
-    <InputNumeric
-      v-model="amount"
-      :disabled="pending"
-      class="mt-6"
-      placeholder="Amount to supply"
-      :error="'ERROR'"
-    />
-
-    <hr />
-
-    <div class="flex items-center justify-between mt-6">
-      <div class="font-semibold">Set Max</div>
-
-      <ToggleButton :checked="isMaxAmount" @change="toggle" />
+    <div class="bg-background mt-6 p-8">
+      <input-numeric v-model="amount" placeholder="Amount to supply" />
     </div>
-
-    <SidebarContextHeading class="mt-6"
-      >Projected Debt Position
-    </SidebarContextHeading>
-
-    <hr />
-
-    <SidebarSectionStatus
-      class="mt-6"
-      :liquidation="maxLiquidation"
-      :status="status"
-    />
-
-    <hr />
-
-    <!-- prettier-ignore -->
-    <SidebarSectionValueWithIcon class="mt-6" label="Liquidation Price (ETH)">
-      <template #value>{{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} / {{ formatUsd(liquidationMaxPrice) }}</template>
-    </SidebarSectionValueWithIcon>
-
-    <hr />
-
-    <div class="flex flex-shrink-0 mt-6">
-      <ButtonCTA
-        class="w-full"
-        :disabled="!isValid || pending"
-        :loading="pending"
-        @click="cast"
-        >Supply</ButtonCTA
-      >
-    </div>
-
-    <ValidationErrors :error-messages="errorMessages" class="mt-6" />
   </SidebarContextRootContainer>
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import InputNumeric from '~/components/common/input/InputNumeric.vue'
 import { useAaveV2Position } from '~/composables/useAaveV2Position'
 import { useFormatting } from '~/composables/useFormatting'
+import { useToken } from '~/composables/useToken'
 
 export default defineComponent({
+  components: { InputNumeric },
   props: {
     tokenKey: { type: String, required: true },
   },
   setup(props) {
-    const { status } = useAaveV2Position()
-    const { formatUsd, formatUsdMax, formatNumber, formatDecimal } = useFormatting()
+    const { status, displayPositions } = useAaveV2Position()
+    // const { formatUsd, formatUsdMax, formatNumber, formatDecimal } = useFormatting()
 
+    const amount = ref('')
+
+    const rootTokenKey = computed(() => 'eth')
+
+    const { getTokenByKey } = useToken()
+
+    const token = computed(() => getTokenByKey(props.tokenKey))
+    const symbol = computed(() => token.value?.symbol)
+
+
+    const balance = computed(() => "0")
 
     return {
+      amount,
       status,
-
-      formatUsd, formatUsdMax, formatNumber, formatDecimal,
+      rootTokenKey,
+      token,
+      symbol,
+      balance,
     }
   },
 })
