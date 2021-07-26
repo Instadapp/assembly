@@ -108,11 +108,13 @@
 
 <script>
 import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
+import { useBalances } from '~/composables/useBalances';
 import { useDSA } from "~/composables/useDSA";
 
 export default defineComponent({
   setup() {
     const { accounts, activeAccount, createAccount, creatingAccount, setAccount } = useDSA()
+    const { fetchBalances } = useBalances()
 
     const show = ref(false)
 
@@ -121,6 +123,7 @@ export default defineComponent({
     }
 
     watch(activeAccount, hide);
+    watch(activeAccount, (val) => val && fetchBalances(true));
 
     return {
       hide,

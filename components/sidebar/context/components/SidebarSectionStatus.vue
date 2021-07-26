@@ -8,18 +8,20 @@
 
     <div class="flex items-center">
       <div class="w-24 mr-3 font-medium text-19">{{ formatPercent(status) }}</div>
-      <ProgressBar class="w-full" :color="color" :progress="status" />
+      <progress-bar class="w-full" :color="color" :progress="status" />
     </div>
   </div>
 </template>
 
 <script>
 import { computed, defineComponent } from '@nuxtjs/composition-api'
+import ProgressBar from '~/components/common/ProgressBar.vue'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
 import { useStatus } from '~/composables/useStatus'
 
 export default defineComponent({
+  components: { ProgressBar },
   props: {
     liquidation: { type: String, required: true },
     status: { type: String, required: true },

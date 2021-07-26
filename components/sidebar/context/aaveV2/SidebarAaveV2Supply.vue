@@ -2,15 +2,65 @@
   <SidebarContextRootContainer>
     <template #title>Supply {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon class="mt-2" label="Token Balance">
+    <SidebarSectionValueWithIcon label="Token Balance">
       <template #icon
         ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
       /></template>
-      <template #value>{{ balance }} {{ symbol }}</template>
+      <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
 
     <div class="bg-background mt-6 p-8">
-      <input-numeric v-model="amount" placeholder="Amount to supply" />
+      <input-numeric
+        v-model="amount"
+        placeholder="Amount to supply"
+        :error="errors.amount.message"
+      />
+    </div>
+
+    <hr />
+
+    <div class="px-5">
+      <div class="flex items-center justify-between mt-6">
+        <div class="font-semibold">Set Max</div>
+
+        <toggle-button :checked="isMaxAmount" @change="toggle" />
+      </div>
+
+      <SidebarContextHeading class="mt-6"
+        >Projected Debt Position</SidebarContextHeading
+      >
+
+      <hr />
+
+      <SidebarSectionStatus
+        class="mt-6"
+        :liquidation="maxLiquidation"
+        :status="status"
+      />
+
+      <hr />
+
+      <SidebarSectionValueWithIcon class="mt-6" label="Liquidation Price (ETH)">
+        <template #value>
+          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} /
+          {{ formatUsd(liquidationMaxPrice) }}
+        </template>
+      </SidebarSectionValueWithIcon>
+
+      <hr />
+
+      <div class="flex flex-shrink-0 mt-6">
+        <ButtonCTA
+          class="w-full"
+          :disabled="!isValid || pending"
+          :loading="pending"
+          @click="cast"
+        >
+          Supply
+        </ButtonCTA>
+      </div>
+
+      <ValidationErrors :error-messages="errorMessages" class="mt-6" />
     </div>
   </SidebarContextRootContainer>
 </template>
@@ -19,37 +69,122 @@
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
 import { useAaveV2Position } from '~/composables/useAaveV2Position'
+import { useBalances } from '~/composables/useBalances'
+import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
+import { useValidators } from '~/composables/useValidators'
+import { useValidation } from '~/composables/useValidation'
 import { useToken } from '~/composables/useToken'
+import { useParsing } from '~/composables/useParsing'
+import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
+import { useWeb3 } from '~/composables/useWeb3'
+import atokens from '~/constant/atokens'
+import ToggleButton from '~/components/common/input/ToggleButton.vue'
+import { useDSA } from '~/composables/useDSA'
+import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
+import { useNotification } from '~/composables/useNotification'
 
 export default defineComponent({
-  components: { InputNumeric },
+  components: { InputNumeric, ToggleButton, ButtonCTA },
   props: {
     tokenKey: { type: String, required: true },
   },
   setup(props) {
-    const { status, displayPositions } = useAaveV2Position()
-    // const { formatUsd, formatUsdMax, formatNumber, formatDecimal } = useFormatting()
+    const { showTransaction } = useNotification()
+    const { networkName, account } = useWeb3()
+    const { dsa } = useDSA()
+    const { getTokenByKey, valInt } = useToken()
+    const { getBalanceByKey } = useBalances()
+    const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
+    const { isZero, gt, plus } = useBigNumber()
+    const { parseSafeFloat } = useParsing()
+
+    const { status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
+      overridePosition: (position) => {
+        if (rootTokenKey.value !== position.key) return position
+
+        return {
+          ...position,
+          supply: plus(position.supply, amountParsed.value).toFixed(),
+        }
+      },
+    })
 
     const amount = ref('')
+    const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const rootTokenKey = computed(() => 'eth')
+    const rootTokenKey = computed(() => atokens[networkName.value].rootTokens.includes(props.tokenKey) ? props.tokenKey : 'eth')
 
-    const { getTokenByKey } = useToken()
-
-    const token = computed(() => getTokenByKey(props.tokenKey))
+    const token = computed(() => getTokenByKey(rootTokenKey.value))
     const symbol = computed(() => token.value?.symbol)
+    const decimals = computed(() => token.value?.decimals)
+    const balance = computed(() => getBalanceByKey(rootTokenKey.value))
+    const address = computed(() => token.value?.address)
 
+    const factor = computed(
+      () => displayPositions.value?.find((position) => rootTokenKey.value === position.key)?.factor
+    )
 
-    const balance = computed(() => "0")
+    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
+
+    const { validateAmount, validateLiquidation, validateIsLoggedIn } = useValidators()
+    const errors = computed(() => {
+      const hasAmountValue = !isZero(amount.value)
+      const liqValid = gt(factor.value, '0') ? validateLiquidation(status.value, maxLiquidation.value) : null
+
+      return {
+        amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
+        liquidation: { message: liqValid, show: hasAmountValue },
+        auth: { message: validateIsLoggedIn(!!account.value), show: true },
+      }
+    })
+    const { errorMessages, isValid } = useValidation(errors)
+
+    const pending = ref(false)
+
+    async function cast() {
+      pending.value = true
+
+      const amount = isMaxAmount.value ? dsa.value.maxValue : valInt(amountParsed.value, decimals.value)
+
+      const spells = dsa.value.Spell()
+
+      spells.add({
+        connector: 'aave_v2',
+        method: 'deposit',
+        args: [address.value, amount, 0, 0],
+      })
+
+      window.dsa = dsa.value
+
+      const txHash = await dsa.value.cast({
+        spells,
+        from: account.value,
+      })
+
+      pending.value = false
+    }
 
     return {
+      pending,
+      cast,
+      errors,
       amount,
       status,
       rootTokenKey,
       token,
       symbol,
       balance,
+      formatNumber,
+      formatUsdMax,
+      formatUsd,
+      toggle,
+      isMaxAmount,
+      maxLiquidation,
+      liquidationPrice,
+      liquidationMaxPrice,
+      errorMessages,
+      isValid
     }
   },
 })

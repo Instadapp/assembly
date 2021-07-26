@@ -12,7 +12,16 @@ import { useBigNumber } from "./useBigNumber";
 import { usePosition } from "./usePosition";
 import { useToken } from "./useToken";
 
-const { times, isZero, div, max, gt, minus, ensureValue } = useBigNumber();
+const {
+  times,
+  isZero,
+  div,
+  max,
+  gt,
+  minus,
+  ensureValue,
+  plus
+} = useBigNumber();
 const { getType } = usePosition();
 
 const position = ref<any>({
@@ -43,25 +52,13 @@ const totalBorrow = computed(() =>
     : 0
 );
 
-const status = computed(() => {
-  if (!position.value) {
-    return "0";
-  }
+const ethPriceInUsd = computed(() => position.value?.ethPriceInUsd);
 
-  if (
-    isZero(position.value.totalSupplyInEth) &&
-    !isZero(position.value.totalBorrowInEth)
-  )
-    return "1.1";
-  if (isZero(position.value.totalSupplyInEth)) return "0";
+export function useAaveV2Position(
+  { overridePosition } = { overridePosition: null }
+) {
+  overridePosition = overridePosition || (pos => pos);
 
-  return max(
-    div(position.value.totalBorrowInEth, position.value.totalSupplyInEth),
-    "0"
-  ).toFixed();
-});
-
-export function useAaveV2Position() {
   const { web3, chainId, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { getTokenByKey, allATokensV2 } = useToken();
@@ -118,6 +115,42 @@ export function useAaveV2Position() {
     { immediate: true }
   );
 
+  const stats = computed(() =>
+    displayPositions.value.reduce(
+      (stats, { key, supply, borrow, priceInEth, factor, liquidation }) => {
+        if (key === "eth") {
+          stats.ethSupplied = supply;
+        }
+
+        stats.totalSupplyInEth = plus(
+          stats.totalSupplyInEth,
+          times(supply, priceInEth)
+        ).toFixed();
+        stats.totalBorrowInEth = plus(
+          stats.totalBorrowInEth,
+          times(borrow, priceInEth)
+        ).toFixed();
+        stats.totalMaxBorrowLimitInEth = plus(
+          stats.totalMaxBorrowLimitInEth,
+          times(supply, times(priceInEth, factor))
+        ).toFixed();
+        stats.totalMaxLiquidationLimitInEth = plus(
+          stats.totalMaxLiquidationLimitInEth,
+          times(supply, times(priceInEth, liquidation))
+        ).toFixed();
+
+        return stats;
+      },
+      {
+        totalSupplyInEth: "0",
+        totalBorrowInEth: "0",
+        totalMaxBorrowLimitInEth: "0",
+        totalMaxLiquidationLimitInEth: "0",
+        ethSupplied: "0"
+      }
+    )
+  );
+
   const rewardTokenPriceInUsd = computed(() => {
     if (networkName.value === Network.Polygon) {
       return ensureValue(
@@ -159,7 +192,8 @@ export function useAaveV2Position() {
           max(b.supplyUsd, b.borrowUsd),
           max(a.supplyUsd, a.borrowUsd)
         ).toNumber()
-      );
+      )
+      .map(overridePosition);
   });
 
   function getPositionOrDefaultPosition(token, position) {
@@ -230,13 +264,57 @@ export function useAaveV2Position() {
     };
   }
 
+  const maxLiquidation = computed(() => {
+    if (isZero(stats.value.totalSupplyInEth)) return "0";
+
+    return max(
+      div(
+        stats.value.totalMaxLiquidationLimitInEth,
+        stats.value.totalSupplyInEth
+      ),
+      "0"
+    ).toFixed();
+  });
+
+  const liquidationPrice = computed(() => {
+    if (isZero(stats.value.ethSupplied)) return "0";
+
+    return max(
+      times(
+        div(
+          stats.value.totalBorrowInEth,
+          stats.value.totalMaxLiquidationLimitInEth
+        ),
+        ethPriceInUsd.value
+      ),
+      "0"
+    ).toFixed();
+  });
+
+  const status = computed(() => {
+    if (
+      isZero(stats.value.totalSupplyInEth) &&
+      !isZero(stats.value.totalBorrowInEth)
+    )
+      return "1.1";
+    if (isZero(stats.value.totalSupplyInEth)) return "0";
+
+    return max(
+      div(stats.value.totalBorrowInEth, stats.value.totalSupplyInEth),
+      "0"
+    ).toFixed();
+  });
+
   return {
     displayPositions,
     position,
     fetchPosition,
     totalSupply,
     totalBorrow,
-    status
+    status,
+    maxLiquidation,
+    liquidationPrice,
+    liquidationMaxPrice: ethPriceInUsd
   };
 }
 

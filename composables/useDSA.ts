@@ -21,6 +21,15 @@ export function useDSA() {
   );
 
   watch(
+    chainId,
+    () => {
+      if (web3.value) {
+        dsa.value = new DSA(web3.value, chainId.value);
+      }
+    },
+  );
+
+  watch(
     dsa,
     async () => {
       if (dsa.value) {
@@ -29,6 +38,16 @@ export function useDSA() {
         if (accounts.value.length > 0) {
           activeAccount.value = accounts.value[0];
         }
+      }
+    },
+    { immediate: true }
+  );
+
+  watch(
+    activeAccount,
+    async () => {
+      if (activeAccount.value) {
+        dsa.value.setAccount(activeAccount.value.id);
       }
     },
     { immediate: true }

@@ -61,7 +61,7 @@ export default defineComponent({
 <style>
 :root {
   --min-width-app: 320px;
-  --width-sidebar-context: 360px;
+  --width-sidebar-context: 385px;
   --width-container-main: 1016px;
   --height-navbar: 64px;
   --height-top-banner: 32px;

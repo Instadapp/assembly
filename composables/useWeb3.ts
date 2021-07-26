@@ -85,6 +85,7 @@ export function useWeb3() {
   };
 
   return {
+    account,
     chainId,
     web3,
     active,

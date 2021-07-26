@@ -5,12 +5,12 @@ const polygonInfura = "https://polygon-mainnet.infura.io/v3/";
 
 export const polygonWeb3 = new Web3(
   new Web3.providers.HttpProvider(
-    polygonInfura + "5c8b888909a544e2ba6917322f0cca68"
+    polygonInfura + "19c4b8b779a343e6ac5a91f4eaf55b81"
   )
 );
 
 export const mainnetWeb3 = new Web3(
   new Web3.providers.HttpProvider(
-    mainnetInfura + "5c8b888909a544e2ba6917322f0cca68"
+    mainnetInfura + "19c4b8b779a343e6ac5a91f4eaf55b81"
   )
 );
