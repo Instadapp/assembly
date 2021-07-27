@@ -175,8 +175,6 @@ export default defineComponent({
         args: [address.value, amount, 0, 0],
       })
 
-      window.dsa = dsa.value
-
       const txHash = await dsa.value.cast({
         spells,
         from: account.value,
