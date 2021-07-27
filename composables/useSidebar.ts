@@ -24,6 +24,18 @@ const sidebars = {
   "/polygon/aave-v2#withdraw-token": {
     component: null,
     back: { hash: "withdraw-overview" }
+  },
+
+
+  "/mainnet/aave-v2": { component: null },
+  "/mainnet/aave-v2#overview": { component: null },
+  "/mainnet/aave-v2#supply": { component: SidebarAaveV2Supply },
+  "/mainnet/aave-v2#borrow": { component: null },
+  "/mainnet/aave-v2#payback": { component: null },
+  "/mainnet/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
+  "/mainnet/aave-v2#withdraw-token": {
+    component: null,
+    back: { hash: "withdraw-overview" }
   }
 };
 

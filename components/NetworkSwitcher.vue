@@ -99,18 +99,21 @@
 </template>
 
 <script>
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent, nextTick, ref } from '@nuxtjs/composition-api'
+import { useModal } from '~/composables/useModal'
 import { useNetwork } from '~/composables/useNetwork'
 
 export default defineComponent({
   setup() {
     const show = ref(false)
 
-    const { networks, activeNetworkId, activeNetwork } = useNetwork()
+    const { networks, activeNetworkId, activeNetwork, checkForNetworkMismatch } = useNetwork()
 
-    const setActiveNetwork = networkId => {
+    const setActiveNetwork = async networkId => {
       activeNetworkId.value = networkId;
       show.value = false
+      await nextTick()
+      checkForNetworkMismatch()
     }
 
     const hide = () => {

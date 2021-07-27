@@ -1,9 +1,13 @@
-import { computed, readonly, ref, watch } from "@nuxtjs/composition-api";
+import { computed, onMounted, ref, watch } from "@nuxtjs/composition-api";
+import { useLocalStorage } from "vue-composable";
 
 //@ts-ignore
 import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 //@ts-ignore
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
+import { useModal } from "./useModal";
+import { useNotification } from "./useNotification";
+import { useWeb3 } from "./useWeb3";
 
 export enum Network {
   Mainnet = "mainnet",
@@ -21,9 +25,107 @@ const activeNetwork = computed(
 );
 
 export function useNetwork() {
+  
+  const { showWarning } = useNotification();
+  const { account, networkName, refreshWeb3 } = useWeb3();
+  const { showNetworksMismatchDialog } = useModal();
+
+  const networkMismatch = computed(
+    () => networkName.value != activeNetworkId.value
+  );
+
+  const checkForNetworkMismatch = () => {
+    if (networkMismatch.value) {
+      showNetworksMismatchDialog();
+    }
+  };
+
+  async function switchToMainnet() {
+    if (window.ethereum) {
+      const chainData = {
+        chainId: "0x1"
+      };
+
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [chainData]
+        });
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }
+  }
+
+  async function switchToPolygon() {
+    if (window.ethereum) {
+      const chainId = "0x89";
+
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId }]
+        });
+      } catch (switchError) {
+        // 4902 error code indicates that the chain has not been added to MetaMask.
+        if (switchError.code === 4902) {
+          try {
+            const chainData = {
+              chainId,
+              chainName: "Matic(Polygon) Mainnet",
+              nativeCurrency: {
+                name: "Matic",
+                symbol: "MATIC",
+                decimals: 18
+              },
+              rpcUrls: ["https://rpc-mainnet.matic.network"],
+              blockExplorerUrls: ["https://polygonscan.com/"]
+            };
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [chainData, account.value]
+            });
+          } catch (addError) {
+            return Promise.reject(addError);
+          }
+        } else {
+          return Promise.reject(switchError);
+        }
+      }
+    }
+  }
+
+  async function switchNetwork() {
+    try {
+      if (activeNetworkId.value === "mainnet") {
+        await switchToMainnet();
+      } else {
+        await switchToPolygon();
+      }
+      return Promise.resolve();
+    } catch (error) {
+      showWarning("Failed to switch network");
+      return Promise.reject(error);
+    }
+  }
+
+  watch(activeNetworkId, () => {
+    localStorage.setItem('network', activeNetworkId.value)
+  })
+
+  onMounted( () => {
+    //@ts-ignore
+    activeNetworkId.value = localStorage.getItem('network') || "polygon";
+
+    refreshWeb3()
+  })
+
   return {
+    networkMismatch,
     networks,
     activeNetworkId,
-    activeNetwork
+    activeNetwork,
+    switchNetwork,
+    checkForNetworkMismatch
   };
 }

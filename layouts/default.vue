@@ -13,18 +13,21 @@
 
     <SidebarContext class="grid-sidebar-context" />
 
+    <Modal />
+
     <NotificationBar />
   </div>
 </template>
 
 <script>
-import { defineComponent, watch } from "@nuxtjs/composition-api";
+import { defineComponent, nextTick, useContext, useRoute, watch } from "@nuxtjs/composition-api";
 import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
 import CompoundIcon from '~/assets/icons/compound.svg?inline'
 import AaveIcon from '~/assets/icons/aave.svg?inline'
 import { useWeb3 } from '~/composables/useWeb3'
 import { init as initSidebars } from '~/composables/useSidebar'
 import { useBackdrop } from '@/composables/useBackdrop'
+import { useNetwork } from "~/composables/useNetwork";
 
 export default defineComponent({
   components: {
@@ -33,8 +36,11 @@ export default defineComponent({
     AaveIcon,
   },
   setup() {
-    const { active, activate, deactivate } = useWeb3();
+    const { active, activate, deactivate, chainId } = useWeb3();
+    const { activeNetwork, checkForNetworkMismatch } = useNetwork();
     const { isShown: isBackdropShown, close: closeBackdrop } = useBackdrop()
+    const { redirect } = useContext()
+    const route = useRoute()
 
     watch(isBackdropShown, () => {
       if (isBackdropShown.value) {
@@ -45,6 +51,27 @@ export default defineComponent({
     })
 
     initSidebars();
+
+    // global routes guard
+    watch(
+      [activeNetwork, route],
+      async () => {
+        await nextTick()
+
+        if (route.path === '/') {
+          return;
+        }
+
+        if (!route.value.path.includes(activeNetwork.value.id)) {
+          redirect('/')
+        }
+      }, { immediate: true })
+
+    watch(chainId, (val) => {
+      if (val) {
+        checkForNetworkMismatch()
+      }
+    }, { immediate: true })
 
     return {
       active,

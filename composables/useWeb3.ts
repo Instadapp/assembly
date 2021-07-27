@@ -62,6 +62,8 @@ export function useWeb3() {
     let newWeb3 = new Web3(web3Provider);
     chainId.value = await newWeb3.eth.getChainId();
     web3.value = newWeb3;
+
+    setProvider(web3Provider);
   };
 
   const deactivate = async () => {
@@ -84,6 +86,40 @@ export function useWeb3() {
     chainId.value = undefined;
   };
 
+  const setProvider = provider => {
+    web3Provider = provider;
+    if (web3Modal.cachedProvider === "walletconnect") {
+      provider.on("accountsChanged", () => {
+        location.reload();
+      });
+
+      // Subscribe to networkId change
+      provider.on("networkChanged", () => {
+        location.reload();
+      });
+
+      // Subscribe to session connection/open
+      provider.on("open", () => {
+        location.reload();
+      });
+
+      // Subscribe to session disconnection/close
+      provider.on("close", () => {
+        location.reload();
+      });
+    }
+
+    // Subscribe to chainId change
+    provider.on("chainChanged", refreshWeb3);
+  };
+
+  const refreshWeb3 = async () => {
+    let newWeb3 = new Web3(web3Provider);
+    chainId.value = await newWeb3.eth.getChainId();
+    web3.value = newWeb3;
+    window.web3 = web3.value;
+  };
+
   return {
     account,
     chainId,
@@ -91,6 +127,7 @@ export function useWeb3() {
     active,
     activate,
     deactivate,
-    networkName
+    networkName,
+    refreshWeb3,
   };
 }

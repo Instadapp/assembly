@@ -59,7 +59,7 @@ export function useNotification() {
     show({ icon: "error", title, body, href, duration: 0 });
   }
 
-  function showWarning(title, body) {
+  function showWarning(title, body = "") {
     show({ icon: "warning", title, body, duration: 0 });
   }
 
