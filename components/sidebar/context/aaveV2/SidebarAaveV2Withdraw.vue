@@ -1,6 +1,6 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Supply {{ symbol }}</template>
+    <template #title>Withdraw {{ symbol }}</template>
 
     <SidebarSectionValueWithIcon label="Token Balance" center>
       <template #icon
@@ -44,8 +44,10 @@
 
       <SidebarSectionValueWithIcon class="mt-8" label="Liquidation Price (ETH)">
         <template #value>
-          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} <span class="text-primary-gray">/
-          {{ formatUsd(liquidationMaxPrice) }}</span>
+          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }}
+          <span class="text-primary-gray"
+            >/ {{ formatUsd(liquidationMaxPrice) }}</span
+          >
         </template>
       </SidebarSectionValueWithIcon>
 
@@ -56,7 +58,7 @@
           :loading="pending"
           @click="cast"
         >
-          Supply
+          Withdraw
         </ButtonCTA>
       </div>
 
@@ -92,25 +94,35 @@ export default defineComponent({
     tokenKey: { type: String, required: true },
   },
   setup(props) {
-    const { close} = useSidebar()
+    const { close } = useSidebar()
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
-    const { getBalanceByKey, fetchBalances } = useBalances()
+    const { fetchBalances } = useBalances()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
-    const { isZero, gt, plus } = useBigNumber()
+    const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
 
-    const { status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
+    const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
 
         return {
           ...position,
-          supply: plus(position.supply, amountParsed.value).toFixed(),
+          supply: max(minus(position.supply, amountParsed.value), '0').toFixed(),
         }
       },
     })
+
+
+    const availableLiquidity = computed(
+      () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.availableLiquidity || '0'
+    )
+
+    const balance = computed(
+      () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.supply || '0'
+    )
+
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
@@ -120,7 +132,6 @@ export default defineComponent({
     const token = computed(() => getTokenByKey(rootTokenKey.value))
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
-    const balance = computed(() => getBalanceByKey(rootTokenKey.value))
     const address = computed(() => token.value?.address)
 
     const factor = computed(
@@ -129,15 +140,22 @@ export default defineComponent({
 
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
 
-    const { validateAmount, validateLiquidation, validateIsLoggedIn } = useValidators()
+    const { validateAmount, validateLiquidation, validateIsLoggedIn, validateLiquidity } = useValidators()
+
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
-      const liqValid = gt(factor.value, '0') ? validateLiquidation(status.value, maxLiquidation.value) : null
+      const liqValid = gt(factor.value, '0')
+        ? validateLiquidation(status.value, maxLiquidation.value, isZero(stats.value.totalBorrowInEth))
+        : null
 
       return {
         amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
         liquidation: { message: liqValid, show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
+        liquidity: {
+          message: validateLiquidity(amountParsed.value, availableLiquidity.value, symbol.value, true),
+          show: hasAmountValue,
+        },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -153,7 +171,7 @@ export default defineComponent({
 
       spells.add({
         connector: 'aave_v2',
-        method: 'deposit',
+        method: 'withdraw',
         args: [address.value, amount, 0, 0],
       })
 
@@ -167,7 +185,7 @@ export default defineComponent({
       fetchBalances(true)
 
       pending.value = false
-      
+
       close()
     }
 

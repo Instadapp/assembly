@@ -306,6 +306,7 @@ export function useAaveV2Position(
   });
 
   return {
+    stats,
     displayPositions,
     position,
     fetchPosition,

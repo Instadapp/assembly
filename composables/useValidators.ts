@@ -1,6 +1,8 @@
 import { useBigNumber } from "./useBigNumber";
+import { useFormatting } from "./useFormatting";
 
 export function useValidators() {
+  const { formatNumber } = useFormatting()
   const { isZero, minus, eq, gt } = useBigNumber();
 
   function validateAmount(amountParsed, balance = null, options = null) {
@@ -37,9 +39,21 @@ export function useValidators() {
     return null;
   }
 
+  function validateLiquidity(borrow, availableLiquidity, tokenSymbol, withdraw = false) {
+    if (gt(borrow, availableLiquidity)) {
+      let action = 'borrow'
+      if (withdraw) {
+        action = 'withdraw'
+      }
+      return `Not enough liquidity to ${action} ${formatNumber(borrow, 2)} ${tokenSymbol}`
+    }
+    return null
+  }
+
   return {
     validateAmount,
     validateLiquidation,
-    validateIsLoggedIn
+    validateIsLoggedIn,
+    validateLiquidity
   };
 }

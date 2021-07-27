@@ -7,12 +7,12 @@ import {
   watch
 } from "@nuxtjs/composition-api";
 
-import SidebarAaveV2Supply from "~/components/sidebar/context/aaveV2/SidebarAaveV2Supply.vue";
 import { useDSA } from "./useDSA";
 import { useWeb3 } from "./useWeb3";
+import SidebarAaveV2Supply from "~/components/sidebar/context/aaveV2/SidebarAaveV2Supply.vue";
+import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAaveV2Withdraw.vue'
 // import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAaveV2Borrow.vue'
 // import SidebarAaveV2Payback from '~/components/sidebar/context/aaveV2/SidebarAaveV2Payback.vue'
-// import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAaveV2Withdraw.vue'
 
 const sidebars = {
   "/polygon/aave-v2": { component: null },
@@ -20,7 +20,7 @@ const sidebars = {
   "/polygon/aave-v2#supply": { component: SidebarAaveV2Supply },
   "/polygon/aave-v2#borrow": { component: null },
   "/polygon/aave-v2#payback": { component: null },
-  "/polygon/aave-v2#withdraw": { component: null },
+  "/polygon/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
   "/polygon/aave-v2#withdraw-token": {
     component: null,
     back: { hash: "withdraw-overview" }
