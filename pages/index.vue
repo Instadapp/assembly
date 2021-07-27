@@ -54,20 +54,6 @@ const appsPerNetwork = {
       url: "/polygon/aave-v2",
       description: "Lend and borrow straight from your Gnosis Safe"
     },
-    {
-      id: "aave-v3",
-      icon: AaveIcon,
-      name: "Aave v3",
-      url: "/polygon/aave-v2",
-      description: "Lend and borrow straight from your Gnosis Safe"
-    },
-    {
-      id: "aave-v4",
-      icon: AaveIcon,
-      name: "Aave v4",
-      url: "/polygon/aave-v2",
-      description: "Lend and borrow straight from your Gnosis Safe"
-    }
   ]
 };
 

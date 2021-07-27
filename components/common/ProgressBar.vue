@@ -1,6 +1,6 @@
 <template>
-  <div class="relative overflow-hidden rounded-xs">
-    <div class="w-full h-1 bg-opacity-25 bg-grey-pure"></div>
+  <div class="relative overflow-hidden rounded-[5px] border border-primary-gray border-opacity-[0.15]">
+    <div class="w-full h-2 bg-white"></div>
     <div
       class="absolute inset-0 transition-transform duration-200 ease-out"
       :style="{ transform }"

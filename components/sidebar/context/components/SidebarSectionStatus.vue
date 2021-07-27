@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col flex-shrink-0">
-    <div class="flex items-center justify-between mb-4">
-      <div class="text-grey-pure text-14">Status (max. {{ formatPercent(liquidation) }})</div>
+    <div class="flex items-center justify-between mb-6">
+      <div class="font-semibold text-grey-pure text-xs">Status (max. {{ formatPercent(liquidation) }})</div>
 
-      <Badge class="w-18" :color="color">{{ text }}</Badge>
+      <Badge class="w-[80px]" :color="color">{{ text }}</Badge>
     </div>
 
     <div class="flex items-center">
-      <div class="w-24 mr-3 font-medium text-19">{{ formatPercent(status) }}</div>
+      <div class="w-24 mr-3 font-medium text-lg">{{ formatPercent(status) }}</div>
       <progress-bar class="w-full" :color="color" :progress="status" />
     </div>
   </div>

@@ -1,14 +1,19 @@
 <template>
-  <div class="flex flex-col items-center">
-    <div class="h-6 font-medium text-24">
+  <div
+    class="flex flex-col w-full"
+    :class="{ 'text-center items-center': center }"
+  >
+    <value-display-label class="flex mb-2 text-primary-gray font-semibold">
+      {{ label }} <Info v-if="tooltip" :text="tooltip" class="ml-1" />
+    </value-display-label>
+
+    <div
+      class="font-medium text-lg text-primary-black"
+      :class="{ 'text-center': center }"
+    >
       <Spinner v-if="loading" class="w-5 h-5" />
       <slot v-else name="default" />
     </div>
-
-    <value-display-label class="flex mb-2 mt-3"
-      >{{ label }} <Info v-if="tooltip" :text="tooltip" class="ml-1" />
-    </value-display-label>
-
     <transition
       enter-active-class="duration-200 ease-out"
       enter-class="opacity-0"
@@ -36,6 +41,7 @@ export default defineComponent({
     label: { type: String, default: null },
     loading: { type: Boolean, default: false },
     tooltip: { type: String, default: null },
+    center: { type: Boolean, default: false },
   },
 })
 </script>

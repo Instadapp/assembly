@@ -1,3 +1,3 @@
 <template>
-  <div class="font-semibold text-center text-19"><slot /></div>
+  <div class="font-semibold text-center text-sm text-primary-black"><slot /></div>
 </template>

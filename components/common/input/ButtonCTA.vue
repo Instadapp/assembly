@@ -1,6 +1,6 @@
 <template>
   <button
-    class="flex items-center justify-center flex-shrink-0 py-2 font-semibold text-white whitespace-no-wrap duration-75 ease-out transform rounded-sm select-none bg-ocean-blue-pure text-14 shadow-cta focus:outline-none dark:shadow-none"
+    class="flex items-center justify-center flex-shrink-0 py-2 font-semibold text-white whitespace-no-wrap duration-75 ease-out transform rounded-[4px] select-none bg-ocean-blue-pure shadow-cta focus:outline-none dark:shadow-none"
     :class="{
       'bg-opacity-50 pointer-events-none': disabled && !loading,
       'hover:-translate-y-px': !disabled && !loading,

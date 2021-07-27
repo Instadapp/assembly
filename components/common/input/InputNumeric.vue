@@ -1,14 +1,17 @@
 <template>
   <div class="flex flex-col flex-shrink-0 w-full">
-    <input
-      autocomplete="off"
-      class="w-full pl-8 pr-8 rounded-[6px] border border-grey-dark border-opacity-[0.15]"
-      type="text"
-      inputmode="decimal"
-      :value="value"
-      v-bind="$attrs"
-      v-on="inputListeners"
-    />
+    <div class="relative w-full">
+      <input
+        autocomplete="off"
+        class="w-full px-4 rounded-[6px] border border-grey-dark border-opacity-[0.15]"
+        type="text"
+        inputmode="decimal"
+        :value="value"
+        v-bind="$attrs"
+        v-on="inputListeners"
+      />
+      <slot name="suffix" />
+    </div>
 
     <div class="h-0">
       <transition
@@ -19,7 +22,12 @@
         leave-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <p v-if="touched && showError && error" class="mt-1 text-red-600 text-11">{{ error }}</p>
+        <p
+          v-if="touched && showError && error"
+          class="mt-1 text-red-600 text-11"
+        >
+          {{ error }}
+        </p>
       </transition>
     </div>
   </div>

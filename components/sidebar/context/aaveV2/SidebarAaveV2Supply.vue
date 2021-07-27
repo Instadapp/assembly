@@ -2,54 +2,54 @@
   <SidebarContextRootContainer>
     <template #title>Supply {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon label="Token Balance">
+    <SidebarSectionValueWithIcon label="Token Balance" center>
       <template #icon
         ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
       /></template>
       <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
 
-    <div class="bg-background mt-6 p-8">
+    <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
+      <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
+        Amount to supply
+      </h3>
+
       <input-numeric
         v-model="amount"
         placeholder="Amount to supply"
         :error="errors.amount.message"
-      />
-    </div>
-
-    <hr />
-
-    <div class="px-5">
-      <div class="flex items-center justify-between mt-6">
-        <div class="font-semibold">Set Max</div>
-
-        <toggle-button :checked="isMaxAmount" @change="toggle" />
-      </div>
-
-      <SidebarContextHeading class="mt-6"
-        >Projected Debt Position</SidebarContextHeading
       >
+        <template v-if="!isMaxAmount" #suffix>
+          <div class="absolute mt-2 top-0 right-0 mr-4">
+            <button
+              type="button"
+              class="text-primary-blue-dark font-semibold text-sm hover:text-primary-blue-hover"
+              @click="toggle"
+            >
+              Max
+            </button>
+          </div>
+        </template>
+      </input-numeric>
 
-      <hr />
+      <SidebarContextHeading class="mt-5">
+        Projected Debt Position
+      </SidebarContextHeading>
 
       <SidebarSectionStatus
-        class="mt-6"
+        class="mt-8"
         :liquidation="maxLiquidation"
         :status="status"
       />
 
-      <hr />
-
-      <SidebarSectionValueWithIcon class="mt-6" label="Liquidation Price (ETH)">
+      <SidebarSectionValueWithIcon class="mt-8" label="Liquidation Price (ETH)">
         <template #value>
-          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} /
-          {{ formatUsd(liquidationMaxPrice) }}
+          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} <span class="">/
+          {{ formatUsd(liquidationMaxPrice) }}</span>
         </template>
       </SidebarSectionValueWithIcon>
 
-      <hr />
-
-      <div class="flex flex-shrink-0 mt-6">
+      <div class="flex flex-shrink-0 mt-10">
         <ButtonCTA
           class="w-full"
           :disabled="!isValid || pending"
@@ -83,14 +83,14 @@ import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useNotification } from '~/composables/useNotification'
+import Button from '~/components/Button.vue'
 
 export default defineComponent({
-  components: { InputNumeric, ToggleButton, ButtonCTA },
+  components: { InputNumeric, ToggleButton, ButtonCTA, Button },
   props: {
     tokenKey: { type: String, required: true },
   },
   setup(props) {
-    const { showTransaction } = useNotification()
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()

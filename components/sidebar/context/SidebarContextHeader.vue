@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-shrink-0 w-full mx-auto max-w-[385px] p-4">
+  <div class="flex-shrink-0 w-full mx-auto p-4">
     <div class="flex justify-between items-center w-full">
       <button
         class="flex items-center justify-center text-opacity-50 group hover:text-opacity-100 focus:hover:text-opacity-100 text-grey-pure focus:outline-none"
