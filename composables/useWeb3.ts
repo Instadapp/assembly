@@ -87,7 +87,6 @@ export function useWeb3() {
   };
 
   const setProvider = provider => {
-    web3Provider = provider;
     if (web3Modal.cachedProvider === "walletconnect") {
       provider.on("accountsChanged", () => {
         location.reload();
@@ -114,6 +113,9 @@ export function useWeb3() {
   };
 
   const refreshWeb3 = async () => {
+    if (!web3Provider) {
+      return;
+    }
     let newWeb3 = new Web3(web3Provider);
     chainId.value = await newWeb3.eth.getChainId();
     web3.value = newWeb3;
@@ -128,6 +130,6 @@ export function useWeb3() {
     activate,
     deactivate,
     networkName,
-    refreshWeb3,
+    refreshWeb3
   };
 }

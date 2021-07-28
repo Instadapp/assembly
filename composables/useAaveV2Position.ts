@@ -68,10 +68,11 @@ export function useAaveV2Position(
   const { activeAccount } = useDSA();
   const { getTokenByKey, allATokensV2 } = useToken();
 
-  const resolver =
+  const resolver = computed(() =>
     chainId.value === 1
       ? "0xFb3a1D56eD56F046721B9aCa749895100754578b"
-      : "0xD6E0803d0eB34af8Ea135835512D7E77960b28F1";
+      : "0xD6E0803d0eB34af8Ea135835512D7E77960b28F1"
+  );
 
   const fetchPosition = async () => {
     if (!web3.value) {
@@ -84,7 +85,7 @@ export function useAaveV2Position(
 
     const aaveResolverInstance = new web3.value.eth.Contract(
       aaveV2ABI as AbiItem[],
-      resolver
+      resolver.value
     );
 
     const aaveTokensArr = atokensV2[networkName.value].allTokens.map(
