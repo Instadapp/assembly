@@ -1,5 +1,6 @@
-import NetworksMismatchDialog from "~/components/modal/NetworksMismatchDialog";
 import { computed, ref } from "@nuxtjs/composition-api";
+//@ts-ignore
+import NetworksMismatchDialog from "~/components/modal/NetworksMismatchDialog";
 
 const modal = ref(null);
 const props = ref({});

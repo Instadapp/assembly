@@ -56,10 +56,19 @@ export function useBalances() {
     );
   };
 
+  const getBalanceRawByKey = (tokenKey, network = null) => {
+    return (
+      balances.dsa?.[network || networkName.value][
+        getTokenByKey(tokenKey)?.address
+      ]?.raw || "0"
+    );
+  };
+  
   return {
     balances,
     fetchBalances,
-    getBalanceByKey
+    getBalanceByKey,
+    getBalanceRawByKey
   };
 }
 

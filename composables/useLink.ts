@@ -17,5 +17,6 @@ export function useLink() {
 
 export const getEtherscanLink = (transactionHash) => `https://etherscan.io/tx/${transactionHash}`
 export const getMaticLink = (transactionHash) => `https://polygonscan.com/tx/${transactionHash}`
+export const getPolygonLink = (transactionHash) => `https://polygonscan.com/tx/${transactionHash}`
 export const getTenderlyLink = (simulationId) =>
   `https://dashboard.tenderly.co/public/InstaDApp/dsa-simulations/fork-simulation/${simulationId}?hideSidebar=true`

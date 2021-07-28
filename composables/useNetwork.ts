@@ -14,13 +14,13 @@ export enum Network {
   Polygon = "polygon"
 }
 
-const networks = [
+export const networks = [
   { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
   { id: "polygon", chainId: 136, name: "Polygon", icon: PolygonSVG }
 ];
 
-const activeNetworkId = ref<Network>(Network.Polygon);
-const activeNetwork = computed(
+export const activeNetworkId = ref<Network>(Network.Polygon);
+export const activeNetwork = computed(
   () => networks.find(n => n.id === activeNetworkId.value) || networks[0]
 );
 

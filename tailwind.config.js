@@ -109,7 +109,10 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Montserrat", ...defaultTheme.fontFamily.sans]
-      }
+      },
+      animation: {
+        'spin-loading': 'spin 1s cubic-bezier(.6,0,.4,1) infinite',
+      },
     },
   },
   variants: {

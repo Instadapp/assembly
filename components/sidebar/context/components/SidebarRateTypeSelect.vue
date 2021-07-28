@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="flex items-center">
-      <ValueDisplayLabel class="leading-none">APR type</ValueDisplayLabel>
-      <Info class="ml-2" :text="tooltipARP" />
+      <value-display-label class="leading-none">APR type</value-display-label>
+      <info class="ml-2" :text="tooltipARP" />
     </div>
     <div v-if="stableBorrowEnabled" class="flex mt-2">
-      <ButtonBullet
+      <button-bullet
         v-for="item in items"
         :key="item.value"
         :value="value"
@@ -21,9 +21,13 @@
 
 <script>
 import { defineComponent, onMounted } from '@nuxtjs/composition-api'
+import ButtonBullet from '~/components/common/input/ButtonBullet.vue'
+import Info from '~/components/Info.vue'
 import { useFormatting } from '~/composables/useFormatting'
+import ValueDisplayLabel from './ValueDisplayLabel.vue'
 
 export default defineComponent({
+  components: { ValueDisplayLabel, ButtonBullet, Info },
   props: {
     value: { type: Object, default: () => {} },
     items: { type: Array, default: () => [] },

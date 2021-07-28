@@ -54,6 +54,11 @@ const totalBorrow = computed(() =>
 
 const ethPriceInUsd = computed(() => position.value?.ethPriceInUsd);
 
+const annualPercentageRateTypes = computed(() => [
+  { label: "Variable", value: "variable", rateMode: 2 },
+  { label: "Stable", value: "stable", rateMode: 1 }
+]);
+
 export function useAaveV2Position(
   { overridePosition } = { overridePosition: null }
 ) {
@@ -305,6 +310,15 @@ export function useAaveV2Position(
     ).toFixed();
   });
 
+  const liquidation = computed(() => {
+    if (isZero(stats.value.totalSupplyInEth)) return "0";
+
+    return max(
+      div(stats.value.totalMaxBorrowLimitInEth, stats.value.totalSupplyInEth),
+      "0"
+    ).toFixed();
+  });
+
   return {
     stats,
     displayPositions,
@@ -313,9 +327,11 @@ export function useAaveV2Position(
     totalSupply,
     totalBorrow,
     status,
+    liquidation,
     maxLiquidation,
     liquidationPrice,
-    liquidationMaxPrice: ethPriceInUsd
+    liquidationMaxPrice: ethPriceInUsd,
+    annualPercentageRateTypes
   };
 }
 

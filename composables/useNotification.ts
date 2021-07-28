@@ -2,6 +2,7 @@ import { ref } from "@nuxtjs/composition-api";
 import { useFormatting } from "@/composables/useFormatting";
 import { getEtherscanLink, getMaticLink, getTenderlyLink } from "./useLink";
 import { useRandom } from "./useRandom";
+import { Network, activeNetworkId } from "./useNetwork";
 const { makeid } = useRandom();
 
 const queue = ref([]);
@@ -85,9 +86,11 @@ export function useNotification() {
     return key;
   }
 
-  function showPendingTransaction(transactionHash, network) {
+  function showPendingTransaction(transactionHash, network?: Network) {
+    network = network || activeNetworkId.value;
+
     let href;
-    if (network === "matic") {
+    if (network === Network.Polygon) {
       href = getMaticLink(transactionHash);
     } else {
       href = getEtherscanLink(transactionHash);
@@ -104,9 +107,11 @@ export function useNotification() {
     });
   }
 
-  function showConfirmedTransaction(transactionHash, network) {
+  function showConfirmedTransaction(transactionHash, network?: Network) {
+    network = network || activeNetworkId.value;
+
     let href;
-    if (network === "matic") {
+    if (network === Network.Polygon) {
       href = getMaticLink(transactionHash);
     } else {
       href = getEtherscanLink(transactionHash);

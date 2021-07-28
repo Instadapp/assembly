@@ -1,8 +1,16 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Supply {{ symbol }}</template>
+    <template #title>Borrow {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon label="Token Balance" center>
+    <SidebarRateTypeSelect
+      class="flex flex-col items-center"
+      v-model="rateType"
+      :items="annualPercentageRateTypes"
+      :borrow-stable-rate="borrowStableRate"
+      :stable-borrow-enabled="stableBorrowEnabled"
+    />
+
+    <SidebarSectionValueWithIcon class="mt-6" label="Borrowed" center>
       <template #icon
         ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
       /></template>
@@ -44,8 +52,10 @@
 
       <SidebarSectionValueWithIcon class="mt-8" label="Liquidation Price (ETH)">
         <template #value>
-          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} <span class="text-primary-gray">/
-          {{ formatUsd(liquidationMaxPrice) }}</span>
+          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }}
+          <span class="text-primary-gray"
+            >/ {{ formatUsd(liquidationMaxPrice) }}</span
+          >
         </template>
       </SidebarSectionValueWithIcon>
 
@@ -56,7 +66,7 @@
           :loading="pending"
           @click="cast"
         >
-          Supply
+          Borrow
         </ButtonCTA>
       </div>
 
@@ -82,6 +92,7 @@ import atokens from '~/constant/atokens'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
+import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
 
@@ -91,7 +102,7 @@ export default defineComponent({
     tokenKey: { type: String, required: true },
   },
   setup(props) {
-    const { close} = useSidebar()
+    const { close } = useSidebar()
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
@@ -100,26 +111,44 @@ export default defineComponent({
     const { isZero, gt, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
 
-    const { status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
+    const { status, displayPositions, liquidation, maxLiquidation, liquidationPrice, liquidationMaxPrice, annualPercentageRateTypes } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
 
         return {
           ...position,
-          supply: plus(position.supply, amountParsed.value).toFixed(),
+          borrow: plus(position.borrow, amountParsed.value).toFixed(),
         }
       },
     })
+
+    const rateType = ref(null)
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
     const rootTokenKey = computed(() => atokens[networkName.value].rootTokens.includes(props.tokenKey) ? props.tokenKey : 'eth')
 
+    const currentPosition = computed(() =>
+      displayPositions.value.find((position) => position.key === rootTokenKey.value)
+    )
+
     const token = computed(() => getTokenByKey(rootTokenKey.value))
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
-    const balance = computed(() => getBalanceByKey(rootTokenKey.value))
+    const balance = computed(() => {
+      if (rateType.value?.value === 'stable') {
+        return currentPosition.value?.borrowStable || '0'
+      }
+      return currentPosition.value?.borrow || '0'
+    })
+
+    const availableLiquidity = computed(() => currentPosition.value?.availableLiquidity || '0')
+    const borrowStableRate = computed(() => currentPosition.value?.borrowStableRate || '0')
+    const stableBorrowEnabled = computed(
+      () => currentPosition.value?.stableBorrowEnabled && isZero(currentPosition.value?.supply)
+    )
+
     const address = computed(() => token.value?.address)
 
     const factor = computed(
@@ -128,15 +157,18 @@ export default defineComponent({
 
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
 
-    const { validateAmount, validateLiquidation, validateIsLoggedIn } = useValidators()
+    const { validateAmount, validateLiquidation, validateLiquidity, validateIsLoggedIn } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
-      const liqValid = gt(factor.value, '0') ? validateLiquidation(status.value, maxLiquidation.value) : null
 
       return {
-        amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
-        liquidation: { message: liqValid, show: hasAmountValue },
+        amount: { message: validateAmount(amountParsed.value), show: hasAmountValue },
+        liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
+        liquidity: {
+          message: validateLiquidity(amountParsed.value, availableLiquidity.value, symbol.value),
+          show: hasAmountValue,
+        },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -146,14 +178,16 @@ export default defineComponent({
     async function cast() {
       pending.value = true
 
-      const amount = isMaxAmount.value ? dsa.value.maxValue : valInt(amountParsed.value, decimals.value)
+      const amount = valInt(amountParsed.value, decimals.value)
 
       const spells = dsa.value.Spell()
 
+      const rateMode = rateType.value?.rateMode
+
       spells.add({
         connector: 'aave_v2',
-        method: 'deposit',
-        args: [address.value, amount, 0, 0],
+        method: 'borrow',
+        args: [address.value, amount, rateMode, 0, 0],
       })
 
       const txHash = await dsa.value.cast({
@@ -187,7 +221,12 @@ export default defineComponent({
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,
-      isValid
+      isValid,
+      annualPercentageRateTypes,
+      availableLiquidity,
+      borrowStableRate,
+      stableBorrowEnabled,
+      rateType,
     }
   },
 })

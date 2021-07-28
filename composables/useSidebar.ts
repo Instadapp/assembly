@@ -9,17 +9,21 @@ import {
 
 import { useDSA } from "./useDSA";
 import { useWeb3 } from "./useWeb3";
+//@ts-ignore
 import SidebarAaveV2Supply from "~/components/sidebar/context/aaveV2/SidebarAaveV2Supply.vue";
+//@ts-ignore
 import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAaveV2Withdraw.vue'
-// import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAaveV2Borrow.vue'
-// import SidebarAaveV2Payback from '~/components/sidebar/context/aaveV2/SidebarAaveV2Payback.vue'
+//@ts-ignore
+import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAaveV2Borrow.vue'
+//@ts-ignore
+import SidebarAaveV2Payback from '~/components/sidebar/context/aaveV2/SidebarAaveV2Payback.vue'
 
 const sidebars = {
   "/polygon/aave-v2": { component: null },
   "/polygon/aave-v2#overview": { component: null },
   "/polygon/aave-v2#supply": { component: SidebarAaveV2Supply },
-  "/polygon/aave-v2#borrow": { component: null },
-  "/polygon/aave-v2#payback": { component: null },
+  "/polygon/aave-v2#borrow": { component: SidebarAaveV2Borrow },
+  "/polygon/aave-v2#payback": { component: SidebarAaveV2Payback },
   "/polygon/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
   "/polygon/aave-v2#withdraw-token": {
     component: null,
@@ -30,8 +34,8 @@ const sidebars = {
   "/mainnet/aave-v2": { component: null },
   "/mainnet/aave-v2#overview": { component: null },
   "/mainnet/aave-v2#supply": { component: SidebarAaveV2Supply },
-  "/mainnet/aave-v2#borrow": { component: null },
-  "/mainnet/aave-v2#payback": { component: null },
+  "/mainnet/aave-v2#borrow": { component: SidebarAaveV2Borrow },
+  "/mainnet/aave-v2#payback": { component: SidebarAaveV2Payback },
   "/mainnet/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
   "/mainnet/aave-v2#withdraw-token": {
     component: null,

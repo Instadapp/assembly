@@ -1,5 +1,5 @@
 <template>
-  <Card class="flex w-full pl-4 overflow-hidden border border-opacity-75 shadow-lg dark:bg-dark-300 border-grey-light">
+  <div class="flex w-full pl-4 overflow-hidden border border-opacity-75 shadow-lg dark:bg-dark-300 border-grey-light">
     <div class="flex items-center w-full py-4">
       <IconNotification :icon="icon" />
 
@@ -35,7 +35,7 @@
         <Icon name="x" class="w-full" />
       </button>
     </div>
-  </Card>
+  </div>
 </template>
 
 <script>
@@ -59,7 +59,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      if (props.duration) {
+      if (props && props.duration) {
         setTimeout(dismiss, props.duration)
       }
     })
