@@ -10,18 +10,24 @@
       :stable-borrow-enabled="stableBorrowEnabled"
     />
 
-    <SidebarSectionValueWithIcon class="mt-6" label="Borrowed" center>
-      <template #icon
-        ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
-      /></template>
-      <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
-    </SidebarSectionValueWithIcon>
+    <div class="mt-6 flex justify-around items-center  w-full">
+      <SidebarSectionValueWithIcon class="" label="Borrowed" center>
+        <template #icon
+          ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
+        /></template>
+        <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
+      </SidebarSectionValueWithIcon>
 
-    <SidebarSectionValueWithIcon class="" label="Token Balance" center>
-      <template #value
-        >{{ formatNumber(tokenMaxBalance) }} {{ symbol }}</template
-      >
-    </SidebarSectionValueWithIcon>
+      <SidebarSectionValueWithIcon class="" label="Token Balance" center>
+        <template #icon
+          ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
+        /></template>
+
+        <template #value
+          >{{ formatNumber(tokenMaxBalance) }} {{ symbol }}</template
+        >
+      </SidebarSectionValueWithIcon>
+    </div>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
