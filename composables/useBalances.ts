@@ -1,4 +1,9 @@
-import { nextTick, onMounted, reactive, watch } from "@nuxtjs/composition-api";
+import {
+  computed,
+  reactive,
+  onMounted,
+  useContext
+} from "@nuxtjs/composition-api";
 import BigNumber from "bignumber.js";
 import abis from "~/constant/abis";
 import addresses from "~/constant/addresses";
@@ -11,17 +16,33 @@ import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { mainnetWeb3, polygonWeb3 } from "~/utils/web3";
 import { useToken } from "./useToken";
+import { useBigNumber } from "./useBigNumber";
+import { useSorting } from "./useSorting";
 
 const balances = reactive({
   user: null,
   dsa: null
 });
 
+const prices = reactive({
+  mainnet: {},
+  polygon: {}
+});
+
 export function useBalances() {
-  const { account, web3, networkName } = useWeb3();
+  const { $axios } = useContext();
+  const { times, plus, ensureValue } = useBigNumber();
+  const { account, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { getTokenByKey } = useToken();
+  const { by } = useSorting();
 
+  onMounted(async () => {
+    prices.mainnet = await $axios.$get("https://api.instadapp.io/defi/prices");
+    prices.polygon = await $axios.$get(
+      "https://api.instadapp.io/defi/polygon/prices"
+    );
+  });
   const fetchBalances = async (refresh = false) => {
     if (!balances.user || refresh) {
       balances.user = {
@@ -46,27 +67,57 @@ export function useBalances() {
     }
   };
 
-  const getBalanceByKey = (tokenKey, network = null) => {
+  const getBalanceByKey = (tokenKey, network = null, type = "dsa") => {
+    return getBalanceByAddress(getTokenByKey(tokenKey)?.address, network, type);
+  };
+
+  const getBalanceByAddress = (address, network = null, type = "dsa") => {
     return (
-      balances.dsa?.[network || networkName.value][
-        getTokenByKey(tokenKey)?.address
-      ]?.balance || "0"
+      balances[type]?.[network || networkName.value][address]?.balance || "0"
     );
   };
 
-  const getBalanceRawByKey = (tokenKey, network = null) => {
+  const getBalanceRawByKey = (tokenKey, network = null, type = "dsa") => {
     return (
-      balances.dsa?.[network || networkName.value][
+      balances[type]?.[network || networkName.value][
         getTokenByKey(tokenKey)?.address
       ]?.raw || "0"
     );
   };
-  
+
+  const netWorth = (address, type = "dsa") => {
+    const balance = getBalanceByAddress(address, networkName.value, type);
+    const price = ensureValue(prices[networkName.value][address]).toFixed();
+
+    return times(balance, price).toFixed();
+  };
+
+  const balanceTotal = computed(() =>
+    tokens[networkName.value].allTokens.reduce(
+      (totalNetWorth, token) =>
+        plus(totalNetWorth, netWorth(token.address)).toFixed(),
+      "0"
+    )
+  );
+
+  const getAssets = (type = "dsa") => {
+    return tokens[networkName.value].allTokens
+      .map(token => ({
+        ...token,
+        balance: getBalanceByAddress(token.address, networkName.value, type),
+        netWorth: netWorth(token.address, type)
+      }))
+      .sort(by("-netWorth"));
+  };
+
   return {
     balances,
     fetchBalances,
     getBalanceByKey,
-    getBalanceRawByKey
+    getBalanceRawByKey,
+    balanceTotal,
+    prices,
+    getAssets
   };
 }
 

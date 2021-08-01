@@ -18,9 +18,12 @@ import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAave
 //@ts-ignore
 import SidebarAaveV2Payback from '~/components/sidebar/context/aaveV2/SidebarAaveV2Payback.vue'
 
+//@ts-ignore
+import SidebarOverview from '~/components/sidebar/context/overview/SidebarOverview.vue'
+
 const sidebars = {
+  "#overview" :  {component: SidebarOverview, back : false, close : true },
   "/polygon/aave-v2": { component: null },
-  "/polygon/aave-v2#overview": { component: null },
   "/polygon/aave-v2#supply": { component: SidebarAaveV2Supply },
   "/polygon/aave-v2#borrow": { component: SidebarAaveV2Borrow },
   "/polygon/aave-v2#payback": { component: SidebarAaveV2Payback },
@@ -32,7 +35,6 @@ const sidebars = {
 
 
   "/mainnet/aave-v2": { component: null },
-  "/mainnet/aave-v2#overview": { component: null },
   "/mainnet/aave-v2#supply": { component: SidebarAaveV2Supply },
   "/mainnet/aave-v2#borrow": { component: SidebarAaveV2Borrow },
   "/mainnet/aave-v2#payback": { component: SidebarAaveV2Payback },
@@ -68,6 +70,8 @@ export function init() {
         return
       }
 
+      console.log(hash, sidebars[route.path + hash], sidebars[hash]);
+      
       sidebar.value = sidebars[route.path + hash] || sidebars[hash];
         
       if (!sidebar.value) {
@@ -113,11 +117,16 @@ export function useSidebar() {
     return !!component.value;
   });
 
+  const showSidebarBalances = () => {
+    router.push({ hash: 'overview' });
+  }
+
   return {
     close,
     back,
     component,
     props,
-    isOpen
+    isOpen,
+    showSidebarBalances
   };
 }

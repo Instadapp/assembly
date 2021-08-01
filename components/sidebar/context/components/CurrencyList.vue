@@ -1,6 +1,6 @@
 <template>
   <div v-if="filteredAssets.length" class="pb-6">
-    <CardCurrency
+    <card-currency
       v-for="token in filteredAssets"
       :key="token.address"
       class="mt-2 sm:mt-4 first:mt-0"
@@ -20,19 +20,21 @@
 
 <script>
 import { computed, defineComponent, watchEffect } from '@nuxtjs/composition-api'
+import { useBalances } from '~/composables/useBalances'
 import { useSearchFilter } from '~/composables/useSearchFilter'
-import { useToken } from '~/composables/useToken'
+import CardCurrency from '../overview/CardCurrency.vue'
 
 export default defineComponent({
+  components: { CardCurrency },
   props: {
     search: { type: String, default: null },
     type: { type: String },
     actionLabel: { type: String, required: true },
   },
   setup(props) {
-    const { assets } = useToken()
+    const { getAssets } = useBalances()
 
-    const typedAssets = computed(() => assets.value(props.type))
+    const typedAssets = computed(() => getAssets(props.type))
 
     const { filtered: filteredAssets, search } = useSearchFilter(typedAssets, 'name', 'symbol')
     watchEffect(() => (search.value = props.search))

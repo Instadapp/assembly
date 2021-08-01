@@ -9,6 +9,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/composition-api": "^0.24.7",
     "@portis/web3": "^4.0.5",
     "@tailwindcss/forms": "^0.3.3",
