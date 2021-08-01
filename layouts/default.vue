@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen overflow-hidden font-sans antialiased text-primary-black"
+    class="min-h-screen relative overflow-hidden font-sans antialiased text-primary-black"
   >
     <Navbar />
     <div class="max-w-6xl mx-auto py-12 overflow-x-hidden ">
@@ -11,7 +11,7 @@
 
     <Backdrop :show="isBackdropShown" @click="closeBackdrop" />
 
-    <SidebarContext class="grid-sidebar-context" />
+    <SidebarContext />
 
     <Modal />
 
@@ -95,15 +95,6 @@ export default defineComponent({
 
   @screen sm {
     --height-navbar: 82px;
-  }
-}
-
-.grid-sidebar-context {
-  grid-row-start: navbar;
-  grid-row-end: main;
-
-  @screen xl {
-    grid-area: sidebar-context;
   }
 }
 </style>
