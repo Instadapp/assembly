@@ -18,7 +18,7 @@
       <h2 class="text-primary-gray text-lg font-semibold">Overview</h2>
 
       <div
-        class="mt-6 grid w-full grid-cols-1 gap-4 sm:grid-cols-3 xl:gap-[18px]"
+        class="px-1 mt-6 grid w-full grid-cols-1 gap-4 sm:grid-cols-3 xl:gap-[18px]"
       >
         <div class="shadow rounded-lg py-8 px-6 flex">
           <div class="flex-1">
@@ -86,6 +86,7 @@
               {{ formatPercent(status) }} -
               {{ formatPercent(position.maxLiquidation) }}
             </h3>
+             <Badge class="w-18 xxl:w-23" :color="color">{{ text }}</Badge>
             <p class="mt-4 text-primary-gray font-medium">D/C (%)</p>
           </div>
           <div class="flex items-center">
@@ -114,19 +115,19 @@
 
     <div class="mt-[60px]">
       <div
-        class="flex flex-col mt-6 sm:flex-row sm:items-center sm:justify-between xxl:mt-4"
+        class="w-full flex flex-col mt-6 sm:flex-row sm:items-center sm:justify-between xl:mt-4"
       >
         <h2 class="text-primary-gray text-lg font-semibold">Your Positions</h2>
 
-        <div class="w-full mt-4 sm:mt-0 sm:w-40">
+        <div class="mt-4 sm:mt-0 sm:mr-1">
           <SearchInput
             v-model.trim="search"
             dense
-            placeholder="Search position"
+            placeholder="Search positions"
           />
         </div>
       </div>
-      <div class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content">
+      <div class="mt-3 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content px-1">
         <div v-for="item in filteredPositions" :key="item.key">
           <CardAave
             :token-key="item.key"
@@ -153,12 +154,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@nuxtjs/composition-api";
+import { defineComponent, computed } from "@nuxtjs/composition-api";
 // @ts-ignore
 import BackIcon from "~/assets/icons/back.svg?inline";
 import { useAaveV2Position } from "~/composables/useAaveV2Position";
 import { useFormatting } from "~/composables/useFormatting";
 import { useSearchFilter } from "~/composables/useSearchFilter";
+import { useStatus } from '~/composables/useStatus'
+import { useBigNumber } from '~/composables/useBigNumber'
 
 export default defineComponent({
   components: {
@@ -170,8 +173,16 @@ export default defineComponent({
       displayPositions,
       totalSupply,
       totalBorrow,
-      status
+      status,
+      liquidation
     } = useAaveV2Position();
+
+ const { div } = useBigNumber()
+
+    const statusLiquidationRatio = computed(() => div(status.value, liquidation.value).toFixed())
+
+    const { color, text } = useStatus(statusLiquidationRatio)
+
     const { formatUsd, formatPercent } = useFormatting();
 
     const { filtered: filteredPositions, search } = useSearchFilter(
@@ -188,7 +199,9 @@ export default defineComponent({
       totalBorrow,
       status,
       formatUsd,
-      formatPercent
+      formatPercent,
+      color,
+      text
     };
   }
 });

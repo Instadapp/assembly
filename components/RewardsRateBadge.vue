@@ -1,10 +1,10 @@
 <template>
   <div
     v-tooltip="`Managing on ${protocolName} gives you rewards in ${tokenName}. The APY represents how much of the rewards you would earn during one year.`"
-    class="flex items-center px-1 py-1 border border-opacity-50 rounded-sm select-none border-grey-light"
+    class="flex items-center px-2 py-1 border rounded-[4px] select-none border-grey-dark border-opacity-[0.15]"
   >
     <IconCurrency :currency="currency" no-height class="w-3 h-3 mr-1" />
-    <div class="text-11">{{ computedRate }}</div>
+    <div class="text-sm font-semibold">{{ computedRate }}</div>
   </div>
 </template>
 

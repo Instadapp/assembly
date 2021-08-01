@@ -18,7 +18,7 @@ const textValues = [
   { minValue: 0, text: 'Safe' },
 ]
 
-export function useStatus(statusLiquidationRatioRef, statusRef, liquidationRef) {
+export function useStatus(statusLiquidationRatioRef, statusRef = null , liquidationRef = null) {
   const color = computed(() => {
     if (!isZero(statusRef) && !isZero(liquidationRef)) {
       if (gte(statusRef.value, '1')) return 'red-dark'

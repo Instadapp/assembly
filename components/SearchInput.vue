@@ -1,13 +1,12 @@
 <template>
-  <div class="relative flex items-center w-full">
+  <div class="relative flex items-center h-9 w-[200px]">
     <input
-      class="w-full pr-4 rounded-[6px] border border-grey-dark border-opacity-[0.15]"
+      class="w-full pl-3 pr-8 rounded-[6px] border border-grey-dark border-opacity-[0.15]"
       type="text"
       v-bind="$attrs"
-      :class="{ 'pl-9 py-1': dense, 'pl-12': !dense }"
       v-on="inputListeners"
     />
-    <SVGSearch class="absolute w-4 h-4 search-icon" :style="dense ? 'left:12px' : 'left:18px'" />
+    <SVGSearch class="absolute w-4 h-4 search-icon right-4" />
   </div>
 </template>
 
@@ -16,9 +15,6 @@ import { defineComponent, computed } from '@nuxtjs/composition-api'
 import SVGSearch from '@/assets/icons/search.svg?inline'
 
 export default defineComponent({
-  props: {
-    dense: { type: Boolean, default: false },
-  },
   inheritAttrs: false,
   components: {
     SVGSearch,
@@ -39,7 +35,7 @@ export default defineComponent({
 </script>
 <style scoped>
 .search-icon {
-  @apply text-grey-light;
+  @apply text-grey-pure;
   @apply transition;
   @apply duration-150;
 }

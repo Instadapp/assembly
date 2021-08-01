@@ -1,5 +1,8 @@
 <template>
-  <div class="flex-shrink-0 shadow bg-white relative flex flex-col flex-1 px-4 pt-4 pb-6 dark:bg-dark-500">
+  <div
+    class="flex-shrink-0 bg-white rounded-lg relative flex flex-col flex-1 px-4 pt-4 pb-6 dark:bg-dark-500"
+    style="box-shadow: -1px -3px 10px rgba(12, 25, 91, 0.03), 2px 4px 12px rgba(12, 25, 91, 0.05)"
+  >
     <div class="flex items-center h-14">
       <div class="flex mr-4 -space-x-3 overflow-hidden">
         <IconCurrency :currency="tokenKey" class="w-12 h-12" no-height />
@@ -55,8 +58,19 @@
       <Badge v-if="type === 'no'" color="grey">No Position</Badge>
       <Badge v-if="type === 'supply'" color="green">Supplied</Badge>
       <Badge v-if="type === 'borrow'" color="yellow">Borrowed</Badge>
-      <Badge v-tooltip="'Collateral Factor is the power to borrow against a particular token. Eg:- if collateral factor of ETH is 0.75 that means for every $100 of ETH you can borrow $75 worth of other assets.'" color="blue">C.F: {{ cf }}</Badge>
-      <Badge v-if="ll !== null" v-tooltip="'Liquidation Limit is the point where position is subject to liquidate. Eg:- if liquidation limit of ETH is 0.8 that means for every $100 of ETH if the debt crosses $80 position will get liquidate.'" color="blue"
+      <Badge
+        v-tooltip="
+          'Collateral Factor is the power to borrow against a particular token. Eg:- if collateral factor of ETH is 0.75 that means for every $100 of ETH you can borrow $75 worth of other assets.'
+        "
+        color="blue"
+        >C.F: {{ cf }}</Badge
+      >
+      <Badge
+        v-if="ll !== null"
+        v-tooltip="
+          'Liquidation Limit is the point where position is subject to liquidate. Eg:- if liquidation limit of ETH is 0.8 that means for every $100 of ETH if the debt crosses $80 position will get liquidate.'
+        "
+        color="blue"
         >L.L: {{ ll }}</Badge
       >
     </div>
@@ -65,7 +79,7 @@
 
     <div class="flex items-center justify-around mt-4">
       <div class="flex-col flex-1 text-center">
-        <div class="flex items-center mb-1 justify-evenly">
+        <div class="flex items-center mb-2 justify-evenly">
           <div
             class="font-medium leading-none text-navi-pure-light dark:text-light text-16"
           >
@@ -83,7 +97,7 @@
       </div>
       <Divider vertical class="h-6" />
       <div class="flex-col flex-1 text-center">
-        <div class="flex items-center mb-1 justify-evenly">
+        <div class="flex items-center mb-2 justify-evenly">
           <div
             class="font-medium leading-none text-navi-pure-light dark:text-light text-16"
           >
@@ -105,47 +119,56 @@
 
     <div
       v-if="type === 'no'"
-      class="flex items-center justify-around px-4 mt-6"
+      class="flex items-center justify-around mt-6"
     >
-      <Button
-        class="mr-4 position-button"
-        color="ocean-blue"
+      <button
+        class="mr-4 h-10 w-full bg-primary-blue-dark shadow text-white rounded-[4px] hover:bg-primary-blue-hover"
         @click="showSupply"
-        >Supply</Button
       >
-      <Button class="position-button" color="ocean-blue" @click="showBorrow"
-        >Borrow</Button
+        Supply
+      </button>
+      <button
+        class="h-10 w-full text-primary-blue-dark shadow border border-primary-blue-dark hover:border-primary-blue-hover rounded-[4px] hover:text-primary-blue-hover"
+        @click="showBorrow"
       >
+        Borrow
+      </button>
     </div>
 
     <div
       v-if="type === 'supply'"
-      class="flex items-center justify-around px-4 mt-6"
+      class="flex items-center justify-around mt-6"
     >
-      <Button
-        class="mr-4 position-button"
-        color="ocean-blue"
+      <button
+        class="mr-4 h-10 w-full bg-primary-blue-dark shadow text-white rounded-[4px] hover:bg-primary-blue-hover"
         @click="showSupply"
-        >Supply</Button
       >
-      <Button class="position-button" color="ocean-blue" @click="showWithdraw"
-        >Withdraw</Button
+        Supply
+      </button>
+      <button
+        class="h-10 w-full text-primary-blue-dark shadow border border-primary-blue-dark hover:border-primary-blue-hover rounded-[4px] hover:text-primary-blue-hover"
+        @click="showWithdraw"
       >
+        Withdraw
+      </button>
     </div>
 
     <div
       v-if="type === 'borrow'"
-      class="flex items-center justify-around px-4 mt-6"
+      class="flex items-center justify-around mt-6"
     >
-      <Button
-        class="mr-4 position-button"
-        color="ocean-blue"
+      <button
+        class="mr-4 h-10 w-full bg-primary-blue-dark shadow text-white rounded-[4px] hover:bg-primary-blue-hover"
         @click="showBorrow"
-        >Borrow</Button
       >
-      <Button class="position-button" color="ocean-blue" @click="showPayback"
-        >Payback</Button
+        Borrow
+      </button>
+      <button
+        class="h-10 w-full text-primary-blue-dark shadow border border-primary-blue-dark hover:border-primary-blue-hover rounded-[4px] hover:text-primary-blue-hover"
+        @click="showPayback"
       >
+        Payback
+      </button>
     </div>
   </div>
 </template>

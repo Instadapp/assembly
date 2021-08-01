@@ -18,7 +18,7 @@
       <h2 class="text-primary-gray text-lg font-semibold">Overview</h2>
 
       <div
-        class="mt-6 grid w-full grid-cols-1 gap-4 sm:grid-cols-3 xl:gap-[18px]"
+        class="px-1 mt-6 grid w-full grid-cols-1 gap-4 sm:grid-cols-3 xl:gap-[18px]"
       >
         <div class="shadow rounded-lg py-8 px-6 flex">
           <div class="flex-1">
@@ -114,20 +114,20 @@
 
     <div class="mt-[60px]">
       <div
-        class="flex flex-col mt-6 sm:flex-row sm:items-center sm:justify-between xxl:mt-4"
+        class="w-full flex flex-col mt-6 sm:flex-row sm:items-center sm:justify-between xl:mt-4"
       >
         <h2 class="text-primary-gray text-lg font-semibold">Your Positions</h2>
 
-        <div class="w-full mt-4 sm:mt-0 sm:w-40">
+        <div class="mt-4 sm:mt-0 sm:mr-1">
           <SearchInput
             v-model.trim="search"
             dense
-            placeholder="Search position"
+            placeholder="Search positions"
           />
         </div>
       </div>
       <div
-        class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content"
+        class="mt-3 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content px-1"
       >
         <div v-for="item in filteredPositions" :key="item.key">
           <CardAave
