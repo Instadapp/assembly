@@ -23,8 +23,6 @@ export function useBalances() {
   const { getTokenByKey } = useToken();
 
   const fetchBalances = async (refresh = false) => {
-    await nextTick();
-
     if (!balances.user || refresh) {
       balances.user = {
         mainnet: await getBalances(account.value, Network.Mainnet, mainnetWeb3),

@@ -101,11 +101,16 @@ export function useAaveV2Position(
     return newPos;
   };
 
+  const refreshPosition = async () => {
+    position.value = await fetchPosition();
+  };
+
+
   watch(
     web3,
     async val => {
       if (val) {
-        position.value = await fetchPosition();
+        refreshPosition();
       }
     },
     { immediate: true }
@@ -115,7 +120,7 @@ export function useAaveV2Position(
     activeAccount,
     async val => {
       if (val) {
-        position.value = await fetchPosition();
+        refreshPosition();
       }
     },
     { immediate: true }
@@ -325,6 +330,7 @@ export function useAaveV2Position(
     displayPositions,
     position,
     fetchPosition,
+    refreshPosition,
     totalSupply,
     totalBorrow,
     status,
