@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col items-center flex-shrink-0 w-full px-8 mt-6 mb-2 text-center sm:mb-10">
-    <h3 class="flex items-center leading-none">Balance <Info text="This is your DSA balance and doesn't reflect your wallet balance (like Metamask)" class="ml-1" /></h3>
-    <div class="mt-4 font-semibold text-32">{{ formatUsd(balanceTotal) }}</div>
+  <div class="flex flex-col items-center text-primary-black flex-shrink-0 w-full px-8 mb-2 text-center sm:mb-10">
+    <h3 class="flex items-center font-medium leading-none">Balance</h3>
+    <div class="mt-2 font-semibold text-32">{{ formatUsd(balanceTotal) }}</div>
   </div>
 </template>
 

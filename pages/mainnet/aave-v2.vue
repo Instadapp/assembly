@@ -113,6 +113,7 @@
           <SearchInput
             v-model.trim="search"
             dense
+            class="w-[200px]"
             placeholder="Search positions"
           />
         </div>

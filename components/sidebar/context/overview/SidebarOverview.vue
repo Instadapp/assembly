@@ -3,15 +3,17 @@
     <SidebarContextHeader :showBackButton="false"></SidebarContextHeader>
 
     <div class="flex-grow overflow-y-scroll scrollbar-hover">
-      <div class="h-full mx-auto" style="max-width: 296px">
+      <div class="h-full mx-auto">
         <div class="flex flex-col h-full py-2 sm:py-4">
           <SidebarOverviewBalance />
-          <div class="flex flex-col flex-grow mt-2 sm:mt-4">
+          <div
+            class="bg-[#C5CCE1] bg-opacity-[0.15] py-10 px-8 flex flex-col flex-grow mt-2 sm:mt-4"
+          >
             <div class="flex flex-shrink-0">
               <search-input
                 v-model.trim="search"
                 placeholder="Search Currency"
-                class="mr-2"
+                class="w-full mr-2"
               />
               <Menu>
                 <template v-slot:activator="{ on }">
@@ -32,7 +34,7 @@
               </Menu>
             </div>
 
-            <div class="flex flex-col flex-grow mt-2 sm:mt-4">
+            <div class="flex flex-col flex-grow mt-2 sm:mt-4 overflow-y-scroll">
               <currency-list :search="search" type="dsa" action-label="Trade">
                 <template v-slot:no-items>
                   <div class="flex flex-col">

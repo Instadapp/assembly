@@ -9,7 +9,7 @@
       :net-worth="token.netWorth"
       :symbol="token.symbol"
       :action-label="actionLabel"
-      @action="$emit('action', token.key)"
+      @deposit="$router.push({ hash: 'deposit-overview?tokenKey=' + token.key })"
     />
   </div>
   <div v-else>

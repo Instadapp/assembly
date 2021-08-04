@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex items-center h-9 w-[200px]">
+  <div class="relative flex items-center h-9">
     <input
       class="w-full pl-3 pr-8 rounded-[6px] border border-grey-dark border-opacity-[0.15]"
       type="text"

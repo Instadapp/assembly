@@ -20,9 +20,12 @@ import SidebarAaveV2Payback from '~/components/sidebar/context/aaveV2/SidebarAav
 
 //@ts-ignore
 import SidebarOverview from '~/components/sidebar/context/overview/SidebarOverview.vue'
+//@ts-ignore
+import SidebarDepositOverview from '~/components/sidebar/context/SidebarDepositOverview.vue'
 
 const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
+  "#deposit-overview": {component: SidebarDepositOverview },
   "/polygon/aave-v2": { component: null },
   "/polygon/aave-v2#supply": { component: SidebarAaveV2Supply },
   "/polygon/aave-v2#borrow": { component: SidebarAaveV2Borrow },
