@@ -17,15 +17,17 @@ import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAa
 import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAaveV2Borrow.vue'
 //@ts-ignore
 import SidebarAaveV2Payback from '~/components/sidebar/context/aaveV2/SidebarAaveV2Payback.vue'
-
 //@ts-ignore
 import SidebarOverview from '~/components/sidebar/context/overview/SidebarOverview.vue'
 //@ts-ignore
 import SidebarDepositOverview from '~/components/sidebar/context/SidebarDepositOverview.vue'
+//@ts-ignore
+import SidebarWithdraw from '~/components/sidebar/context/SidebarWithdraw.vue'
 
 const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
-  "#deposit-overview": {component: SidebarDepositOverview },
+  "#deposit-overview": {component: SidebarDepositOverview, back: { hash: 'overview' }  },
+  '#withdraw-token': { component: SidebarWithdraw, back: { hash: 'overview' } },
   "/polygon/aave-v2": { component: null },
   "/polygon/aave-v2#supply": { component: SidebarAaveV2Supply },
   "/polygon/aave-v2#borrow": { component: SidebarAaveV2Borrow },

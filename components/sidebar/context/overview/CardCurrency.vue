@@ -24,7 +24,7 @@
       </button>
       <button
         class="h-[26px] w-24 text-xs flex-shrink-0  text-primary-blue-dark shadow border border-primary-blue-dark border-opacity-38 hover:border-primary-blue-hover rounded-[4px] hover:text-primary-blue-hover"
-        @click="$emit('action')"
+        @click="$emit('withdraw')"
       >
         Withdraw
       </button>

@@ -10,6 +10,7 @@
       :symbol="token.symbol"
       :action-label="actionLabel"
       @deposit="$router.push({ hash: 'deposit-overview?tokenKey=' + token.key })"
+      @withdraw="$router.push({ hash: 'withdraw-token?tokenKey=' + token.key })"
     />
   </div>
   <div v-else>
