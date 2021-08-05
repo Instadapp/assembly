@@ -122,7 +122,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-
+const { showPendingTransaction } = useNotification()
     const { status, displayPositions, liquidation, maxLiquidation, liquidationPrice, liquidationMaxPrice, annualPercentageRateTypes } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
@@ -214,7 +214,7 @@ export default defineComponent({
         from: account.value,
       })
 
-      fetchBalances(true)
+      showPendingTransaction(txHash)
 
       pending.value = false
 

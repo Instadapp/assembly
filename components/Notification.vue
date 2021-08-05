@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full pl-4 overflow-hidden border border-opacity-75 shadow-lg dark:bg-dark-300 border-grey-light">
+  <div class="flex w-full pl-4 overflow-hidden bg-white border border-opacity-75 shadow-lg dark:bg-dark-300 border-grey-light">
     <div class="flex items-center w-full py-4">
       <IconNotification :icon="icon" />
 
@@ -32,7 +32,7 @@
         class="h-full px-3 py-3 focus:outline-none text-grey-pure hover:text-brand dark:hover:text-light"
         @click="dismiss"
       >
-        <Icon name="x" class="w-full" />
+        <CloseIcon class="w-full" />
       </button>
     </div>
   </div>
@@ -41,10 +41,12 @@
 <script>
 import { defineComponent, onMounted } from '@nuxtjs/composition-api'
 import SVGExternalLink from '@/assets/icons/external-link.svg?inline'
+import CloseIcon from '@/assets/img/icons/heroicons/solid/x.svg?inline'
 
 export default defineComponent({
   components: {
     SVGExternalLink,
+    CloseIcon
   },
   props: {
     title: { type: String, deafult: '' },

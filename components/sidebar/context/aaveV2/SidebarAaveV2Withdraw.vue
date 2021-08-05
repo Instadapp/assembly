@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
 import { useAaveV2Position } from '~/composables/useAaveV2Position'
 import { useBalances } from '~/composables/useBalances'
@@ -102,6 +102,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
+    const { showPendingTransaction } = useNotification()
 
     const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
       overridePosition: (position) => {
@@ -113,7 +114,6 @@ export default defineComponent({
         }
       },
     })
-
 
     const availableLiquidity = computed(
       () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.availableLiquidity || '0'
@@ -180,7 +180,7 @@ export default defineComponent({
         from: account.value,
       })
 
-      fetchBalances(true)
+      showPendingTransaction(txHash)
 
       pending.value = false
 

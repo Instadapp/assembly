@@ -70,6 +70,7 @@ import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
 import { useAaveV2Position } from '~/composables/useAaveV2Position'
 import { useBalances } from '~/composables/useBalances'
+import { useNotification } from '~/composables/useNotification'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
 import { useValidators } from '~/composables/useValidators'
@@ -99,7 +100,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-
+  const { showPendingTransaction } = useNotification()
     const { status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
@@ -161,7 +162,7 @@ export default defineComponent({
         from: account.value,
       })
 
-      fetchBalances(true)
+      showPendingTransaction(txHash)
 
       pending.value = false
 

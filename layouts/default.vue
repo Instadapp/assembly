@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { defineComponent, nextTick, useContext, useRoute, watch } from "@nuxtjs/composition-api";
+import { defineComponent, nextTick, onErrorCaptured, useContext, useRoute, watch } from "@nuxtjs/composition-api";
 import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
 import CompoundIcon from '~/assets/icons/compound.svg?inline'
 import AaveIcon from '~/assets/icons/aave.svg?inline'
@@ -103,6 +103,11 @@ export default defineComponent({
         checkForNetworkMismatch()
       }
     }, { immediate: true })
+
+    onErrorCaptured(() => {
+      
+      return false
+    })
 
     return {
       active,

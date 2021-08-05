@@ -13,25 +13,8 @@
               <search-input
                 v-model.trim="search"
                 placeholder="Search Currency"
-                class="w-full mr-2"
+                class="w-full"
               />
-              <Menu>
-                <template v-slot:activator="{ on }">
-                  <menu-button size="38" v-on="on" />
-                </template>
-                <template>
-                  <list :items="menuActions">
-                    <template v-slot:default="{ item }">
-                      <menu-list-item
-                        :item="item.text"
-                        :icon="item.icon"
-                        :disabled="item.disabled"
-                        @click="item.onClick"
-                      ></menu-list-item>
-                    </template>
-                  </list>
-                </template>
-              </Menu>
             </div>
 
             <div class="flex flex-col flex-grow mt-2 sm:mt-4 overflow-y-scroll">
@@ -72,21 +55,9 @@ export default defineComponent({
   components: { SVGAdd, CurrencyList, List, Menu, MenuButton, MenuListItem },
   setup() {
 
-    const menuActions = computed(() => [
-      {
-        text: 'Add custom token',
-        onClick: startAddingCustomToken,
-        icon: SVGAdd,
-        disabled: false,
-      },
-    ])
-
-    function startAddingCustomToken() {
-    }
-
     const search = ref(null)
 
-    return { search, menuActions }
+    return { search }
   },
 })
 </script>

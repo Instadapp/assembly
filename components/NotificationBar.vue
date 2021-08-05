@@ -14,11 +14,7 @@
       <Notification
         v-for="item in queue"
         :key="item.key"
-        :title="item.title"
-        :body="item.body"
-        :href="item.href"
-        :icon="item.icon"
-        :duration="item.duration"
+        v-bind="item"
         class="mr-2"
         @dismiss="close(item.key)"
       />
@@ -30,16 +26,20 @@
       style="top: 0px; font-size: 13px"
       @click="closeAll"
     >
-      <Icon name="x" class="w-4 h-4 mr-1" />Clear all
+      <CloseIcon class="w-4 h-4 mr-1" />Clear all
     </button>
   </div>
 </template>
 
 <script>
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, onErrorCaptured } from '@nuxtjs/composition-api'
 import { useNotification } from '~/composables/useNotification'
+import CloseIcon from '@/assets/img/icons/heroicons/solid/x.svg?inline'
 
 export default defineComponent({
+  components :{
+    CloseIcon
+  },
   setup() {
     const { queue, close, closeAll } = useNotification()
 

@@ -106,11 +106,10 @@ export default defineComponent({
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
-    const { getBalanceByKey, fetchBalances } = useBalances()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-
+    const { showPendingTransaction } = useNotification()
     const { status, displayPositions, liquidation, maxLiquidation, liquidationPrice, liquidationMaxPrice, annualPercentageRateTypes } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
@@ -195,7 +194,7 @@ export default defineComponent({
         from: account.value,
       })
 
-      fetchBalances(true)
+      showPendingTransaction(txHash)
 
       pending.value = false
 

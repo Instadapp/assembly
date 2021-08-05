@@ -73,8 +73,6 @@ export function init() {
         return
       }
 
-      console.log(hash, sidebars[route.path + hash], sidebars[hash]);
-      
       sidebar.value = sidebars[route.path + hash] || sidebars[hash];
         
       if (!sidebar.value) {
