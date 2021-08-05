@@ -7,7 +7,7 @@ export function useValidators() {
 
   function validateAmount(amountParsed, balance = null, options = null) {
     const mergedOptions = Object.assign(
-      { msg: "Your amount exceeds your balance." },
+      { msg: "Your amount exceeds your maximum limit." },
       options
     );
 
