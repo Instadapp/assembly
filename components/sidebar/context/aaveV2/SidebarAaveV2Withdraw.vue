@@ -6,7 +6,7 @@
       <template #icon
         ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
       /></template>
-      <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
+      <template #value>{{ formatNumber(originalBalance) }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
@@ -98,15 +98,16 @@ export default defineComponent({
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
-    const { fetchBalances } = useBalances()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
     const { showPendingTransaction } = useNotification()
-
+    const originalBalance = ref('0')
     const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
+
+        originalBalance.value = position.supply
 
         return {
           ...position,
@@ -149,7 +150,7 @@ export default defineComponent({
         : null
 
       return {
-        amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
+        amount: { message: validateAmount(amountParsed.value, originalBalance.value), show: hasAmountValue },
         liquidation: { message: liqValid, show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
         liquidity: {
@@ -196,6 +197,7 @@ export default defineComponent({
       rootTokenKey,
       token,
       symbol,
+      originalBalance,
       balance,
       formatNumber,
       formatUsdMax,
