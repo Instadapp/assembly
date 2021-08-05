@@ -59,9 +59,10 @@
 
         <div class="text-primary-gray mt-9">
           <h3 class="font-bold">Important</h3>
-          <p class="text-xs font-medium mt-4">
-            ! Send <span class="uppercase">{{ tokenKey }}</span> or ERC20 tokens to this address on <span class="capitalize">{{ activeNetworkId }}</span> Mainnet only.
-          </p>
+          <div class="text-xs font-medium mt-4 flex items-start">
+              <SVGInfo class="mr-2" /> 
+              <p>Send <span class="uppercase">{{ tokenKey }}</span> or ERC20 tokens to this address on <span class="capitalize">{{ activeNetworkId }}</span> only.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -76,9 +77,9 @@ import { useCopiedToClipboardUx } from '~/composables/useCopiedToClipboardUx'
 import Icon from '~/components/Icon.vue'
 import Button from '~/components/Button.vue'
 import { useNetwork } from '~/composables/useNetwork'
-
+import SVGInfo from '@/assets/icons/info.svg?inline'
 export default defineComponent({
-  components: { Icon, Button },
+  components: { SVGInfo, Icon, Button },
   props: {
     tokenKey: {}
   },

@@ -16,6 +16,7 @@
         </h3>
 
         <Input
+          readonly
           v-model="accountAddress"
           placeholder="Paste account address"
           :error="errors.accountAddress.message"
