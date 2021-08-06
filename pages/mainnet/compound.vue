@@ -11,7 +11,7 @@
     </div>
 
     <div class="mt-10">
-      <h1 class="text-primary-black text-2xl font-semibold">Aave v2</h1>
+      <h1 class="text-primary-black text-2xl font-semibold">Compound</h1>
     </div>
 
     <div class="mt-10" v-if="position">
@@ -122,22 +122,20 @@
         class="mt-3 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content px-1"
       >
         <div v-for="item in filteredPositions" :key="item.key">
-          <card-aave
+          <card-compound
             :token-key="item.key"
+            :token-id="item.tokenId"
             :supply="item.supply"
             :supply-usd="item.supplyUsd"
-            :supply-rate="item.supplyRate"
+            :supply-rate="item.supplyYield"
             :borrow="item.borrow"
             :borrow-usd="item.borrowUsd"
-            :borrow-rate="item.borrowRate"
+            :borrow-rate="item.borrowYield"
             :type="item.type"
+            :cf="item.cf"
+            :borrow-enabled="item.borrowEnabled"
             :supply-reward-rate="item.supplyRewardRate"
             :borrow-reward-rate="item.borrowRewardRate"
-            reward-token-name="MATIC"
-            reward-currency="matic"
-            :cf="item.cf"
-            :ll="item.ll"
-            :borrow-enabled="item.borrowEnabled"
             :price-in-usd="item.priceInUsd"
           />
         </div>
@@ -150,17 +148,17 @@
 import { defineComponent, computed } from "@nuxtjs/composition-api";
 // @ts-ignore
 import BackIcon from "~/assets/icons/back.svg?inline";
-import { useAaveV2Position } from "~/composables/useAaveV2Position";
+import { useCompoundPosition } from "~/composables/useCompoundPosition";
 import { useFormatting } from "~/composables/useFormatting";
 import { useSearchFilter } from "~/composables/useSearchFilter";
 import { useStatus } from "~/composables/useStatus";
 import { useBigNumber } from "~/composables/useBigNumber";
-import CardAave from "~/components/protocols/CardAave.vue";
+import CardCompound from "~/components/protocols/CardCompound.vue";
 
 export default defineComponent({
   components: {
     BackIcon,
-    CardAave
+    CardCompound
   },
   setup() {
     const {
@@ -170,7 +168,7 @@ export default defineComponent({
       totalBorrow,
       status,
       liquidation
-    } = useAaveV2Position();
+    } = useCompoundPosition();
 
     const { div } = useBigNumber();
 

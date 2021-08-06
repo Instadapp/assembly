@@ -44,6 +44,20 @@ const appsPerNetwork = {
       name: "Aave v2",
       url: "/mainnet/aave-v2",
       description: "Lend and borrow straight from your Gnosis Safe"
+    },
+    {
+      id: "compound",
+      icon: AaveIcon,
+      name: "Compound",
+      url: "/mainnet/compound",
+      description: "Lend and borrow straight from your Gnosis Safe"
+    },
+    {
+      id: "maker",
+      icon: AaveIcon,
+      name: "Maker",
+      url: "/mainnet/maker",
+      description: "Lend and borrow straight from your Gnosis Safe"
     }
   ],
   polygon: [
@@ -53,7 +67,7 @@ const appsPerNetwork = {
       name: "Aave v2",
       url: "/polygon/aave-v2",
       description: "Lend and borrow straight from your Gnosis Safe"
-    },
+    }
   ]
 };
 

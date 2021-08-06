@@ -122,7 +122,7 @@
         class="mt-3 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content px-1"
       >
         <div v-for="item in filteredPositions" :key="item.key">
-          <CardAave
+          <card-aave
             :token-key="item.key"
             :supply="item.supply"
             :supply-usd="item.supplyUsd"
@@ -155,10 +155,12 @@ import { useFormatting } from "~/composables/useFormatting";
 import { useSearchFilter } from "~/composables/useSearchFilter";
 import { useStatus } from "~/composables/useStatus";
 import { useBigNumber } from "~/composables/useBigNumber";
+import CardAave from "~/components/protocols/CardAave.vue";
 
 export default defineComponent({
   components: {
-    BackIcon
+    BackIcon,
+    CardAave
   },
   setup() {
     const {
