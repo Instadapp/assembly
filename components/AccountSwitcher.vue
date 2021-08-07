@@ -104,6 +104,10 @@
       </ul>
     </div>
   </div>
+
+  <button class="bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded-[6px] h-9 flex items-center justify-center w-40" @click="createAccount" v-else>
+    Create Account
+  </button>
 </template>
 
 <script>
