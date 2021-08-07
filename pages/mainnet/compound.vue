@@ -146,7 +146,6 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "@nuxtjs/composition-api";
-// @ts-ignore
 import BackIcon from "~/assets/icons/back.svg?inline";
 import { useCompoundPosition } from "~/composables/useCompoundPosition";
 import { useFormatting } from "~/composables/useFormatting";

@@ -19,12 +19,12 @@
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
-        Amount to supply
+        Amount to borrow
       </h3>
 
       <input-numeric
         v-model="amount"
-        placeholder="Amount to supply"
+        placeholder="Amount to borrow"
         :error="errors.amount.message"
       >
         <template v-if="!isMaxAmount" #suffix>

@@ -9,20 +9,20 @@ import {
 
 import { useDSA } from "./useDSA";
 import { useWeb3 } from "./useWeb3";
-//@ts-ignore
 import SidebarAaveV2Supply from "~/components/sidebar/context/aaveV2/SidebarAaveV2Supply.vue";
-//@ts-ignore
 import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAaveV2Withdraw.vue'
-//@ts-ignore
 import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAaveV2Borrow.vue'
-//@ts-ignore
 import SidebarAaveV2Payback from '~/components/sidebar/context/aaveV2/SidebarAaveV2Payback.vue'
-//@ts-ignore
+
 import SidebarOverview from '~/components/sidebar/context/overview/SidebarOverview.vue'
-//@ts-ignore
 import SidebarDepositOverview from '~/components/sidebar/context/SidebarDepositOverview.vue'
-//@ts-ignore
 import SidebarWithdraw from '~/components/sidebar/context/SidebarWithdraw.vue'
+
+import SidebarCompoundWithdraw from '~/components/sidebar/context/compound/SidebarCompoundWithdraw.vue'
+import SidebarCompoundSupply from '~/components/sidebar/context/compound/SidebarCompoundSupply.vue'
+import SidebarCompoundBorrow from '~/components/sidebar/context/compound/SidebarCompoundBorrow.vue'
+import SidebarCompoundPayback from '~/components/sidebar/context/compound/SidebarCompoundBorrow.vue'
+
 
 const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
@@ -33,10 +33,6 @@ const sidebars = {
   "/polygon/aave-v2#borrow": { component: SidebarAaveV2Borrow },
   "/polygon/aave-v2#payback": { component: SidebarAaveV2Payback },
   "/polygon/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
-  "/polygon/aave-v2#withdraw-token": {
-    component: null,
-    back: { hash: "withdraw-overview" }
-  },
 
 
   "/mainnet/aave-v2": { component: null },
@@ -44,10 +40,13 @@ const sidebars = {
   "/mainnet/aave-v2#borrow": { component: SidebarAaveV2Borrow },
   "/mainnet/aave-v2#payback": { component: SidebarAaveV2Payback },
   "/mainnet/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
-  "/mainnet/aave-v2#withdraw-token": {
-    component: null,
-    back: { hash: "withdraw-overview" }
-  }
+
+
+  "/mainnet/compound": { component: null },
+  "/mainnet/compound#withdraw": { component: SidebarCompoundWithdraw },
+  "/mainnet/compound#supply": { component: SidebarCompoundSupply },
+  "/mainnet/compound#borrow": { component: SidebarCompoundBorrow },
+  "/mainnet/compound#payback": { component: SidebarCompoundPayback },
 };
 
 const sidebar = ref(null);

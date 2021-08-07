@@ -1,22 +1,34 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Withdraw {{ symbol }}</template>
+    <template #title>Payback {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon label="Token Balance" center>
-      <template #icon
-        ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
-      /></template>
-      <template #value>{{ formatNumber(originalBalance) }} {{ symbol }}</template>
-    </SidebarSectionValueWithIcon>
+    <div class="mt-6 flex justify-around items-center  w-full">
+      <SidebarSectionValueWithIcon class="" label="Borrowed" center>
+        <template #icon
+          ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
+        /></template>
+        <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
+      </SidebarSectionValueWithIcon>
+
+      <SidebarSectionValueWithIcon class="" label="Token Balance" center>
+        <template #icon
+          ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
+        /></template>
+
+        <template #value
+          >{{ formatNumber(tokenMaxBalance) }} {{ symbol }}</template
+        >
+      </SidebarSectionValueWithIcon>
+    </div>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
-        Amount to withdraw
+        Amount to supply
       </h3>
 
       <input-numeric
         v-model="amount"
-        placeholder="Amount to withdraw"
+        placeholder="Amount to supply"
         :error="errors.amount.message"
       >
         <template v-if="!isMaxAmount" #suffix>
@@ -38,7 +50,7 @@
 
       <SidebarSectionStatus
         class="mt-8"
-        :liquidation="maxLiquidation"
+        :liquidation="liquidation"
         :status="status"
       />
 
@@ -58,7 +70,7 @@
           :loading="pending"
           @click="cast"
         >
-          Withdraw
+          Payback
         </ButtonCTA>
       </div>
 
@@ -68,9 +80,8 @@
 </template>
 
 <script>
-import { computed, defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
-import { useAaveV2Position } from '~/composables/useAaveV2Position'
 import { useBalances } from '~/composables/useBalances'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
@@ -80,83 +91,77 @@ import { useToken } from '~/composables/useToken'
 import { useParsing } from '~/composables/useParsing'
 import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
 import { useWeb3 } from '~/composables/useWeb3'
-import atokens from '~/constant/atokens'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
+import { useCompoundPosition } from '~/composables/useCompoundPosition'
+import ctokens from '~/constant/ctokens'
+import tokenIdMapping from '~/constant/tokenIdMapping'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
   props: {
-    tokenKey: { type: String, required: true },
+    tokenId: { type: String, required: true },
   },
   setup(props) {
     const { close } = useSidebar()
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
+    const { getBalanceByKey, getBalanceRawByKey, fetchBalances } = useBalances()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
     const { showPendingTransaction } = useNotification()
-    const originalBalance = ref('0')
-    const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
-      overridePosition: (position) => {
-        if (rootTokenKey.value !== position.key) return position
+    const tokenId = computed(() => props.tokenId)
+    const tokenKey = computed(() => tokenIdMapping.idToToken[tokenId.value])
 
-        originalBalance.value = position.supply
+    const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
+
+
+    const { status, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+      overridePosition: (position) => {
+        if (tokenId.value !== position.cTokenId) return position
 
         return {
           ...position,
-          supply: max(minus(position.supply, amountParsed.value), '0').toFixed(),
+          borrow: max(minus(position.borrow, amountParsed.value), '0').toFixed(),
         }
       },
     })
 
-    const availableLiquidity = computed(
-      () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.availableLiquidity || '0'
-    )
-
-    const balance = computed(
-      () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.supply || '0'
-    )
-
-
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const rootTokenKey = computed(() => atokens[networkName.value].rootTokens.includes(props.tokenKey) ? props.tokenKey : 'eth')
+    const currentPosition = computed(() =>
+      displayPositions.value.find((position) => position.cTokenId === tokenId.value)
+    )
 
     const token = computed(() => getTokenByKey(rootTokenKey.value))
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
-    const address = computed(() => token.value?.address)
+    const balance = computed(() => {
+      return currentPosition.value?.borrow || '0'
+    })
 
-    const factor = computed(
-      () => displayPositions.value?.find((position) => rootTokenKey.value === position.key)?.factor
-    )
+    const tokenMaxBalance = computed(() => getBalanceByKey(rootTokenKey.value))
+    const tokenMaxBalanceRaw = computed(() => getBalanceRawByKey(rootTokenKey.value))
+
+    const address = computed(() => token.value?.address)
 
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
 
-    const { validateAmount, validateLiquidation, validateIsLoggedIn, validateLiquidity } = useValidators()
-
+    const { validateAmount, validateLiquidation, validateLiquidity, validateIsLoggedIn } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
-      const liqValid = gt(factor.value, '0')
-        ? validateLiquidation(status.value, maxLiquidation.value, isZero(stats.value.totalBorrowInEth))
-        : null
 
       return {
-        amount: { message: validateAmount(amountParsed.value, originalBalance.value), show: hasAmountValue },
-        liquidation: { message: liqValid, show: hasAmountValue },
+        amount: { message: validateAmount(amountParsed.value), show: hasAmountValue },
+        liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
-        liquidity: {
-          message: validateLiquidity(amountParsed.value, availableLiquidity.value, symbol.value, true),
-          show: hasAmountValue,
-        },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -166,14 +171,20 @@ export default defineComponent({
     async function cast() {
       pending.value = true
 
-      const amount = isMaxAmount.value ? dsa.value.maxValue : valInt(amountParsed.value, decimals.value)
+      const amount = isMaxAmount.value
+        ? gte(tokenMaxBalance.value, balance.value)
+          ? $dsa().maxValue
+          : tokenMaxBalanceRaw.value
+        : valInt(amountParsed.value, decimals.value)
 
       const spells = dsa.value.Spell()
 
+      const rateMode = rateType.value?.rateMode
+
       spells.add({
-        connector: 'aave_v2',
-        method: 'withdraw',
-        args: [address.value, amount, 0, 0],
+        connector: 'compound',
+        method: 'payback',
+        args: [tokenId.value, amount, 0, 0],
       })
 
       const txHash = await dsa.value.cast({
@@ -197,18 +208,17 @@ export default defineComponent({
       rootTokenKey,
       token,
       symbol,
-      originalBalance,
       balance,
       formatNumber,
       formatUsdMax,
       formatUsd,
       toggle,
       isMaxAmount,
-      maxLiquidation,
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,
-      isValid
+      isValid,
+      tokenMaxBalance,
     }
   },
 })

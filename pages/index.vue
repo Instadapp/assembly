@@ -33,8 +33,9 @@
 <script lang="ts">
 import { computed, defineComponent } from "@nuxtjs/composition-api";
 import { useNetwork } from "~/composables/useNetwork";
-//@ts-ignore
 import AaveIcon from "~/assets/icons/colored/aave.svg?inline";
+import CompoundIcon from "~/assets/icons/colored/compound.svg?inline";
+import MakerIcon from "~/assets/icons/colored/maker.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [
@@ -47,14 +48,14 @@ const appsPerNetwork = {
     },
     {
       id: "compound",
-      icon: AaveIcon,
+      icon: CompoundIcon,
       name: "Compound",
       url: "/mainnet/compound",
       description: "Lend and borrow straight from your Gnosis Safe"
     },
     {
       id: "maker",
-      icon: AaveIcon,
+      icon: MakerIcon,
       name: "Maker",
       url: "/mainnet/maker",
       description: "Lend and borrow straight from your Gnosis Safe"

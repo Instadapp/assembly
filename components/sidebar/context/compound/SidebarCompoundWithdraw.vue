@@ -2,11 +2,13 @@
   <SidebarContextRootContainer>
     <template #title>Withdraw {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon label="Token Balance" center>
+    <SidebarSectionValueWithIcon label="Supplied" center>
       <template #icon
         ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
       /></template>
-      <template #value>{{ formatNumber(originalBalance) }} {{ symbol }}</template>
+      <template #value
+        >{{ formatNumber(originalBalance) }} {{ symbol }}</template
+      >
     </SidebarSectionValueWithIcon>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
@@ -68,10 +70,8 @@
 </template>
 
 <script>
-import { computed, defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
-import { useAaveV2Position } from '~/composables/useAaveV2Position'
-import { useBalances } from '~/composables/useBalances'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
 import { useValidators } from '~/composables/useValidators'
@@ -80,18 +80,20 @@ import { useToken } from '~/composables/useToken'
 import { useParsing } from '~/composables/useParsing'
 import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
 import { useWeb3 } from '~/composables/useWeb3'
-import atokens from '~/constant/atokens'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
+import tokenIdMapping from '~/constant/tokenIdMapping'
+import ctokens from '~/constant/ctokens'
+import { useCompoundPosition } from '~/composables/useCompoundPosition'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
   props: {
-    tokenKey: { type: String, required: true },
+    tokenId: { type: String, required: true },
   },
   setup(props) {
     const { close } = useSidebar()
@@ -103,10 +105,15 @@ export default defineComponent({
     const { parseSafeFloat } = useParsing()
     const { showPendingTransaction } = useNotification()
     const originalBalance = ref('0')
-    const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
-      overridePosition: (position) => {
-        if (rootTokenKey.value !== position.key) return position
+    const tokenId = computed(() => props.tokenId)
+    const tokenKey = computed(() => tokenIdMapping.idToToken[tokenId.value])
 
+    const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
+
+
+    const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+      overridePosition: (position) => {
+        if (tokenId.value !== position.cTokenId) return position
         originalBalance.value = position.supply
 
         return {
@@ -116,27 +123,20 @@ export default defineComponent({
       },
     })
 
-    const availableLiquidity = computed(
-      () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.availableLiquidity || '0'
-    )
-
     const balance = computed(
-      () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.supply || '0'
+      () => displayPositions.value.find((position) => position.cTokenId === tokenId.value)?.supply || '0'
     )
-
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const rootTokenKey = computed(() => atokens[networkName.value].rootTokens.includes(props.tokenKey) ? props.tokenKey : 'eth')
 
     const token = computed(() => getTokenByKey(rootTokenKey.value))
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
-    const address = computed(() => token.value?.address)
 
     const factor = computed(
-      () => displayPositions.value?.find((position) => rootTokenKey.value === position.key)?.factor
+      () => displayPositions.value?.find((position) => position.cTokenId === tokenId.value)?.factor
     )
 
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
@@ -153,10 +153,6 @@ export default defineComponent({
         amount: { message: validateAmount(amountParsed.value, originalBalance.value), show: hasAmountValue },
         liquidation: { message: liqValid, show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
-        liquidity: {
-          message: validateLiquidity(amountParsed.value, availableLiquidity.value, symbol.value, true),
-          show: hasAmountValue,
-        },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -171,9 +167,9 @@ export default defineComponent({
       const spells = dsa.value.Spell()
 
       spells.add({
-        connector: 'aave_v2',
+        connector: 'compound',
         method: 'withdraw',
-        args: [address.value, amount, 0, 0],
+        args: [tokenId.value, amount, 0, 0],
       })
 
       const txHash = await dsa.value.cast({
@@ -208,7 +204,8 @@ export default defineComponent({
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,
-      isValid
+      isValid,
+      displayPositions,
     }
   },
 })

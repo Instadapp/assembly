@@ -1,9 +1,7 @@
 import { computed, onMounted, ref, watch } from "@nuxtjs/composition-api";
 import { useLocalStorage } from "vue-composable";
 
-//@ts-ignore
 import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
-//@ts-ignore
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
 import { useModal } from "./useModal";
 import { useNotification } from "./useNotification";

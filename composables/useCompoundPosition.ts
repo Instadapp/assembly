@@ -56,19 +56,14 @@ const totalBorrow = computed(() =>
 
 const ethPriceInUsd = computed(() => position.value?.ethPriceInUsd);
 
-const annualPercentageRateTypes = computed(() => [
-  { label: "Variable", value: "variable", rateMode: 2 },
-  { label: "Stable", value: "stable", rateMode: 1 }
-]);
-
 export function useCompoundPosition(
   { overridePosition } = { overridePosition: null }
 ) {
   overridePosition = overridePosition || (pos => pos);
 
-  const { web3, chainId, networkName } = useWeb3();
+  const { web3, networkName } = useWeb3();
   const { activeAccount } = useDSA();
-  const { getTokenByKey, allATokensV2 } = useToken();
+  const { getTokenByKey } = useToken();
 
   const resolver = computed(() => addresses.mainnet.resolver.compound);
 
@@ -126,10 +121,13 @@ export function useCompoundPosition(
 
   const stats = computed(() =>
     displayPositions.value.reduce(
-      (stats, { key, supply, borrow, priceInEth, factor, liquidation }) => {
+      (stats, { key, supply, borrow, priceInEth, factor }) => {
         if (key === "eth") {
           stats.ethSupplied = supply;
         }
+
+        console.log(key, supply, borrow, priceInEth, factor);
+        
 
         stats.totalSupplyInEth = plus(
           stats.totalSupplyInEth,
@@ -143,10 +141,6 @@ export function useCompoundPosition(
           stats.totalMaxBorrowLimitInEth,
           times(supply, times(priceInEth, factor))
         ).toFixed();
-        stats.totalMaxLiquidationLimitInEth = plus(
-          stats.totalMaxLiquidationLimitInEth,
-          times(supply, times(priceInEth, liquidation))
-        ).toFixed();
 
         return stats;
       },
@@ -154,7 +148,6 @@ export function useCompoundPosition(
         totalSupplyInEth: "0",
         totalBorrowInEth: "0",
         totalMaxBorrowLimitInEth: "0",
-        totalMaxLiquidationLimitInEth: "0",
         ethSupplied: "0"
       }
     )
@@ -178,12 +171,15 @@ export function useCompoundPosition(
           return [];
         }
 
-        const ctokenPosition = position.value.data.find(
-          x => x.cTokenId === ctoken.id
+        const ctokenPosition = overridePosition(
+          position.value.data.find(x => x.cTokenId === ctoken.id)
         );
 
-        const p = getPositionOrDefaultPosition(token, ctokenPosition);
+        if (!ctokenPosition) {
+          return [];
+        }
 
+        const p = getPositionOrDefaultPosition(token, ctokenPosition);
         if (gt(p.supply, "0") && gt(p.borrow, "0")) {
           return [
             { ...p, type: "supply" },
@@ -202,15 +198,14 @@ export function useCompoundPosition(
           return false;
         }
         return true;
-      })
-      .map(overridePosition);
+      });
   });
 
-  function getPositionOrDefaultPosition(token, p) {
-    if (!p) {
+  function getPositionOrDefaultPosition(token, pos) {
+    if (!pos) {
       const defaultPosition = {
         key: token?.key,
-        tokenId: `${token?.symbol}-A`,
+        tokenId: `${token.symbol}-A`,
         ctknBalance: "0",
         cTokenDecimals: "0",
         cf: "0",
@@ -234,43 +229,33 @@ export function useCompoundPosition(
 
     return {
       key: token?.key,
-      tokenId: p.cTokenId,
-      ctknBalance: p.ctknBalance,
-      cTokenDecimals: p.cTokenDecimals,
-      cf: p.factor,
-      supply: p.supply,
-      supplyUsd: times(p.supply, p.priceInUsd).toFixed(),
-      supplyRate: p.supplyRate,
-      supplyYield: p.supplyYield,
-      borrow: p.borrow,
-      borrowUsd: times(p.borrow, p.priceInUsd).toFixed(),
-      borrowRate: p.borrowRate,
-      borrowYield: p.borrowYield,
-      borrowEnabled: p.borrowEnabled,
-      type: getType(p),
+      tokenId: pos.cTokenId,
+      ctknBalance: pos.ctknBalance,
+      cTokenDecimals: pos.cTokenDecimals,
+      cf: pos.factor,
+      supply: pos.supply,
+      supplyUsd: times(pos.supply, pos.priceInUsd).toFixed(),
+      supplyRate: pos.supplyRate,
+      supplyYield: pos.supplyYield,
+      borrow: pos.borrow,
+      borrowUsd: times(pos.borrow, pos.priceInUsd).toFixed(),
+      borrowRate: pos.borrowRate,
+      borrowYield: pos.borrowYield,
+      borrowEnabled: pos.borrowEnabled,
+      type: getType(pos),
       supplyRewardRate: times(
-        p.compSupplyApy,
+        pos.compSupplyApy,
         rewardTokenPriceInUsd.value
       ).toFixed(),
       borrowRewardRate: times(
-        p.compBorrowApy,
+        pos.compBorrowApy,
         rewardTokenPriceInUsd.value
       ).toFixed(),
-      priceInUsd: p.priceInUsd
+      priceInUsd: pos.priceInUsd,
+      priceInEth: pos.priceInEth,
+      factor: pos.factor,
     };
   }
-
-  const maxLiquidation = computed(() => {
-    if (isZero(stats.value.totalSupplyInEth)) return "0";
-
-    return max(
-      div(
-        stats.value.totalMaxLiquidationLimitInEth,
-        stats.value.totalSupplyInEth
-      ),
-      "0"
-    ).toFixed();
-  });
 
   const liquidationPrice = computed(() => {
     if (isZero(stats.value.ethSupplied)) return "0";
@@ -279,7 +264,7 @@ export function useCompoundPosition(
       times(
         div(
           stats.value.totalBorrowInEth,
-          stats.value.totalMaxLiquidationLimitInEth
+          stats.value.totalMaxBorrowLimitInEth
         ),
         ethPriceInUsd.value
       ),
@@ -320,10 +305,8 @@ export function useCompoundPosition(
     totalBorrow,
     status,
     liquidation,
-    maxLiquidation,
     liquidationPrice,
-    liquidationMaxPrice: ethPriceInUsd,
-    annualPercentageRateTypes
+    liquidationMaxPrice: ethPriceInUsd
   };
 }
 

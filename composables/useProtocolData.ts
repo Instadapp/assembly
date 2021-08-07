@@ -1,4 +1,3 @@
-// @ts-nocheck
 import SVGCompound from "@/assets/logo/compound.svg?inline";
 import SVGMakerDAO from "@/assets/logo/makerdao.svg?inline";
 import SVGAave from "@/assets/logo/aave.svg?inline";

@@ -1,22 +1,22 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Withdraw {{ symbol }}</template>
+    <template #title>Borrow {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon label="Token Balance" center>
+    <SidebarSectionValueWithIcon class="mt-6" label="Borrowed" center>
       <template #icon
         ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
       /></template>
-      <template #value>{{ formatNumber(originalBalance) }} {{ symbol }}</template>
+      <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
-        Amount to withdraw
+        Amount to borrow
       </h3>
 
       <input-numeric
         v-model="amount"
-        placeholder="Amount to withdraw"
+        placeholder="Amount to borrow"
         :error="errors.amount.message"
       >
         <template v-if="!isMaxAmount" #suffix>
@@ -38,7 +38,7 @@
 
       <SidebarSectionStatus
         class="mt-8"
-        :liquidation="maxLiquidation"
+        :liquidation="liquidation"
         :status="status"
       />
 
@@ -58,7 +58,7 @@
           :loading="pending"
           @click="cast"
         >
-          Withdraw
+          Borrow
         </ButtonCTA>
       </div>
 
@@ -68,9 +68,8 @@
 </template>
 
 <script>
-import { computed, defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
-import { useAaveV2Position } from '~/composables/useAaveV2Position'
 import { useBalances } from '~/composables/useBalances'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
@@ -80,18 +79,20 @@ import { useToken } from '~/composables/useToken'
 import { useParsing } from '~/composables/useParsing'
 import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
 import { useWeb3 } from '~/composables/useWeb3'
-import atokens from '~/constant/atokens'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
+import { useCompoundPosition } from '~/composables/useCompoundPosition'
+import ctokens from '~/constant/ctokens'
+import tokenIdMapping from '~/constant/tokenIdMapping'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
   props: {
-    tokenKey: { type: String, required: true },
+    tokenId: { type: String, required: true },
   },
   setup(props) {
     const { close } = useSidebar()
@@ -99,64 +100,58 @@ export default defineComponent({
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
-    const { isZero, gt, plus, max, minus } = useBigNumber()
+    const { isZero, gt, div, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
     const { showPendingTransaction } = useNotification()
-    const originalBalance = ref('0')
-    const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
-      overridePosition: (position) => {
-        if (rootTokenKey.value !== position.key) return position
 
-        originalBalance.value = position.supply
+    const tokenId = computed(() => props.tokenId)
+    const tokenKey = computed(() => tokenIdMapping.idToToken[tokenId.value])
+
+    const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
+
+    const { stats, status: initialStatus, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+      overridePosition: (position) => {
+        if (tokenId.value !== position.cTokenId) return position
 
         return {
           ...position,
-          supply: max(minus(position.supply, amountParsed.value), '0').toFixed(),
+          borrow: plus(position.borrow, amountParsed.value).toFixed(),
         }
       },
     })
 
-    const availableLiquidity = computed(
-      () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.availableLiquidity || '0'
-    )
+    const status = computed(() => {
+      if (!amountParsed.value) return initialStatus.value
 
-    const balance = computed(
-      () => displayPositions.value.find((position) => position.key === rootTokenKey.value)?.supply || '0'
-    )
-
+      return div(stats.value.totalBorrowInEth, stats.value.totalSupplyInEth).toFixed()
+    })
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const rootTokenKey = computed(() => atokens[networkName.value].rootTokens.includes(props.tokenKey) ? props.tokenKey : 'eth')
+    const currentPosition = computed(() =>
+      displayPositions.value.find((position) => position.cTokenId === tokenId.value)
+    )
 
     const token = computed(() => getTokenByKey(rootTokenKey.value))
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
-    const address = computed(() => token.value?.address)
+    const balance = computed(() => {
+      return currentPosition.value?.borrow || '0'
+    })
 
-    const factor = computed(
-      () => displayPositions.value?.find((position) => rootTokenKey.value === position.key)?.factor
-    )
+    const address = computed(() => token.value?.address)
 
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
 
-    const { validateAmount, validateLiquidation, validateIsLoggedIn, validateLiquidity } = useValidators()
-
+    const { validateAmount, validateLiquidation, validateLiquidity, validateIsLoggedIn } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
-      const liqValid = gt(factor.value, '0')
-        ? validateLiquidation(status.value, maxLiquidation.value, isZero(stats.value.totalBorrowInEth))
-        : null
 
       return {
-        amount: { message: validateAmount(amountParsed.value, originalBalance.value), show: hasAmountValue },
-        liquidation: { message: liqValid, show: hasAmountValue },
+        amount: { message: validateAmount(amountParsed.value), show: hasAmountValue },
+        liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
-        liquidity: {
-          message: validateLiquidity(amountParsed.value, availableLiquidity.value, symbol.value, true),
-          show: hasAmountValue,
-        },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -166,14 +161,14 @@ export default defineComponent({
     async function cast() {
       pending.value = true
 
-      const amount = isMaxAmount.value ? dsa.value.maxValue : valInt(amountParsed.value, decimals.value)
+      const amount = valInt(amountParsed.value, decimals.value)
 
       const spells = dsa.value.Spell()
 
       spells.add({
-        connector: 'aave_v2',
-        method: 'withdraw',
-        args: [address.value, amount, 0, 0],
+        connector: 'compound',
+        method: 'borrow',
+        args: [tokenId.value, amount, 0, 0],
       })
 
       const txHash = await dsa.value.cast({
@@ -189,26 +184,26 @@ export default defineComponent({
     }
 
     return {
+      stats,
       pending,
       cast,
       errors,
       amount,
       status,
+      liquidation,
       rootTokenKey,
       token,
       symbol,
-      originalBalance,
       balance,
       formatNumber,
       formatUsdMax,
       formatUsd,
       toggle,
       isMaxAmount,
-      maxLiquidation,
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,
-      isValid
+      isValid,
     }
   },
 })
