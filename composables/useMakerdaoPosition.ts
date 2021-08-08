@@ -90,26 +90,27 @@ export function useMakerdaoPosition() {
   const minDebt = computed(() => vaultTypes.value[0]?.totalFloor || "5000");
   const debtCeilingReached = computed(() =>
     vaultTypes.value?.some(vault =>
-      gt(vault.value.overallTotalDebt, vault.value.overallTotalDebtCeiling)
+      gt(vault.value?.overallTotalDebt, vault.value?.overallTotalDebtCeiling)
     )
   );
 
   const fetchPosition = async () => {
-    console.log("fetchPosition");
-
     if (!web3.value) {
       return;
     }
 
     vaultTypes.value = await getVaultTypes(web3.value);
-    console.log(vaultTypes.value);
 
     if (!activeAccount.value) {
       return;
     }
 
+    console.log(activeAccount.value.address);
+
     vaults.value = await getVaults(activeAccount.value.address, web3.value);
-    console.log(vaults.value);
+    if (vaults.value.length > 0) {
+      vaultId.value = vaults.value[0].id;
+    }
   };
 
   watch(
@@ -235,12 +236,13 @@ async function getVaults(user, web3) {
         owner,
         type,
         collInWei,
+        ,
         debtInWei,
         liquidatedColInWei,
         ratePerBlock,
         priceInWei,
         liquidationRatioCbyD,
-        urn
+        urn,
       ]) => {
         const collateral = new BigNumber(collInWei).dividedBy(1e18);
         const debt = new BigNumber(debtInWei).dividedBy(1e18);
