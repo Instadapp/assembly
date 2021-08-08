@@ -38,7 +38,7 @@
 
       <SidebarSectionStatus
         class="mt-8"
-        :liquidation="maxLiquidation"
+        :liquidation="liquidation"
         :status="status"
       />
 
@@ -110,7 +110,7 @@ export default defineComponent({
 
     const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
 
-    const { status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+    const { status, position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
       overridePosition: (position) => {
         if (tokenId.value !== position.cTokenId) return position
 
@@ -131,8 +131,12 @@ export default defineComponent({
     const balance = computed(() => getBalanceByKey(rootTokenKey.value))
     const address = computed(() => token.value?.address)
 
-     const factor = computed(
-      () => displayPositions.value?.find((position) => position.cTokenId === tokenId.value)?.factor
+    const currentPosition = computed(() =>
+      position.value?.data.find((position) => position.cTokenId === tokenId.value)
+    )
+
+    const factor = computed(
+      () => currentPosition.value?.factor || "0"
     )
 
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
@@ -140,7 +144,7 @@ export default defineComponent({
     const { validateAmount, validateLiquidation, validateIsLoggedIn } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
-      const liqValid = gt(factor.value, '0') ? validateLiquidation(status.value, maxLiquidation.value) : null
+      const liqValid = gt(factor.value, '0') ? validateLiquidation(status.value, liquidation.value) : null
 
       return {
         amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
@@ -192,7 +196,7 @@ export default defineComponent({
       formatUsd,
       toggle,
       isMaxAmount,
-      maxLiquidation,
+      liquidation,
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,

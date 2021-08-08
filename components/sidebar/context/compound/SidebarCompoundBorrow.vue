@@ -109,7 +109,7 @@ export default defineComponent({
 
     const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
 
-    const { stats, status: initialStatus, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+    const { stats, status: initialStatus,position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
       overridePosition: (position) => {
         if (tokenId.value !== position.cTokenId) return position
 
@@ -130,7 +130,7 @@ export default defineComponent({
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
     const currentPosition = computed(() =>
-      displayPositions.value.find((position) => position.cTokenId === tokenId.value)
+      position.value?.data.find((position) => position.cTokenId === tokenId.value)
     )
 
     const token = computed(() => getTokenByKey(rootTokenKey.value))

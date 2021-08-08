@@ -40,7 +40,7 @@
 
       <SidebarSectionStatus
         class="mt-8"
-        :liquidation="maxLiquidation"
+        :liquidation="liquidation"
         :status="status"
       />
 
@@ -111,7 +111,7 @@ export default defineComponent({
     const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
 
 
-    const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+    const { stats, status,position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
       overridePosition: (position) => {
         if (tokenId.value !== position.cTokenId) return position
         originalBalance.value = position.supply
@@ -124,7 +124,7 @@ export default defineComponent({
     })
 
     const balance = computed(
-      () => displayPositions.value.find((position) => position.cTokenId === tokenId.value)?.supply || '0'
+      () => position.value.data.find((position) => position.cTokenId === tokenId.value)?.supply || '0'
     )
 
     const amount = ref('')
@@ -146,7 +146,7 @@ export default defineComponent({
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
       const liqValid = gt(factor.value, '0')
-        ? validateLiquidation(status.value, maxLiquidation.value, isZero(stats.value.totalBorrowInEth))
+        ? validateLiquidation(status.value, liquidation.value, isZero(stats.value.totalBorrowInEth))
         : null
 
       return {
@@ -200,7 +200,7 @@ export default defineComponent({
       formatUsd,
       toggle,
       isMaxAmount,
-      maxLiquidation,
+      liquidation,
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,
