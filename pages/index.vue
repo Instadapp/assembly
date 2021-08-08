@@ -56,7 +56,7 @@ const appsPerNetwork = {
     {
       id: "maker",
       icon: MakerIcon,
-      name: "Maker",
+      name: "MakerDAO",
       url: "/mainnet/maker",
       description: "Lend and borrow straight from your Gnosis Safe"
     }

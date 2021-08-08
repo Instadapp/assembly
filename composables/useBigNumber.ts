@@ -1,5 +1,7 @@
 import BigNumber from "bignumber.js";
 
+BigNumber.config({ POW_PRECISION: 200 })
+
 export function useBigNumber() {
   /**
    * Returns value as BigNumber if it exists and can be parsed by BigNumber,
