@@ -126,9 +126,6 @@ export function useCompoundPosition(
           stats.ethSupplied = supply;
         }
 
-        console.log(key, supply, borrow, priceInEth, factor);
-        
-
         stats.totalSupplyInEth = plus(
           stats.totalSupplyInEth,
           times(supply, priceInEth)

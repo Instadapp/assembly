@@ -113,7 +113,7 @@ export default defineComponent({
     const { getTokenByKey, valInt } = useToken()
     const { getBalanceByKey, getBalanceRawByKey, fetchBalances } = useBalances()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
-    const { isZero, gt, plus, max, minus } = useBigNumber()
+    const { isZero, gte, plus, max, minus, min } = useBigNumber()
     const { parseSafeFloat } = useParsing()
     const { showPendingTransaction } = useNotification()
     const tokenId = computed(() => props.tokenId)
@@ -122,7 +122,7 @@ export default defineComponent({
     const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
 
 
-    const { status, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+    const { status, position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
       overridePosition: (position) => {
         if (tokenId.value !== position.cTokenId) return position
 
@@ -137,7 +137,7 @@ export default defineComponent({
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
     const currentPosition = computed(() =>
-      displayPositions.value.find((position) => position.cTokenId === tokenId.value)
+      position.value.data.find((position) => position.cTokenId === tokenId.value)
     )
 
     const token = computed(() => getTokenByKey(rootTokenKey.value))
@@ -152,14 +152,17 @@ export default defineComponent({
 
     const address = computed(() => token.value?.address)
 
-    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
 
-    const { validateAmount, validateLiquidation, validateLiquidity, validateIsLoggedIn } = useValidators()
+    const maxBalance = computed(() => min(balance.value, tokenMaxBalance.value).toFixed())
+    const { toggle, isMaxAmount } = useMaxAmountActive(amount, maxBalance)
+
+    const { validateAmount, validateLiquidation, validateIsLoggedIn } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
 
       return {
-        amount: { message: validateAmount(amountParsed.value), show: hasAmountValue },
+
+        amount: { message: validateAmount(amountParsed.value, maxBalance.value), show: hasAmountValue },
         liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
       }
@@ -178,8 +181,6 @@ export default defineComponent({
         : valInt(amountParsed.value, decimals.value)
 
       const spells = dsa.value.Spell()
-
-      const rateMode = rateType.value?.rateMode
 
       spells.add({
         connector: 'compound',
@@ -213,7 +214,10 @@ export default defineComponent({
       formatUsdMax,
       formatUsd,
       toggle,
+      displayPositions,
+      currentPosition,
       isMaxAmount,
+      liquidation,
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,

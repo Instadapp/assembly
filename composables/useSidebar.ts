@@ -21,7 +21,7 @@ import SidebarWithdraw from '~/components/sidebar/context/SidebarWithdraw.vue'
 import SidebarCompoundWithdraw from '~/components/sidebar/context/compound/SidebarCompoundWithdraw.vue'
 import SidebarCompoundSupply from '~/components/sidebar/context/compound/SidebarCompoundSupply.vue'
 import SidebarCompoundBorrow from '~/components/sidebar/context/compound/SidebarCompoundBorrow.vue'
-import SidebarCompoundPayback from '~/components/sidebar/context/compound/SidebarCompoundBorrow.vue'
+import SidebarCompoundPayback from '~/components/sidebar/context/compound/SidebarCompoundPayback.vue'
 
 
 const sidebars = {
