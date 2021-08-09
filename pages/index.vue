@@ -44,21 +44,21 @@ const appsPerNetwork = {
       icon: AaveIcon,
       name: "Aave v2",
       url: "/mainnet/aave-v2",
-      description: "Lend and borrow straight from your Gnosis Safe"
+      description: "Money Market"
     },
     {
       id: "compound",
       icon: CompoundIcon,
       name: "Compound",
       url: "/mainnet/compound",
-      description: "Lend and borrow straight from your Gnosis Safe"
+      description: "Money Market"
     },
     {
       id: "maker",
       icon: MakerIcon,
       name: "MakerDAO",
       url: "/mainnet/maker",
-      description: "Lend and borrow straight from your Gnosis Safe"
+      description: "Collateralized Debt"
     }
   ],
   polygon: [

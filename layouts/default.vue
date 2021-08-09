@@ -1,11 +1,22 @@
 <template>
   <div
-    class="min-h-screen relative overflow-hidden font-sans antialiased text-primary-black"
+    class="relative overflow-hidden font-sans antialiased text-primary-black"
   >
-    <Navbar />
-    <div class="max-w-6xl mx-auto py-12 overflow-x-hidden ">
-      <div>
-        <Nuxt />
+    <div class="min-h-screen flex flex-col">
+      <Navbar />
+      <div class="flex-1 overflow-x-hidden ">
+        <div class="max-w-6xl mx-auto py-12">
+          <Nuxt />
+        </div>
+      </div>
+      <div class="text-center py-8">
+        <a
+          class="font-medium text-primary-blue-dark hover:text-primary-blue-hover hover:underline"
+          href="https://github.com/Instadapp/assembly-nuxt"
+          target="_blank"
+        >
+          Contribute on GitHub
+        </a>
       </div>
     </div>
 
@@ -19,7 +30,7 @@
 
     <div class="fixed bottom-0 right-0 mr-10 mb-16">
       <button
-      @click="showSidebarBalances"
+        @click="showSidebarBalances"
         class="px-9 h-[56px] bg-primary-blue-dark hover:bg-primary-blue-hover text-white rounded-[28px] text-lg font-semibold shadow flex items-center"
       >
         <svg
@@ -105,7 +116,7 @@ export default defineComponent({
     }, { immediate: true })
 
     onErrorCaptured(() => {
-      
+
       return false
     })
 
