@@ -84,12 +84,16 @@
         <div class="shadow rounded-lg py-8 px-6 flex">
           <div class="flex-1">
             <h3 class="text-2xl text-primary-black font-medium">
-              {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} / {{ formatUsd(liquidationMaxPrice) }}
+              {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} /
+              {{ formatUsd(liquidationMaxPrice) }}
             </h3>
             <p class="mt-4 text-primary-gray font-medium">Liquidation (ETH)</p>
           </div>
           <div class="flex items-center">
-             <IconBackground name="receipt-tax" class="bg-light-brown-pure text-light-brown-pure" />
+            <IconBackground
+              name="receipt-tax"
+              class="bg-light-brown-pure text-light-brown-pure"
+            />
           </div>
         </div>
       </div>
@@ -131,7 +135,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "@nuxtjs/composition-api";
+import { computed, defineComponent, useRouter } from "@nuxtjs/composition-api";
 import BackIcon from "~/assets/icons/back.svg?inline";
 import SVGIncoming from "@/assets/img/icons/incoming.svg?inline";
 import SVGBalance from "@/assets/img/icons/balance.svg?inline";
@@ -143,6 +147,7 @@ import { useBigNumber } from "~/composables/useBigNumber";
 import { useFormatting } from "~/composables/useFormatting";
 import { useMakerdaoPosition } from "~/composables/useMakerdaoPosition";
 import { useStatus } from "~/composables/useStatus";
+import { useNotification } from "~/composables/useNotification";
 
 export default defineComponent({
   components: {
@@ -155,12 +160,22 @@ export default defineComponent({
     SVGPercent
   },
   setup() {
-    const { div } = useBigNumber();
+    const router = useRouter();
 
-    const { formatUsd, formatUsdMax, formatPercent, formatDecimal } = useFormatting();
+    const { div, isZero, gt, lt } = useBigNumber();
+
+    const {
+      formatUsd,
+      formatUsdMax,
+      formatPercent,
+      formatDecimal
+    } = useFormatting();
+
+    const { showWarning } = useNotification();
 
     const {
       status,
+      vaults,
       vaultTokenType,
       collateral,
       collateralUsd,
@@ -183,13 +198,40 @@ export default defineComponent({
 
     const { color, text } = useStatus(statusLiquidationRatio);
 
-    function showWithdraw() {}
+    function showSupply() {
+      if (gt(debt.value, "0") && lt(debt.value, minDebt.value)) {
+        // select("depositAndBorrow");
+      } else if (vaults.value.length === 0) {
+        router.push({ hash: "collateral" });
+      } else {
+        router.push({ hash: "supply" });
+      }
+    }
+    function showWithdraw() {
+      if (isZero(collateral.value)) {
+        showWarning("MakerDAO", "No collateral supplied!!");
+      } else if (gt(debt.value, "0") && lt(debt.value, minDebt.value)) {
+        // select("paybackAndWithdraw");
+      } else {
+        router.push({ hash: "withdraw" });
+      }
+    }
 
-    function showPayback() {}
+    function showPayback() {
+      if (isZero(collateral.value)) {
+        showWarning("MakerDAO", "No collateral supplied!!");
+      } else {
+        router.push({ hash: "payback?tokenKey=dai" });
+      }
+    }
 
-    function showBorrow() {}
-
-    function showSupply() {}
+    function showBorrow() {
+      if (isZero(collateral.value)) {
+        showWarning("MakerDAO", "Deposit collateral before borrowing!!");
+      } else {
+        router.push({ hash: "borrow?tokenKey=dai" });
+      }
+    }
 
     return {
       formatUsd,

@@ -1,9 +1,11 @@
 import { useBigNumber } from "./useBigNumber";
 import { useFormatting } from "./useFormatting";
+import { useMakerdaoPosition } from "./useMakerdaoPosition";
 
 export function useValidators() {
-  const { formatNumber } = useFormatting()
-  const { isZero, minus, eq, gt } = useBigNumber();
+  const { formatNumber } = useFormatting();
+  const { isZero, minus, eq, gt, lt, gte, plus } = useBigNumber();
+  const { minDebt: makerMinDebt, vaultTypes } = useMakerdaoPosition();
 
   function validateAmount(amountParsed, balance = null, options = null) {
     const mergedOptions = Object.assign(
@@ -39,21 +41,61 @@ export function useValidators() {
     return null;
   }
 
-  function validateLiquidity(borrow, availableLiquidity, tokenSymbol, withdraw = false) {
+  function validateLiquidity(
+    borrow,
+    availableLiquidity,
+    tokenSymbol,
+    withdraw = false
+  ) {
     if (gt(borrow, availableLiquidity)) {
-      let action = 'borrow'
+      let action = "borrow";
       if (withdraw) {
-        action = 'withdraw'
+        action = "withdraw";
       }
-      return `Not enough liquidity to ${action} ${formatNumber(borrow, 2)} ${tokenSymbol}`
+      return `Not enough liquidity to ${action} ${formatNumber(
+        borrow,
+        2
+      )} ${tokenSymbol}`;
     }
-    return null
+    return null;
+  }
+
+  function validateMakerDebt(
+    debtParsed,
+    minDebt = makerMinDebt.value,
+    vaultId
+  ) {
+    if (lt(debtParsed, minDebt) && gt(debtParsed, "0")) {
+      const vaultText = vaultId
+        ? vaultId !== "0"
+          ? `on vault #${vaultId}`
+          : `on new vault`
+        : "";
+      return `Minimum debt requirement is ${minDebt} DAI ${vaultText}`;
+    }
+
+    return null;
+  }
+
+  function validateMakerDebtCeiling(vaultType, debtParsed = 0) {
+    const vault = vaultTypes.value.find(v => v.type === vaultType);
+    const { debtCeiling, totalDebt } = vault || {};
+
+    if (!isZero(debtCeiling) && !isZero(totalDebt)) {
+      const total = plus(totalDebt, debtParsed);
+      return gte(total, debtCeiling)
+        ? `${vaultType} Collateral reached debt ceiling`
+        : null;
+    }
+    return null;
   }
 
   return {
     validateAmount,
     validateLiquidation,
     validateIsLoggedIn,
-    validateLiquidity
+    validateLiquidity,
+    validateMakerDebt,
+    validateMakerDebtCeiling
   };
 }

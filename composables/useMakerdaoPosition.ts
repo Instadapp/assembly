@@ -1,4 +1,4 @@
-import { computed, ref, watch } from "@nuxtjs/composition-api";
+import { computed, Ref, ref, watch } from "@nuxtjs/composition-api";
 import BigNumber from "bignumber.js";
 BigNumber.config({ POW_PRECISION: 200 });
 import abis from "~/constant/abis";
@@ -50,7 +50,7 @@ const vault = computed(() => {
   return defaultVault;
 });
 
-export function useMakerdaoPosition() {
+export function useMakerdaoPosition(collateralAmountRef: Ref =null, debtAmountRef: Ref = null) {
   const { web3, chainId, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { isZero, ensureValue, times, div, max, gt } = useBigNumber();
@@ -77,14 +77,20 @@ export function useMakerdaoPosition() {
   const rate = computed(() => ensureValue(vault.value.rate).toFixed());
   const netValue = computed(() => ensureValue(vault.value.netValue).toFixed());
 
-  const status = computed(() => ensureValue(vault.value.status).toFixed());
+  const status = computed(() => {
+    if (!collateralAmountRef || !debtAmountRef) return ensureValue(vault.value.status).toFixed()
+    return isZero(collateralAmountRef.value) && !isZero(debtAmountRef.value)
+      ? '1.1'
+      : div(debtAmountRef.value, times(collateralAmountRef.value, price.value)).toFixed()
+  })
 
   const liquidationPrice = computed(() => {
-    return max(
-      div(div(debt.value, collateral.value), liquidation.value),
-      "0"
-    ).toFixed();
-  });
+    if (!collateralAmountRef || !debtAmountRef)
+      return max(div(div(debt.value, collateral.value), liquidation.value), '0').toFixed()
+    return isZero(collateralAmountRef.value) && !isZero(debtAmountRef.value)
+      ? times(price.value, '1.1').toFixed()
+      : max(div(div(debtAmountRef.value, collateralAmountRef.value), liquidation.value), '0').toFixed()
+  })
 
   const debt = computed(() => ensureValue(vault.value.debt).toFixed());
   const minDebt = computed(() => vaultTypes.value[0]?.totalFloor || "5000");
