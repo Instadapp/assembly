@@ -23,6 +23,8 @@ import SidebarCompoundSupply from '~/components/sidebar/context/compound/Sidebar
 import SidebarCompoundBorrow from '~/components/sidebar/context/compound/SidebarCompoundBorrow.vue'
 import SidebarCompoundPayback from '~/components/sidebar/context/compound/SidebarCompoundPayback.vue'
 
+import SidebarMakerdaoSupply from '~/components/sidebar/context/makerdao/SidebarMakerdaoSupply.vue'
+import SidebarMakerdaoWithdraw from '~/components/sidebar/context/makerdao/SidebarMakerdaoWithdraw.vue'
 import SidebarMakerdaoBorrow from '~/components/sidebar/context/makerdao/SidebarMakerdaoBorrow.vue'
 import SidebarMakerdaoPayback from '~/components/sidebar/context/makerdao/SidebarMakerdaoPayback.vue'
 
@@ -51,8 +53,8 @@ const sidebars = {
   "/mainnet/compound#payback": { component: SidebarCompoundPayback },
 
   "/mainnet/maker": { component: null },
-  "/mainnet/maker#withdraw": { component: null },
-  "/mainnet/maker#supply": { component: null },
+  "/mainnet/maker#supply": { component: SidebarMakerdaoSupply },
+  "/mainnet/maker#withdraw": { component: SidebarMakerdaoWithdraw },
   "/mainnet/maker#borrow": { component: SidebarMakerdaoBorrow },
   "/mainnet/maker#payback": { component: SidebarMakerdaoPayback },
 };

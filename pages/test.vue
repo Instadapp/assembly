@@ -1,3 +1,3 @@
 <template>
-    <SidebarMakerdaoPayback tokenKey="dai" />
+    <SidebarMakerdaoWithdraw  />
 </template>

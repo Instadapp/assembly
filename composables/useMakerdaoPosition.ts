@@ -110,9 +110,6 @@ export function useMakerdaoPosition(collateralAmountRef: Ref =null, debtAmountRe
     if (!activeAccount.value) {
       return;
     }
-
-    console.log(activeAccount.value.address);
-
     vaults.value = await getVaults(activeAccount.value.address, web3.value);
     if (vaults.value.length > 0) {
       vaultId.value = vaults.value[0].id;

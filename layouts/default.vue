@@ -115,10 +115,10 @@ export default defineComponent({
       }
     }, { immediate: true })
 
-    onErrorCaptured(() => {
+    // onErrorCaptured(() => {
 
-      return false
-    })
+    //   return false
+    // })
 
     return {
       active,
