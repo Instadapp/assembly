@@ -44,8 +44,10 @@
 
       <SidebarSectionValueWithIcon class="mt-8" label="Liquidation Price (ETH)">
         <template #value>
-          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }} <span class="text-primary-gray">/
-          {{ formatUsd(liquidationMaxPrice) }}</span>
+          {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }}
+          <span class="text-primary-gray"
+            >/ {{ formatUsd(liquidationMaxPrice) }}</span
+          >
         </template>
       </SidebarSectionValueWithIcon>
 
@@ -92,7 +94,7 @@ export default defineComponent({
     tokenKey: { type: String, required: true },
   },
   setup(props) {
-    const { close} = useSidebar()
+    const { close } = useSidebar()
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
@@ -100,7 +102,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-  const { showPendingTransaction } = useNotification()
+    const { showPendingTransaction, showWarning } = useNotification()
     const { status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
@@ -157,12 +159,16 @@ export default defineComponent({
         args: [address.value, amount, 0, 0],
       })
 
-      const txHash = await dsa.value.cast({
-        spells,
-        from: account.value,
-      })
+      try {
+        const txHash = await dsa.value.cast({
+          spells,
+          from: account.value,
+        })
 
-      showPendingTransaction(txHash)
+        showPendingTransaction(txHash)
+      } catch (error) {
+        showWarning(error.message)
+      }
 
       pending.value = false
 

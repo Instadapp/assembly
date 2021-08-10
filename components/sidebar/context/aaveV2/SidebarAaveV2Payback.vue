@@ -122,7 +122,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-const { showPendingTransaction } = useNotification()
+    const { showPendingTransaction, showWarning } = useNotification()
     const { status, displayPositions, liquidation, maxLiquidation, liquidationPrice, liquidationMaxPrice, annualPercentageRateTypes } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
@@ -209,12 +209,16 @@ const { showPendingTransaction } = useNotification()
         args: [address.value, amount, rateMode, 0, 0],
       })
 
-      const txHash = await dsa.value.cast({
-        spells,
-        from: account.value,
-      })
+      try {
+        const txHash = await dsa.value.cast({
+          spells,
+          from: account.value,
+        })
 
-      showPendingTransaction(txHash)
+        showPendingTransaction(txHash)
+      } catch (error) {
+        showWarning(error.message)
+      }
 
       pending.value = false
 

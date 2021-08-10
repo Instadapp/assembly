@@ -103,7 +103,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction } = useNotification()
+    const { showPendingTransaction, showWarning } = useNotification()
     const originalBalance = ref('0')
     const tokenId = computed(() => props.tokenId)
     const tokenKey = computed(() => tokenIdMapping.idToToken[tokenId.value])
@@ -111,7 +111,7 @@ export default defineComponent({
     const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
 
 
-    const { stats, status,position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+    const { stats, status, position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
       overridePosition: (position) => {
         if (tokenId.value !== position.cTokenId) return position
         originalBalance.value = position.supply
@@ -172,12 +172,16 @@ export default defineComponent({
         args: [tokenId.value, amount, 0, 0],
       })
 
-      const txHash = await dsa.value.cast({
-        spells,
-        from: account.value,
-      })
+      try {
+        const txHash = await dsa.value.cast({
+          spells,
+          from: account.value,
+        })
 
-      showPendingTransaction(txHash)
+        showPendingTransaction(txHash)
+      } catch (error) {
+        showWarning(error.message)
+      }
 
       pending.value = false
 

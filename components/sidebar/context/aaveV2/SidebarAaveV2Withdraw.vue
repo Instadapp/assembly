@@ -6,7 +6,9 @@
       <template #icon
         ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
       /></template>
-      <template #value>{{ formatNumber(originalBalance) }} {{ symbol }}</template>
+      <template #value
+        >{{ formatNumber(originalBalance) }} {{ symbol }}</template
+      >
     </SidebarSectionValueWithIcon>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
@@ -101,7 +103,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction } = useNotification()
+    const { showPendingTransaction, showWarning } = useNotification()
     const originalBalance = ref('0')
     const { stats, status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
       overridePosition: (position) => {
@@ -176,12 +178,16 @@ export default defineComponent({
         args: [address.value, amount, 0, 0],
       })
 
-      const txHash = await dsa.value.cast({
-        spells,
-        from: account.value,
-      })
+      try {
+        const txHash = await dsa.value.cast({
+          spells,
+          from: account.value,
+        })
 
-      showPendingTransaction(txHash)
+        showPendingTransaction(txHash)
+      } catch (error) {
+        showWarning(error.message)
+      }
 
       pending.value = false
 

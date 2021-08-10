@@ -98,7 +98,7 @@ export default defineComponent({
     const { formatUsdMax, formatUsd, formatDecimal } = useFormatting()
     const { plus, isZero } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction } = useNotification()
+    const { showPendingTransaction, showWarning } = useNotification()
 
 
     const amount = ref('')
@@ -157,12 +157,16 @@ export default defineComponent({
         })
       }
 
-      const txHash = await dsa.value.cast({
-        spells,
-        from: account.value,
-      })
+      try {
+        const txHash = await dsa.value.cast({
+          spells,
+          from: account.value,
+        })
 
-      showPendingTransaction(txHash)
+        showPendingTransaction(txHash)
+      } catch (error) {
+        showWarning(error.message)
+      }
 
       pending.value = false
 

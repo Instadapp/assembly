@@ -113,7 +113,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gte, plus, max, minus, min } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction } = useNotification()
+    const { showPendingTransaction, showWarning } = useNotification()
 
     const { debt, collateral, liquidation, liquidationMaxPrice, vaultId, symbol: tokenSymbol } = useMakerdaoPosition()
 
@@ -168,12 +168,16 @@ export default defineComponent({
         args: [vaultId.value, amount, 0, 0],
       })
 
-      const txHash = await dsa.value.cast({
-        spells,
-        from: account.value,
-      })
+      try {
+        const txHash = await dsa.value.cast({
+          spells,
+          from: account.value,
+        })
 
-      showPendingTransaction(txHash)
+        showPendingTransaction(txHash)
+      } catch (error) {
+        showWarning(error.message)
+      }
 
       pending.value = false
 
