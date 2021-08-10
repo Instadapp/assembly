@@ -10,8 +10,10 @@
       </nuxt-link>
     </div>
 
-    <div class="mt-10">
+    <div class="mt-10 flex items-center">
       <h1 class="text-primary-black text-2xl font-semibold">MakerDAO</h1>
+
+      <dropdown-makerdao class="ml-auto"/>
     </div>
 
     <div class="mt-10">
@@ -148,6 +150,7 @@ import { useFormatting } from "~/composables/useFormatting";
 import { useMakerdaoPosition } from "~/composables/useMakerdaoPosition";
 import { useStatus } from "~/composables/useStatus";
 import { useNotification } from "~/composables/useNotification";
+import DropdownMakerdao from "~/components/protocols/DropdownMakerdao.vue";
 
 export default defineComponent({
   components: {
@@ -157,7 +160,8 @@ export default defineComponent({
     SVGBalance,
     SVGEarnings,
     SVGArrowRight,
-    SVGPercent
+    SVGPercent,
+    DropdownMakerdao
   },
   setup() {
     const router = useRouter();

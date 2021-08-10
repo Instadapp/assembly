@@ -25,7 +25,7 @@ const defaultVault = {
   netvalue: "0"
 };
 
-const vaultId = ref("0");
+const vaultId = ref(null);
 const vaults = ref([]);
 const isNewVault = ref(false);
 const vaultTypes = ref([]);
@@ -50,7 +50,10 @@ const vault = computed(() => {
   return defaultVault;
 });
 
-export function useMakerdaoPosition(collateralAmountRef: Ref =null, debtAmountRef: Ref = null) {
+export function useMakerdaoPosition(
+  collateralAmountRef: Ref = null,
+  debtAmountRef: Ref = null
+) {
   const { web3, chainId, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { isZero, ensureValue, times, div, max, gt } = useBigNumber();
@@ -78,19 +81,32 @@ export function useMakerdaoPosition(collateralAmountRef: Ref =null, debtAmountRe
   const netValue = computed(() => ensureValue(vault.value.netValue).toFixed());
 
   const status = computed(() => {
-    if (!collateralAmountRef || !debtAmountRef) return ensureValue(vault.value.status).toFixed()
+    if (!collateralAmountRef || !debtAmountRef)
+      return ensureValue(vault.value.status).toFixed();
     return isZero(collateralAmountRef.value) && !isZero(debtAmountRef.value)
-      ? '1.1'
-      : div(debtAmountRef.value, times(collateralAmountRef.value, price.value)).toFixed()
-  })
+      ? "1.1"
+      : div(
+          debtAmountRef.value,
+          times(collateralAmountRef.value, price.value)
+        ).toFixed();
+  });
 
   const liquidationPrice = computed(() => {
     if (!collateralAmountRef || !debtAmountRef)
-      return max(div(div(debt.value, collateral.value), liquidation.value), '0').toFixed()
+      return max(
+        div(div(debt.value, collateral.value), liquidation.value),
+        "0"
+      ).toFixed();
     return isZero(collateralAmountRef.value) && !isZero(debtAmountRef.value)
-      ? times(price.value, '1.1').toFixed()
-      : max(div(div(debtAmountRef.value, collateralAmountRef.value), liquidation.value), '0').toFixed()
-  })
+      ? times(price.value, "1.1").toFixed()
+      : max(
+          div(
+            div(debtAmountRef.value, collateralAmountRef.value),
+            liquidation.value
+          ),
+          "0"
+        ).toFixed();
+  });
 
   const debt = computed(() => ensureValue(vault.value.debt).toFixed());
   const minDebt = computed(() => vaultTypes.value[0]?.totalFloor || "5000");
@@ -136,9 +152,16 @@ export function useMakerdaoPosition(collateralAmountRef: Ref =null, debtAmountRe
     { immediate: true }
   );
 
+  const selectVault = vid => {
+    if (vid === vaultId.value && !isNewVault.value) return;
+    vaultId.value = vid;
+    isNewVault.value = false;
+  };
+
   return {
     fetchPosition,
-    vaultId,
+    vaultId: computed(() => (isNewVault.value ? "0" : vaultId.value || "0")),
+    selectVault,
     vaultTokenType,
     vault,
     vaults,
@@ -245,7 +268,7 @@ async function getVaults(user, web3) {
         ratePerBlock,
         priceInWei,
         liquidationRatioCbyD,
-        urn,
+        urn
       ]) => {
         const collateral = new BigNumber(collInWei).dividedBy(1e18);
         const debt = new BigNumber(debtInWei).dividedBy(1e18);
