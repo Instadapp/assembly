@@ -16,8 +16,7 @@ export function useDSA() {
       if (web3.value) {
         dsa.value = new DSA(web3.value, chainId.value);
       }
-    },
-    { immediate: true }
+    }
   );
 
   watch(
@@ -39,8 +38,7 @@ export function useDSA() {
           activeAccount.value = accounts.value[0];
         }
       }
-    },
-    { immediate: true }
+    }
   );
 
   watch(
