@@ -110,6 +110,7 @@ export function useWeb3() {
 
     // Subscribe to chainId change
     provider.on("chainChanged", refreshWeb3);
+    provider.on("accountsChanged", refreshWeb3);
   };
 
   const refreshWeb3 = async () => {
@@ -119,7 +120,6 @@ export function useWeb3() {
     let newWeb3 = new Web3(web3Provider);
     chainId.value = await newWeb3.eth.getChainId();
     web3.value = newWeb3;
-    window.web3 = web3.value;
   };
 
   return {
