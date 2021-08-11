@@ -27,17 +27,6 @@
         placeholder="Amount to borrow"
         :error="errors.amount.message"
       >
-        <template v-if="!isMaxAmount" #suffix>
-          <div class="absolute mt-2 top-0 right-0 mr-4">
-            <button
-              type="button"
-              class="text-primary-blue-dark font-semibold text-sm hover:text-primary-blue-hover"
-              @click="toggle"
-            >
-              Max
-            </button>
-          </div>
-        </template>
       </input-numeric>
 
       <SidebarContextHeading class="mt-5">
@@ -150,12 +139,6 @@ export default defineComponent({
 
     const address = computed(() => token.value?.address)
 
-    const factor = computed(
-      () => displayPositions.value?.find((position) => rootTokenKey.value === position.key)?.factor
-    )
-
-    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
-
     const { validateAmount, validateLiquidation, validateLiquidity, validateIsLoggedIn } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
@@ -218,8 +201,6 @@ export default defineComponent({
       formatNumber,
       formatUsdMax,
       formatUsd,
-      toggle,
-      isMaxAmount,
       maxLiquidation,
       liquidationPrice,
       liquidationMaxPrice,
