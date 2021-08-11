@@ -1,4 +1,4 @@
-# assembly-nuxt
+# Assembly
 
 ## Build Setup
 

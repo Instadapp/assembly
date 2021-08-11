@@ -12,7 +12,7 @@
       <div class="text-center py-8">
         <a
           class="font-medium text-primary-blue-dark hover:text-primary-blue-hover hover:underline"
-          href="https://github.com/Instadapp/assembly-nuxt"
+          href="https://github.com/Instadapp/assembly"
           target="_blank"
         >
           Contribute on GitHub
