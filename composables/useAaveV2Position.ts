@@ -11,6 +11,7 @@ import { Network } from "./useNetwork";
 import { useBigNumber } from "./useBigNumber";
 import { usePosition } from "./usePosition";
 import { useToken } from "./useToken";
+import { useSorting } from "./useSorting";
 
 const {
   times,
@@ -67,7 +68,8 @@ export function useAaveV2Position(
   const { web3, chainId, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { getTokenByKey, allATokensV2 } = useToken();
-
+  const { byMaxSupplyOrBorrowDesc } = useSorting()
+  
   const resolver = computed(() =>
     chainId.value === 1
       ? "0xFb3a1D56eD56F046721B9aCa749895100754578b"
@@ -204,7 +206,8 @@ export function useAaveV2Position(
           max(a.supplyUsd, a.borrowUsd)
         ).toNumber()
       )
-      .map(overridePosition);
+      .map(overridePosition)
+      .sort(byMaxSupplyOrBorrowDesc);
   });
 
   function getPositionOrDefaultPosition(token, position) {
