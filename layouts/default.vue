@@ -5,7 +5,7 @@
     <div class="min-h-screen flex flex-col">
       <Navbar />
       <div class="flex-1 overflow-x-hidden ">
-        <div class="max-w-6xl mx-auto py-12">
+        <div class="max-w-6xl mx-auto py-12 px-4">
           <Nuxt />
         </div>
       </div>
