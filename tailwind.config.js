@@ -23,8 +23,10 @@ module.exports = {
           black: "#161E2E",
           gray: "#A5ADC6",
           blue: {
-            dark: "#3F75FF",
-            hover: "#5E8BFF",
+            dark: "#1874FF",
+            darker: "#186FF1",
+            border: "#0E59EB",
+            hover: "#0846E4",
           }
         },
         lightest: '#FEFEFF',
@@ -108,7 +110,7 @@ module.exports = {
         90: '0.90',
       },
       fontFamily: {
-        sans: ["Montserrat", ...defaultTheme.fontFamily.sans]
+        sans: ["Work Sans", "Montserrat", ...defaultTheme.fontFamily.sans]
       },
       animation: {
         'spin-loading': 'spin 1s cubic-bezier(.6,0,.4,1) infinite',
