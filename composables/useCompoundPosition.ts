@@ -13,6 +13,7 @@ import { useToken } from "./useToken";
 import addresses from "~/constant/addresses";
 import ctokens from "~/constant/ctokens";
 import tokenIdMapping from "~/constant/tokenIdMapping";
+import { useSorting } from "./useSorting";
 
 const {
   times,
@@ -64,7 +65,7 @@ export function useCompoundPosition(
   const { web3, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { getTokenByKey } = useToken();
-
+  const { byMaxSupplyOrBorrowDesc } = useSorting()
   const resolver = computed(() => addresses.mainnet.resolver.compound);
 
   const fetchPosition = async () => {
@@ -195,7 +196,8 @@ export function useCompoundPosition(
           return false;
         }
         return true;
-      });
+      })
+      .sort(byMaxSupplyOrBorrowDesc);
   });
 
   function getPositionOrDefaultPosition(token, pos) {

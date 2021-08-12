@@ -68,7 +68,16 @@
         >
           <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
           <span class="flex items-center text-white">
+            <div class="mr-2">
+              <span
+                class="text-white flex-grow-0 flex-shrink-0 bg-primary-blue-border shadow-sm rounded text-[10px] p-1"
+              >
+                v{{ account.version }}
+              </span>
+            </div>
+            
             #{{ account.id }}
+
           </span>
 
           <span
@@ -105,7 +114,11 @@
     </div>
   </div>
 
-  <button class="bg-primary-blue-darker hover:bg-primary-blue-hover border border-primary-blue-border text-white text-sm p-2 rounded flex items-center justify-center w-40" @click="createAccount" v-else>
+  <button
+    class="bg-primary-blue-darker hover:bg-primary-blue-hover border border-primary-blue-border text-white text-sm p-2 rounded flex items-center justify-center w-40"
+    @click="createAccount"
+    v-else
+  >
     Create Account
   </button>
 </template>

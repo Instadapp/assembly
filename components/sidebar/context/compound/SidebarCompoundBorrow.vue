@@ -19,17 +19,6 @@
         placeholder="Amount to borrow"
         :error="errors.amount.message"
       >
-        <template v-if="!isMaxAmount" #suffix>
-          <div class="absolute mt-2 top-0 right-0 mr-4">
-            <button
-              type="button"
-              class="text-primary-blue-dark font-semibold text-sm hover:text-primary-blue-hover"
-              @click="toggle"
-            >
-              Max
-            </button>
-          </div>
-        </template>
       </input-numeric>
 
       <SidebarContextHeading class="mt-5">
@@ -70,14 +59,12 @@
 <script>
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
-import { useBalances } from '~/composables/useBalances'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
 import { useValidators } from '~/composables/useValidators'
 import { useValidation } from '~/composables/useValidation'
 import { useToken } from '~/composables/useToken'
 import { useParsing } from '~/composables/useParsing'
-import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
 import { useWeb3 } from '~/composables/useWeb3'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
@@ -140,10 +127,6 @@ export default defineComponent({
       return currentPosition.value?.borrow || '0'
     })
 
-    const address = computed(() => token.value?.address)
-
-    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
-
     const { validateAmount, validateLiquidation, validateLiquidity, validateIsLoggedIn } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
@@ -202,8 +185,6 @@ export default defineComponent({
       formatNumber,
       formatUsdMax,
       formatUsd,
-      toggle,
-      isMaxAmount,
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,
