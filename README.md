@@ -1,6 +1,6 @@
 # Assembly
 
-## Build Setup
+<img src="https://raw.githubusercontent.com/InstaDApp/assembly/master/src/banner.png">
 
 ```bash
 # install dependencies
