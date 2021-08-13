@@ -23,6 +23,14 @@
     │   └── index.vue           # List all avaiable apps             
     └── ...
 
+## Creating new App for Mainnet
+
+- Create a new file `my-app.vue` in `pages/mainnet` folder, or duplicat existing protocol, ex: `pages/mainnet/aave-v2.vue`
+- Register the new app in `index.vue` in `appsPerNetwork` array.
+- Create new protocol `useMyAppPosition.ts` in `composables/protocols` folder, check `composables/protocols/useAaveV2Position.ts` for more details.
+- Create sidebars for the new app in `components/sidebar/context/my-app` folder, ex: `SidebarMyAppSupply.vue`, check `components/sidebar/context/aave-v2` for more details.
+- Register the sidebars in `composables/useSidebar.ts`, check the `sidebars` array for more details.
+
 ## Development
 
 ```bash
