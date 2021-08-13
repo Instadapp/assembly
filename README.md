@@ -2,6 +2,29 @@
 
 <img src="https://raw.githubusercontent.com/Instadapp/assembly/master/banner.png">
 
+
+## Directory Structure
+
+    .
+    ├── ...
+    ├── composables             
+    │   ├── protocols/          # Logic for protocols, example `useAave2Position.ts`
+    │   ├── ...       
+    │   └── ...                  
+    ├── ...
+    ├── components             
+    │   ├── protocols/          # Contains components used for protocols, example `CardAave.vue`
+    │   ├── sidebar/            # Contains all sidebar components, check `useSidebar.ts`
+    │   └── ...                   
+    ├── ...
+    ├── pages             
+    │   ├── mainnet/            # Apps for Mainnet network
+    │   ├── polygon/            # Apps for Polygon network
+    │   └── index.vue           # List all avaiable apps             
+    └── ...
+
+## Development
+
 ```bash
 # install dependencies
 $ yarn install
