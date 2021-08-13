@@ -7,17 +7,16 @@
         v-for="app in apps"
         :key="app.id"
         :to="app.url"
-        class="relative flex flex-col items-center px-4 py-12 text-center rounded-[6px] cursor-pointer bg-white hover:bg-gray-50 shadow"
+        class="relative flex flex-col items-center px-4 py-12 text-center rounded-[6px] cursor-pointer bg-white border border-transparent hover:border-[#1874FF] shadow"
       >
         <div
           style="background: radial-gradient(42.15% 42.15% at 48.94% 48.94%, #D6DAE0 75.67%, #F0F3F9 100%), #C4C4C4;"
-          class="w-20 h-20 rounded-full flex items-center justify-center"
+          class="w-20 h-20 rounded-full flex items-center justify-center border border-[#CCDCF3]"
         >
           <div
-            style="background: linear-gradient(0deg, #FFFFFF, #FFFFFF), #C4C4C4"
-            class="w-16 h-16 rounded-full flex items-center justify-center"
+            class="w-16 h-16 rounded-full flex items-center justify-center bg-[#1874FF]"
           >
-            <component :is="app.icon" class="w-8 h-8" />
+            <component :is="app.icon" class="w-10 h-10 text-white" />
           </div>
         </div>
 
@@ -33,9 +32,9 @@
 <script lang="ts">
 import { computed, defineComponent } from "@nuxtjs/composition-api";
 import { useNetwork } from "~/composables/useNetwork";
-import AaveIcon from "~/assets/icons/colored/aave.svg?inline";
-import CompoundIcon from "~/assets/icons/colored/compound.svg?inline";
-import MakerIcon from "~/assets/icons/colored/maker.svg?inline";
+import AaveIcon from "~/assets/icons/aave.svg?inline";
+import CompoundIcon from "~/assets/icons/compound.svg?inline";
+import MakerIcon from "~/assets/icons/makerdao.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [

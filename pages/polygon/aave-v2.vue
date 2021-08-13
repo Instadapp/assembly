@@ -10,8 +10,18 @@
       </nuxt-link>
     </div>
 
-    <div class="mt-10">
-      <h1 class="text-primary-black text-2xl font-semibold">Aave v2</h1>
+    <div class="mt-10 flex items-center">
+      <div
+        style="background: radial-gradient(42.15% 42.15% at 48.94% 48.94%, #D6DAE0 75.67%, #F0F3F9 100%), #C4C4C4;"
+        class="w-16 h-16 rounded-full flex items-center justify-center border border-[#CCDCF3]"
+      >
+        <div
+          class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
+        >
+          <AaveIcon class="w-10 h-10 text-white" />
+        </div>
+      </div>
+      <h1 class="ml-4 text-primary-black text-2xl font-semibold">Aave v2</h1>
     </div>
 
     <div class="mt-10" v-if="position">
@@ -88,15 +98,15 @@
               </h3>
               <Badge class="w-18 xxl:w-23" :color="color">{{ text }}</Badge>
             </div>
-            <div class="mt-4 flex justify-between items-center text-primary-gray font-medium">
-              <div
-                class="flex items-center whitespace-no-wrap"
-              >
+            <div
+              class="mt-4 flex justify-between items-center text-primary-gray font-medium"
+            >
+              <div class="flex items-center whitespace-no-wrap">
                 <div>D/C (%)</div>
 
                 <div class="ml-2"><Info text="Debt/Collateral ratio" /></div>
               </div>
-              <span >Max - {{ formatPercent(position.maxLiquidation) }}</span>
+              <span>Max - {{ formatPercent(position.maxLiquidation) }}</span>
             </div>
           </div>
         </div>
@@ -155,11 +165,13 @@ import { useSearchFilter } from "~/composables/useSearchFilter";
 import { useStatus } from "~/composables/useStatus";
 import { useBigNumber } from "~/composables/useBigNumber";
 import CardAave from "~/components/protocols/CardAave.vue";
+import AaveIcon from "~/assets/icons/aave.svg?inline";
 
 export default defineComponent({
   components: {
     BackIcon,
-    CardAave
+    CardAave,
+    AaveIcon
   },
   setup() {
     const {

@@ -11,9 +11,21 @@
     </div>
 
     <div class="mt-10 flex items-center">
-      <h1 class="text-primary-black text-2xl font-semibold">MakerDAO</h1>
+      <div class="flex items-center">
+        <div
+          style="background: radial-gradient(42.15% 42.15% at 48.94% 48.94%, #D6DAE0 75.67%, #F0F3F9 100%), #C4C4C4;"
+          class="w-16 h-16 rounded-full flex items-center justify-center border border-[#CCDCF3]"
+        >
+          <div
+            class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
+          >
+            <MakerDAOIcon Icon class="w-10 h-10 text-white" />
+          </div>
+        </div>
+        <h1 class="ml-4 text-primary-black text-2xl font-semibold">MakerDAO</h1>
+      </div>
 
-      <dropdown-makerdao class="ml-auto"/>
+      <dropdown-makerdao class="ml-auto" />
     </div>
 
     <div class="mt-10">
@@ -151,6 +163,7 @@ import { useMakerdaoPosition } from "~/composables/protocols/useMakerdaoPosition
 import { useStatus } from "~/composables/useStatus";
 import { useNotification } from "~/composables/useNotification";
 import DropdownMakerdao from "~/components/protocols/DropdownMakerdao.vue";
+import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
 
 export default defineComponent({
   components: {
@@ -161,7 +174,8 @@ export default defineComponent({
     SVGEarnings,
     SVGArrowRight,
     SVGPercent,
-    DropdownMakerdao
+    DropdownMakerdao,
+    MakerDAOIcon,
   },
   setup() {
     const router = useRouter();
