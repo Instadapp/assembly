@@ -57,7 +57,7 @@
 <script>
 import { defineComponent, useRouter } from '@nuxtjs/composition-api'
 import SVGChevronUp from '@/assets/img/icons/chevron-up.svg?inline'
-import { useMakerdaoPosition } from '~/composables/useMakerdaoPosition'
+import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
 import { useSidebar } from '~/composables/useSidebar'
 import Dropdown from '../common/input/Dropdown.vue'
 import DropdownMenu from './DropdownMenu.vue'

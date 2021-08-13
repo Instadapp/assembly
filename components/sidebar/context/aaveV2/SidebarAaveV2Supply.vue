@@ -70,7 +70,7 @@
 <script>
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
-import { useAaveV2Position } from '~/composables/useAaveV2Position'
+import { useAaveV2Position } from '~/composables/protocols/useAaveV2Position'
 import { useBalances } from '~/composables/useBalances'
 import { useNotification } from '~/composables/useNotification'
 import { useBigNumber } from '~/composables/useBigNumber'

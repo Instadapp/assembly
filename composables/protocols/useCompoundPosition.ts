@@ -2,18 +2,18 @@ import { AbiItem } from "web3-utils";
 
 import compoundABI from "~/abis/read/compound.json";
 import { computed, ref, watch } from "@nuxtjs/composition-api";
-import { useDSA } from "./useDSA";
-import { useWeb3 } from "./useWeb3";
+import { useDSA } from "~/composables/useDSA";
+import { useWeb3 } from "~/composables/useWeb3";
 import BigNumber from "bignumber.js";
 import tokens from "~/constant/tokens";
-import { Network } from "./useNetwork";
-import { useBigNumber } from "./useBigNumber";
-import { usePosition } from "./usePosition";
-import { useToken } from "./useToken";
+import { Network } from "~/composables/useNetwork";
+import { useBigNumber } from "~/composables/useBigNumber";
+import { usePosition } from "~/composables/usePosition";
+import { useToken } from "~/composables/useToken";
 import addresses from "~/constant/addresses";
 import ctokens from "~/constant/ctokens";
 import tokenIdMapping from "~/constant/tokenIdMapping";
-import { useSorting } from "./useSorting";
+import { useSorting } from "~/composables/useSorting";
 
 const {
   times,

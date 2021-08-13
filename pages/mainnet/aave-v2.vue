@@ -149,7 +149,7 @@
 <script lang="ts">
 import { defineComponent, computed } from "@nuxtjs/composition-api";
 import BackIcon from "~/assets/icons/back.svg?inline";
-import { useAaveV2Position } from "~/composables/useAaveV2Position";
+import { useAaveV2Position } from "~/composables/protocols/useAaveV2Position";
 import { useFormatting } from "~/composables/useFormatting";
 import { useSearchFilter } from "~/composables/useSearchFilter";
 import { useStatus } from "~/composables/useStatus";

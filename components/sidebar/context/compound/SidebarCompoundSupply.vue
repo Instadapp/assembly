@@ -87,7 +87,7 @@ import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
 import tokenIdMapping from '~/constant/tokenIdMapping'
 import ctokens from '~/constant/ctokens'
-import { useCompoundPosition } from '~/composables/useCompoundPosition'
+import { useCompoundPosition } from '~/composables/protocols/useCompoundPosition'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },

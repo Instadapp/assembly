@@ -42,7 +42,7 @@
 <script>
 import { defineComponent, useContext, computed } from '@nuxtjs/composition-api'
 import { useFormatting } from '~/composables/useFormatting'
-import { useMakerdaoPosition } from '~/composables/useMakerdaoPosition'
+import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
 import { useSearchFilter } from '~/composables/useSearchFilter'
 import { useSidebar } from '~/composables/useSidebar'
 

@@ -2,16 +2,16 @@ import { AbiItem } from "web3-utils";
 
 import aaveV2ABI from "~/abis/read/aaveV2.json";
 import { computed, ref, watch } from "@nuxtjs/composition-api";
-import { useDSA } from "./useDSA";
-import { useWeb3 } from "./useWeb3";
+import { useDSA } from "~/composables/useDSA";
+import { useWeb3 } from "~/composables/useWeb3";
 import BigNumber from "bignumber.js";
 import atokensV2 from "~/constant/atokensV2";
 import tokens from "~/constant/tokens";
-import { Network } from "./useNetwork";
-import { useBigNumber } from "./useBigNumber";
-import { usePosition } from "./usePosition";
-import { useToken } from "./useToken";
-import { useSorting } from "./useSorting";
+import { Network } from "~/composables/useNetwork";
+import { useBigNumber } from "~/composables/useBigNumber";
+import { usePosition } from "~/composables/usePosition";
+import { useToken } from "~/composables/useToken";
+import { useSorting } from "~/composables/useSorting";
 
 const {
   times,

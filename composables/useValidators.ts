@@ -1,6 +1,6 @@
 import { useBigNumber } from "./useBigNumber";
 import { useFormatting } from "./useFormatting";
-import { useMakerdaoPosition } from "./useMakerdaoPosition";
+import { useMakerdaoPosition } from "~/composables/protocols/useMakerdaoPosition";
 
 export function useValidators() {
   const { formatNumber } = useFormatting();

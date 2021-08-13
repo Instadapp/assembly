@@ -147,7 +147,7 @@ import SVGPercent from "@/assets/img/icons/percent.svg?inline";
 import CardMakerdao from "~/components/protocols/CardMakerdao.vue";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { useFormatting } from "~/composables/useFormatting";
-import { useMakerdaoPosition } from "~/composables/useMakerdaoPosition";
+import { useMakerdaoPosition } from "~/composables/protocols/useMakerdaoPosition";
 import { useStatus } from "~/composables/useStatus";
 import { useNotification } from "~/composables/useNotification";
 import DropdownMakerdao from "~/components/protocols/DropdownMakerdao.vue";

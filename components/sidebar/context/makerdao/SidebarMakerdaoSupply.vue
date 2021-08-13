@@ -85,7 +85,7 @@ import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
-import { useMakerdaoPosition } from '~/composables/useMakerdaoPosition'
+import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },

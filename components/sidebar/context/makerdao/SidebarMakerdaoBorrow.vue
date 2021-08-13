@@ -77,7 +77,7 @@ import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
 import ctokens from '~/constant/ctokens'
-import { useMakerdaoPosition } from '~/composables/useMakerdaoPosition'
+import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },

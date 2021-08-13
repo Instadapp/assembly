@@ -147,7 +147,7 @@
 <script lang="ts">
 import { defineComponent, computed } from "@nuxtjs/composition-api";
 import BackIcon from "~/assets/icons/back.svg?inline";
-import { useCompoundPosition } from "~/composables/useCompoundPosition";
+import { useCompoundPosition } from "~/composables/protocols/useCompoundPosition";
 import { useFormatting } from "~/composables/useFormatting";
 import { useSearchFilter } from "~/composables/useSearchFilter";
 import { useStatus } from "~/composables/useStatus";

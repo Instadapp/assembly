@@ -4,10 +4,10 @@ BigNumber.config({ POW_PRECISION: 200 });
 import abis from "~/constant/abis";
 import addresses from "~/constant/addresses";
 import makerVaults from "~/constant/tokens/vaults";
-import { useBigNumber } from "./useBigNumber";
-import { useDSA } from "./useDSA";
-import { useToken } from "./useToken";
-import { useWeb3 } from "./useWeb3";
+import { useBigNumber } from "~/composables/useBigNumber";
+import { useDSA } from "~/composables/useDSA";
+import { useToken } from "~/composables/useToken";
+import { useWeb3 } from "~/composables/useWeb3";
 import { AbiItem } from "web3-utils";
 
 const defaultVault = {

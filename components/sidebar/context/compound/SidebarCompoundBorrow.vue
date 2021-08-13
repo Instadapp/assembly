@@ -72,7 +72,7 @@ import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
-import { useCompoundPosition } from '~/composables/useCompoundPosition'
+import { useCompoundPosition } from '~/composables/protocols/useCompoundPosition'
 import ctokens from '~/constant/ctokens'
 import tokenIdMapping from '~/constant/tokenIdMapping'
 
