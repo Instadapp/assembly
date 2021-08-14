@@ -17,7 +17,7 @@ export const networks = [
   { id: "polygon", chainId: 136, name: "Polygon", icon: PolygonSVG }
 ];
 
-export const activeNetworkId = ref<Network>(Network.Polygon);
+export const activeNetworkId = ref<Network>();
 export const activeNetwork = computed(
   () => networks.find(n => n.id === activeNetworkId.value) || networks[0]
 );
@@ -113,7 +113,7 @@ export function useNetwork() {
 
   onMounted( () => {
     //@ts-ignore
-    activeNetworkId.value = localStorage.getItem('network') || "polygon";
+    activeNetworkId.value = localStorage.getItem('network') || "mainnet";
 
     refreshWeb3()
   })
