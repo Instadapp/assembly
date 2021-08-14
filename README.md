@@ -1,7 +1,10 @@
 # Assembly
 
+> The Open Source Dashboard for the Instadapp Protocol 
+
 <img src="https://raw.githubusercontent.com/Instadapp/assembly/master/banner.png">
 
+Instadapp Assembly is an open source dashboard for developing and building on the Instadapp Protocol. Instadapp will host a community led interface here: [Assembly.Instadapp.io](Assembly.Instadapp.io)
 
 ## Directory Structure
 
@@ -47,5 +50,38 @@ $ yarn start
 # generate static project
 $ yarn generate
 ```
+
+## Contributing to the hosted Assembly Site
+
+### How to Integrate DApps or Protocols
+If you would like to integrate your project or contracts into the Instadapp protocol you can read our [Integration Guide](https://instadapp.notion.site/Instadapp-Protocol-Integration-d14f34f1a4aa42138154143948ddb7b4). 
+
+After integrations are merged to the protocol, users and developers can start building use-cases and functionality on Assembly by creating a DApp page or submitting strategies for the integration. 
+
+### How to submit a new DApp Page:
+You can submit a new DApp page as a PR to this repo. The team and the Assembly Guild will review and merge the DApp page. 
+
+The requirements will vary depending on the protocol and use-case but in general, DApp pages should attempt to be complete as possible. *i.e . A Maker DApp page should contain information that the user would need such as collateral ratio, Vault ID, amount of debt borrowed, etc.*
+
+### How to submit a strategy to an existing DApp Page:
+You can submit custom strategies and other use cases to be published on Assembly. Submit the strategy to the appropriate DApp page as a PR. 
+
+If your strategy involves multiple protocols or does not fit in one particular DApp page you can submit to multiple DApp pages or you can submit a separate DApp page for your strategy. Not Required but useful; to share the strategy as a link on [Terminal](https://terminal.instadapp.io/) for easier review.
+
+WIP 🚧
+
+
+# 📚 Additional Links
+
+[Developer Documentation](https://docs.instadapp.io/)
+
+[Instadapp SDK Repo](https://github.com/Instadapp/dsa-connect)
+
+Mainnet Connectors: [Docs](https://docs.instadapp.io/connectors/mainnet) / [Repo](https://github.com/Instadapp/dsa-connectors/tree/main/contracts/mainnet)
+
+Polygon Connectors: [Docs](https://docs.instadapp.io/connectors/polygon) / [Repo](https://github.com/Instadapp/dsa-connectors/tree/main/contracts/polygon)
+
+---
+Visit our Homepage - [Instadapp.io](https://instadapp.io/) or reach out to the team on [Discord](https://discord.gg/GFwDf3WQvK) if you have any issues.
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
