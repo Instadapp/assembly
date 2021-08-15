@@ -11,9 +11,9 @@
     @click="toggle"
   >
     <div
-      class="box-content flex w-10 h-5 transition-colors duration-75 rounded-full p-2px"
+      class="box-content flex w-10 h-5 transition-colors duration-75 rounded-full p-0.5"
       :class="{
-        'bg-green-pure dark:bg-opacity-75': checked,
+        'bg-primary-blue-dark': checked,
         'bg-grey-light  group-hover:bg-grey-pure group-hover:bg-opacity-20 focus:bg-grey-pure focus:bg-opacity-20 dark:group-hover:bg-opacity-38 dark:bg-opacity-20 ': !checked
       }"
     />

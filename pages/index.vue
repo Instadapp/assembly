@@ -35,6 +35,7 @@ import { useNetwork } from "~/composables/useNetwork";
 import AaveIcon from "~/assets/icons/aave.svg?inline";
 import CompoundIcon from "~/assets/icons/compound.svg?inline";
 import MakerIcon from "~/assets/icons/makerdao.svg?inline";
+import OneInchIcon from "~/assets/icons/1inch.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [
@@ -58,6 +59,13 @@ const appsPerNetwork = {
       name: "MakerDAO",
       url: "/mainnet/maker",
       description: "Collateralized Debt"
+    },
+    {
+      id: "1inch",
+      icon: OneInchIcon,
+      name: "1inch",
+      url: "/mainnet/1inch",
+      description: "DEX aggregator with the best prices on the market"
     }
   ],
   polygon: [
@@ -67,6 +75,13 @@ const appsPerNetwork = {
       name: "Aave v2",
       url: "/polygon/aave-v2",
       description: "Lend and borrow straight from your Gnosis Safe"
+    },
+    {
+      id: "1inch",
+      icon: OneInchIcon,
+      name: "1inch",
+      url: "/polygon/1inch",
+      description: "DEX aggregator with the best prices on the market"
     }
   ]
 };
