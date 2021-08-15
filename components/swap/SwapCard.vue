@@ -6,10 +6,11 @@
         class="shadow-sm relative border border-grey-dark/[0.15] rounded-lg p-4 mb-2"
       >
         <div class="flex justify-between items-center mb-3">
-          <div>
+          <div class="flex-1" @click="() => token0Input.focus()">
             <input
               type="text"
               v-model.trim="token0.amount"
+              ref="token0Input"
               inputmode="decimal"
               autocomplete="off"
               autocorrect="off"
@@ -341,6 +342,8 @@ export default defineComponent({
     const { activeNetworkId } = useNetwork()
     const allTokens = computed(() => tokens[activeNetworkId.value].allTokens)
 
+    const token0Input = ref()
+
     const token0 = reactive({
       address: '',
       symbol: 'ETH',
@@ -383,6 +386,7 @@ export default defineComponent({
     }
 
     return {
+      token0Input,
       customSlippage,
       token0,
       selectToken0,
