@@ -250,12 +250,12 @@
       <div class="w-1/2">
         <div
           v-if="customSlippage"
-          class="text-sm font-medium flex items-center justify-around bg-primary-gray/[.15] text-primary-gray w-full px-4 py-2 rounded-[6px] border border-grey-dark border-opacity-[0.15]"
+          class="text-sm font-medium flex text-center items-center bg-primary-gray/[.15] text-primary-gray w-full p-1 rounded-[6px] border border-grey-dark border-opacity-[0.15]"
         >
-          <span>0.1%</span>
-          <span>0.5%</span>
-          <span>1%</span>
-          <span>3%</span>
+          <span class="w-1/4 py-1.5">0.1%</span>
+          <span class="w-1/4 py-1.5">0.5%</span>
+          <span class="w-1/4 py-1.5">1%</span>
+          <span class="w-1/4 py-1.5">3%</span>
         </div>
 
         <div
@@ -263,7 +263,7 @@
           class="text-sm font-medium flex items-center border-primary-blue-dark text-primary-gray w-full p-1 rounded-[6px] border "
         >
           <button
-            class="w-1/4 py-2"
+            class="w-1/4 py-1.5"
             @click="slippage = '0.1'"
             :class="{
               'rounded bg-primary-blue-dark text-white': slippage === '0.1'
@@ -273,7 +273,7 @@
           </button>
 
           <button
-            class="w-1/4 py-2"
+            class="w-1/4 py-1.5"
             @click="slippage = '0.5'"
             :class="{
               'rounded bg-primary-blue-dark text-white': slippage === '0.5'
@@ -283,7 +283,7 @@
           </button>
 
           <button
-            class="w-1/4 py-2"
+            class="w-1/4 py-1.5"
             @click="slippage = '1'"
             :class="{
               'rounded bg-primary-blue-dark text-white': slippage === '1'
@@ -293,7 +293,7 @@
           </button>
 
           <button
-            class="w-1/4 py-2"
+            class="w-1/4 py-1.5"
             @click="slippage = '3'"
             :class="{
               'rounded bg-primary-blue-dark text-white': slippage === '3'
