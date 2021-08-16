@@ -347,7 +347,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, reactive, ref, watch, watchEffect } from '@nuxtjs/composition-api'
+import { computed, defineComponent, onMounted, reactive, ref, watch, watchEffect } from '@nuxtjs/composition-api'
 import { useNetwork } from '~/composables/useNetwork'
 import tokens from '~/constant/tokens'
 import Button from '../Button.vue'
@@ -389,7 +389,7 @@ export default defineComponent({
       address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
       symbol: 'ETH',
       amount: '0',
-      amountUSD: computed(() => prices[activeNetworkId.value][token0.address] * token0.amount),
+      amountUSD: computed(() => (prices[activeNetworkId.value][token0.address] * token0.amount) || '0'),
       balance: computed(() => getBalanceByKey(token0.symbol)),
       decimals: 18,
 
@@ -399,7 +399,7 @@ export default defineComponent({
       address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
       symbol: 'DAI',
       amount: props.token1Amount,
-      amountUSD: computed(() => prices[activeNetworkId.value][token1.address] * token1.amount),
+      amountUSD: computed(() => (prices[activeNetworkId.value][token1.address] * token1.amount) || '0'),
       balance: computed(() => getBalanceByKey(token1.symbol)),
       decimals: 18,
     })
@@ -443,7 +443,6 @@ export default defineComponent({
     }
 
     const selectToken1 = (token) => {
-      console.log(token);
       token1.symbol = token.symbol
       token1.address = token.address
       token1.decimals = token.decimals
@@ -453,6 +452,10 @@ export default defineComponent({
     watch(token0, () => emit('token0', { ...token0 }), { immediate: true })
     watch(token1, () => emit('token1', { ...token1 }), { immediate: true })
     watch([slippage, customSlippage, customSlippageValue], () => emit('slippage', customSlippage.value ? customSlippageValue.value : slippage.value), { immediate: true })
+    watch(activeNetworkId, () => {
+      selectToken0(allTokens.value.find(token => token.symbol === 'ETH'))
+      selectToken1(allTokens.value.find(token => token.symbol === 'DAI'))
+    }, { immediate: true })
 
     const swapping = ref(false)
 
