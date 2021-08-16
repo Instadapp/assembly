@@ -64,8 +64,8 @@ const appsPerNetwork = {
       id: "1inch",
       icon: OneInchIcon,
       name: "1inch",
-      url: "/mainnet/1inch",
-      description: "DEX aggregator with the best prices on the market"
+      url: "/1inch",
+      description: "DEX Aggregator"
     }
   ],
   polygon: [
@@ -80,8 +80,8 @@ const appsPerNetwork = {
       id: "1inch",
       icon: OneInchIcon,
       name: "1inch",
-      url: "/polygon/1inch",
-      description: "DEX aggregator with the best prices on the market"
+      url: "/1inch",
+      description: "DEX Aggregator"
     }
   ]
 };
