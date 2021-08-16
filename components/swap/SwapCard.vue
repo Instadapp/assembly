@@ -20,8 +20,8 @@
               maxlength="79"
               spellcheck="false"
               :size="
-                token0.amount.length > 0
-                  ? Math.min(token0.amount.length, 20)
+                String(token0.amount).length > 0
+                  ? Math.min(String(token0.amount).length, 24)
                   : 2
               "
               class="border-0 focus:outline-none focus:ring-0 text-lg font-semibold px-0 max-w-full"
@@ -95,9 +95,11 @@
         <div
           class="flex justify-between items-center text-primary-gray font-medium"
         >
-          <div>~ $ 9,321.69</div>
+          <div>~ {{ formatUsd(token0.amountUSD) }}</div>
 
-          <div>Balance: 85 {{ token0.symbol }}</div>
+          <div>
+            Balance: {{ formatDecimal(token0.balance) }} {{ token0.symbol }}
+          </div>
         </div>
 
         <div
@@ -123,8 +125,8 @@
               maxlength="79"
               spellcheck="false"
               :size="
-                token1.amount.length > 0
-                  ? Math.min(token1.amount.length, 20)
+                String(token1.amount).length > 0
+                  ? Math.min(String(token1.amount).length, 24)
                   : 2
               "
               class="border-0 focus:outline-none focus:ring-0 text-lg font-semibold px-0 max-w-full"
@@ -198,9 +200,16 @@
         <div
           class="flex justify-between items-center text-primary-gray font-medium"
         >
-          <div>~ $ 9,321.69 <span class="text-green-pure">(0.188%)</span></div>
+          <div>
+            ~ {{ formatUsd(token1.amountUSD) }}
+            <span v-if="slippagePerc" class="text-green-pure"
+              >({{ formatPercent(slippagePerc) }})</span
+            >
+          </div>
 
-          <div>Balance: 85 {{ token1.symbol }}</div>
+          <div>
+            Balance: {{ formatDecimal(token1.balance) }} {{ token1.symbol }}
+          </div>
         </div>
 
         <div
@@ -228,8 +237,18 @@
       </div>
     </div>
 
-    <div class="text-right mt-[18px] font-medium mb-1">
-      1 DAI = 0.0004272 ETH
+    <div
+      class="text-right mt-[18px] font-medium mb-1"
+      v-if="
+        token0.amount &&
+          token1.amount &&
+          token1.amount != '0' &&
+          token0.amount != '0'
+      "
+    >
+      1 {{ token1.symbol }} =
+      {{ formatDecimal(token0.amount / token1.amount, 7) }}
+      {{ token0.symbol }}
     </div>
 
     <div class="mt-6 flex items-center justify-between">
@@ -316,13 +335,19 @@
     </div>
 
     <div class="mt-7">
-      <ButtonCTA class="px-8 h-16 w-full">Swap</ButtonCTA>
+      <ButtonCTA
+        @click="swap"
+        :loading="swapping"
+        :disabled="swapping"
+        class="px-8 h-16 w-full"
+        >Swap</ButtonCTA
+      >
     </div>
   </div>
 </template>
 
 <script>
-import { computed, defineComponent, reactive, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, reactive, ref, watch, watchEffect } from '@nuxtjs/composition-api'
 import { useNetwork } from '~/composables/useNetwork'
 import tokens from '~/constant/tokens'
 import Button from '../Button.vue'
@@ -334,27 +359,62 @@ import Menu from '../common/menu/Menu.vue'
 import IconCurrency from '../IconCurrency.vue'
 import DropdownMenu from '../protocols/DropdownMenu.vue'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
+import { useFormatting } from '~/composables/useFormatting'
+import { useBalances } from '~/composables/useBalances'
+import { useBigNumber } from '~/composables/useBigNumber'
 
 export default defineComponent({
   components: { List, Menu, IconCurrency, Button, Dropdown, DropdownMenu, ToggleButton, InputPercent, ButtonCTA },
-  setup() {
+  props: {
+    onSwap: {
+      type: Function,
+      required: true
+    },
+    token1Amount: {
+      type: String,
+      default: '0'
+    },
+  },
+  setup(props, { emit }) {
 
+    const { toBN } = useBigNumber()
+    const { formatDecimal, formatUsd, formatPercent } = useFormatting()
+    const { prices, getBalanceByKey } = useBalances()
     const { activeNetworkId } = useNetwork()
     const allTokens = computed(() => tokens[activeNetworkId.value].allTokens)
 
     const token0Input = ref()
 
     const token0 = reactive({
-      address: '',
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
       symbol: 'ETH',
-      amount: '4'
+      amount: '0',
+      amountUSD: computed(() => prices[activeNetworkId.value][token0.address] * token0.amount),
+      balance: computed(() => getBalanceByKey(token0.symbol)),
+      decimals: 18,
+
     })
 
     const token1 = reactive({
-      address: '',
+      address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
       symbol: 'DAI',
-      amount: '9322.75'
+      amount: props.token1Amount,
+      amountUSD: computed(() => prices[activeNetworkId.value][token1.address] * token1.amount),
+      balance: computed(() => getBalanceByKey(token1.symbol)),
+      decimals: 18,
     })
+
+    const slippagePerc = computed(() => {
+
+      const sellAmountUsd = toBN(token0.amountUSD);
+      const buyAmountUsd = toBN(token1.amountUSD);
+
+      return buyAmountUsd.isZero() || sellAmountUsd.isZero() ? 0 : Math.abs(buyAmountUsd.dividedBy(sellAmountUsd).minus(1).toString())
+    })
+
+    watch(() => props.token1Amount, () => {
+      token1.amount = props.token1Amount
+    });
 
     const slippage = ref('3')
     const customSlippage = ref(false)
@@ -367,25 +427,54 @@ export default defineComponent({
       token0.symbol = token1Raw.symbol
       token0.address = token1Raw.address
       token0.amount = token1Raw.amount
+      token0.decimals = token1Raw.decimals
 
       token1.symbol = token0Raw.symbol
       token1.address = token0Raw.address
       token1.amount = token0Raw.amount
+      token1.decimals = token0Raw.decimals
     }
 
     const selectToken0 = (token) => {
       token0.symbol = token.symbol
       token0.address = token.address
+      token0.decimals = token.decimals
       token0.amount = "0"
     }
 
     const selectToken1 = (token) => {
+      console.log(token);
       token1.symbol = token.symbol
       token1.address = token.address
+      token1.decimals = token.decimals
       token1.amount = "0"
     }
 
+    watch(token0, () => emit('token0', { ...token0 }), { immediate: true })
+    watch(token1, () => emit('token1', { ...token1 }), { immediate: true })
+    watch([slippage, customSlippage, customSlippageValue], () => emit('slippage', customSlippage.value ? customSlippageValue.value : slippage.value), { immediate: true })
+
+    const swapping = ref(false)
+
+    const swap = async () => {
+      swapping.value = true
+
+      if (props.onSwap) {
+        await props.onSwap(
+          { ...token0 },
+          { ...token1 },
+          slippage.value
+        )
+      }
+
+      swapping.value = false
+    }
+
     return {
+      formatPercent,
+      slippagePerc,
+      formatDecimal,
+      formatUsd,
       token0Input,
       customSlippage,
       token0,
@@ -396,6 +485,8 @@ export default defineComponent({
       allTokens,
       customSlippageValue,
       slippage,
+      swap,
+      swapping,
     }
   },
 })
