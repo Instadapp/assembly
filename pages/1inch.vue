@@ -31,7 +31,7 @@
         :on-swap="swap"
         @token0="sellToken = $event"
         @token1="buyToken = $event"
-        @slippage="fee = $event"
+        @slippage="slippage = $event"
         :token1Amount="buyToken ? buyToken.amount : '0'"
       />
     </div>
@@ -54,6 +54,10 @@ import axios from "axios";
 import { useToken } from "~/composables/useToken";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { useNetwork } from "~/composables/useNetwork";
+import { useDSA } from "~/composables/useDSA";
+import { use1InchSwap } from "~/composables/swap/use1InchSwap";
+import { useWeb3 } from "~/composables/useWeb3";
+import { useNotification } from "~/composables/useNotification";
 
 export default defineComponent({
   components: {
@@ -64,17 +68,65 @@ export default defineComponent({
   setup() {
     const { toBN, pow, div } = useBigNumber();
     const { activeNetwork } = useNetwork();
-
+    const { dsa } = useDSA();
+    const { getSellSpell } = use1InchSwap();
+    const { account } = useWeb3();
+    const { showPendingTransaction, showWarning } = useNotification();
     const { valInt } = useToken();
     const sellToken = ref();
     const buyToken = ref();
-    const fee = ref("3.0");
+    const slippage = ref("3.0");
 
-    const swap = async (token0, token1, slippage) => {
-      await wait(3000);
+    function caculateUnitAmt() {
+      let unitAmt: any = toBN(buyToken.value.amount).dividedBy(
+        toBN(sellToken.value.amount)
+      );
+      unitAmt = unitAmt.multipliedBy((100 - 0.3) / 100);
+      unitAmt = unitAmt.multipliedBy(1e18).toFixed(0);
+
+      return unitAmt;
+    }
+
+    const swap = async () => {
+      const result = await fetchSwapData();
+
+      const spells = dsa.value.Spell();
+
+      console.log(
+        getSellSpell({
+          buyAddr: buyToken.value.address,
+          sellAddr: sellToken.value.address,
+          sellAmt: sellToken.value.balance,
+          unitAmt: caculateUnitAmt(),
+          calldata: result.tx.data,
+          setId: 0
+        })
+      );
+
+      spells.add(
+        getSellSpell({
+          buyAddr: buyToken.value.address,
+          sellAddr: sellToken.value.address,
+          sellAmt:  valInt(sellToken.value.amount, sellToken.value.decimals),
+          unitAmt: caculateUnitAmt(),
+          calldata: result.tx.data,
+          setId: 0
+        })
+      );
+
+      try {
+        const txHash = await dsa.value.cast({
+          spells,
+          from: account.value
+        });
+
+        showPendingTransaction(txHash);
+      } catch (error) {
+        showWarning(error.message);
+      }
     };
 
-    const fetchSwapInfo = async () => {
+    const fetchSwapQuote = async () => {
       if (!sellToken.value || !buyToken.value) return;
 
       if (!sellToken.value.amount || sellToken.value.amount === "0") {
@@ -88,8 +140,7 @@ export default defineComponent({
           params: {
             fromTokenAddress: sellToken.value.address,
             toTokenAddress: buyToken.value.address,
-            amount: valInt(sellToken.value.amount, sellToken.value.decimals),
-            fee: fee.value
+            amount: valInt(sellToken.value.amount, sellToken.value.decimals)
           }
         }
       );
@@ -100,11 +151,36 @@ export default defineComponent({
       buyToken.value.amount = div(num, multiplier).toFixed(7);
     };
 
-    watch([sellToken, buyToken, fee], fetchSwapInfo);
+    const fetchSwapData = async () => {
+      if (!sellToken.value || !buyToken.value) return;
+
+      if (!sellToken.value.amount || sellToken.value.amount === "0") {
+        buyToken.value.amount = "0";
+        return;
+      }
+
+      const { data } = await axios.get(
+        `https://api.1inch.exchange/v3.0/${activeNetwork.value.chainId}/swap`,
+        {
+          params: {
+            fromTokenAddress: sellToken.value.address.toLowerCase(),
+            toTokenAddress: buyToken.value.address.toLowerCase(),
+            amount: valInt(sellToken.value.amount, sellToken.value.decimals),
+            fromAddress: dsa.value.instance.address.toLowerCase(),
+            slippage: slippage.value,
+            disableEstimate: true
+          }
+        }
+      );
+
+      return data;
+    };
+
+    watch([sellToken, buyToken, slippage], fetchSwapQuote);
     let interval;
 
     onMounted(() => {
-      interval = setInterval(fetchSwapInfo, 10000);
+      interval = setInterval(fetchSwapQuote, 10000);
     });
 
     onBeforeUnmount(() => {
@@ -115,7 +191,7 @@ export default defineComponent({
 
     return {
       swap,
-      fee,
+      slippage,
       sellToken,
       buyToken
     };

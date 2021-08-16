@@ -362,6 +362,7 @@ import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useFormatting } from '~/composables/useFormatting'
 import { useBalances } from '~/composables/useBalances'
 import { useBigNumber } from '~/composables/useBigNumber'
+import { use1InchSwap } from '~/composables/swap/use1InchSwap'
 
 export default defineComponent({
   components: { List, Menu, IconCurrency, Button, Dropdown, DropdownMenu, ToggleButton, InputPercent, ButtonCTA },
