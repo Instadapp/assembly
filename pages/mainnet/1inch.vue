@@ -53,6 +53,7 @@ import wait from "waait";
 import axios from "axios";
 import { useToken } from "~/composables/useToken";
 import { useBigNumber } from "~/composables/useBigNumber";
+import { useNetwork } from "~/composables/useNetwork";
 
 export default defineComponent({
   components: {
@@ -62,6 +63,7 @@ export default defineComponent({
   },
   setup() {
     const { toBN, pow, div } = useBigNumber();
+    const { activeNetwork } = useNetwork();
 
     const { valInt } = useToken();
     const sellToken = ref();
@@ -81,7 +83,7 @@ export default defineComponent({
       }
 
       const { data } = await axios.get(
-        "https://api.1inch.exchange/v3.0/1/quote",
+        `https://api.1inch.exchange/v3.0/${activeNetwork.value.chainId}/quote`,
         {
           params: {
             fromTokenAddress: sellToken.value.address,
