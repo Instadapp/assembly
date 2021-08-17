@@ -92,17 +92,6 @@ export default defineComponent({
 
       const spells = dsa.value.Spell();
 
-      console.log(
-        getSellSpell({
-          buyAddr: buyToken.value.address,
-          sellAddr: sellToken.value.address,
-          sellAmt: sellToken.value.balance,
-          unitAmt: caculateUnitAmt(),
-          calldata: result.tx.data,
-          setId: 0
-        })
-      );
-
       spells.add(
         getSellSpell({
           buyAddr: buyToken.value.address,

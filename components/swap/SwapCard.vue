@@ -347,7 +347,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, onMounted, reactive, ref, watch, watchEffect } from '@nuxtjs/composition-api'
+import { computed, defineComponent, reactive, ref, watch } from '@nuxtjs/composition-api'
 import { useNetwork } from '~/composables/useNetwork'
 import tokens from '~/constant/tokens'
 import Button from '../Button.vue'
@@ -362,7 +362,6 @@ import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useFormatting } from '~/composables/useFormatting'
 import { useBalances } from '~/composables/useBalances'
 import { useBigNumber } from '~/composables/useBigNumber'
-import { use1InchSwap } from '~/composables/swap/use1InchSwap'
 
 export default defineComponent({
   components: { List, Menu, IconCurrency, Button, Dropdown, DropdownMenu, ToggleButton, InputPercent, ButtonCTA },
