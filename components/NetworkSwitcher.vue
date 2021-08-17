@@ -1,20 +1,20 @@
 <template>
-  <div class="relative w-[148px]" v-click-outside="hide">
+  <div class="relative w-[160px] md:w-[178px]" v-click-outside="hide">
     <button
       type="button"
-      class="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0846E4] focus:border-[#0846E4] sm:text-sm"
+      class="bg-primary-blue-dark hover:bg-primary-blue-hover relative w-full border border-primary-blue-border rounded pl-2.5 pr-10 py-1.5 text-left focus:outline-none focus:ring-1 focus:ring-[#0846E4] focus:border-[#0846E4] sm:text-sm"
       aria-haspopup="listbox"
       aria-expanded="true"
       aria-labelledby="listbox-label"
       @click="show = !show"
     >
-      <span class="flex items-center capitalize">
+      <span class="flex items-center capitalize font-medium text-sm text-white">
         <component :is="activeNetwork.icon" class="w-6 h-6 mr-2" />
 
         {{ activeNetwork.name }}
       </span>
       <span
-        class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none"
+        class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
       >
         <svg
           :class="{ 'rotate-180': show }"
@@ -26,7 +26,7 @@
         >
           <path
             d="M5.5 5.75L6.20711 6.45711C5.81658 6.84763 5.18342 6.84763 4.79289 6.45711L5.5 5.75ZM1.29289 2.95711L0.585786 2.25L2 0.835786L2.70711 1.54289L1.29289 2.95711ZM8.29289 1.54289L9 0.835786L10.4142 2.25L9.70711 2.95711L8.29289 1.54289ZM4.79289 6.45711L1.29289 2.95711L2.70711 1.54289L6.20711 5.04289L4.79289 6.45711ZM4.79289 5.04289L8.29289 1.54289L9.70711 2.95711L6.20711 6.45711L4.79289 5.04289Z"
-            :fill="show ? '#0846E4' : '#161E2E'"
+            fill="#fff"
           />
         </svg>
       </span>
@@ -65,7 +65,7 @@
         >
           <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
           <span class="flex items-center">
-            <component :is="network.icon" class="w-6 h-6 mr-2" />
+            <component :is="network.icon" class="w-6 h-6 mr-2 text-primary-blue-dark" />
 
             {{ network.name }}
           </span>
