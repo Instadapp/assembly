@@ -80,7 +80,7 @@
       </button>
     </div>
 
-    <div v-if="canSimulate" class="fixed bottom-0 left-0 ml-10 mb-16">
+    <div v-if="active && canSimulate" class="fixed bottom-0 left-0 ml-10 mb-16">
       <button
         v-if="forkId"
         @click="stopSimulation"
