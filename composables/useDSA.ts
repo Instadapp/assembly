@@ -12,7 +12,7 @@ export function useDSA() {
 
   watch(
     web3,
-    () => {
+    () => {      
       if (web3.value) {
         dsa.value = new DSA(web3.value, chainId.value);
       }
@@ -38,6 +38,8 @@ export function useDSA() {
           activeAccount.value = accounts.value[0];
         }
       }
+      //@ts-ignore
+      window.dsa = dsa.value
     }
   );
 

@@ -79,11 +79,28 @@
         Balance
       </button>
     </div>
+
+    <div v-if="canSimulate" class="fixed bottom-0 left-0 ml-10 mb-16">
+      <button
+        v-if="forkId"
+        @click="stopSimulation"
+        class="px-9 h-[56px] bg-primary-blue-dark hover:bg-primary-blue-hover text-white rounded-[28px] text-lg font-semibold shadow flex items-center"
+      >
+        Stop Simulation
+      </button>
+      <button
+        v-else
+        @click="startSimulation"
+        class="px-9 h-[56px] bg-primary-blue-dark hover:bg-primary-blue-hover text-white rounded-[28px] text-lg font-semibold shadow flex items-center"
+      >
+        Start Simulation
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, nextTick, onErrorCaptured, useContext, useRoute, watch } from "@nuxtjs/composition-api";
+import { defineComponent, nextTick, onErrorCaptured, onMounted, useContext, useRoute, watch } from "@nuxtjs/composition-api";
 import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
 import CompoundIcon from '~/assets/icons/compound.svg?inline'
 import AaveIcon from '~/assets/icons/aave.svg?inline'
@@ -91,6 +108,7 @@ import { useWeb3 } from '~/composables/useWeb3'
 import { init as initSidebars, useSidebar } from '~/composables/useSidebar'
 import { useBackdrop } from '@/composables/useBackdrop'
 import { useNetwork } from "~/composables/useNetwork";
+import { useTenderly } from "~/composables/useTenderly";
 
 export default defineComponent({
   components: {
@@ -104,6 +122,7 @@ export default defineComponent({
     const { isShown: isBackdropShown, close: closeBackdrop } = useBackdrop()
     const { redirect } = useContext()
     const { showSidebarBalances } = useSidebar()
+    const { canSimulate, startSimulation, stopSimulation, forkId } = useTenderly()
     const route = useRoute()
 
     watch(isBackdropShown, () => {
@@ -149,6 +168,10 @@ export default defineComponent({
       closeBackdrop,
       showSidebarBalances,
       activeNetworkId,
+      startSimulation,
+      forkId,
+      stopSimulation,
+      canSimulate,
     }
   }
 
