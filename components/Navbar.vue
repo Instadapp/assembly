@@ -41,7 +41,7 @@
         @click="deactivate"
         class="hidden md:flex bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded h-9 items-center justify-center w-40"
       >
-        Disonnect
+        Disconnect
       </button>
 
       <AccountSwitcher v-if="active" />
