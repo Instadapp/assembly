@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-[68px] px-8 py-5 border border-b-[#E7E8F1] flex items-center justify-between"
+    class="px-4 md:px-8 py-4 border border-b-[#E7E8F1] shadow flex flex-col md:flex-row md:items-center md:justify-between"
   >
     <nuxt-link to="/" class="flex items-center text-[#1874FF]">
       <svg
@@ -27,11 +27,11 @@
       <span class="ml-2 font-extrabold text-lg">ASSEMBLY</span>
     </nuxt-link>
 
-    <div class="flex items-center space-x-2.5">
+    <div class="mt-8 md:mt-0 ml-auto flex items-center justify-center space-x-2.5">
       <button
         v-if="!active"
         @click="activate"
-        class="bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded-[6px] h-9 flex items-center justify-center w-40"
+        class="hidden md:flex bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded h-9  items-center justify-center w-40"
       >
         Connect
       </button>
@@ -39,9 +39,9 @@
       <button
         v-else
         @click="deactivate"
-        class="bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded-[6px] h-9 flex items-center justify-center w-40"
+        class="hidden md:flex bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded h-9 items-center justify-center w-40"
       >
-        Disonnect
+        Disconnect
       </button>
 
       <AccountSwitcher v-if="active" />

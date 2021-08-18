@@ -5,7 +5,7 @@
     <div class="min-h-screen flex flex-col">
       <Navbar />
       <div v-if="activeNetworkId" class="flex-1 overflow-x-hidden ">
-        <div class="max-w-6xl mx-auto py-12">
+        <div class="px-4 md:px-0 max-w-6xl mx-auto py-12">
           <Nuxt />
         </div>
       </div>
