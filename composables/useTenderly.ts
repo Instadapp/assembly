@@ -13,6 +13,7 @@ export function useTenderly() {
   const canSimulate = computed(
     () => $config.TENDERLY_FORK_PATH && $config.TENDERLY_KEY
   );
+  const loading = ref(false);
 
   onMounted(() => {
     if (!canSimulate.value) {
@@ -25,6 +26,7 @@ export function useTenderly() {
   });
 
   const startSimulation = async () => {
+    loading.value = true;
     try {
       const { data } = await axios({
         method: "post",
@@ -45,9 +47,11 @@ export function useTenderly() {
     } catch (error) {
       stopSimulation();
     }
+    loading.value = false;
   };
 
   const stopSimulation = async () => {
+    loading.value = true;
     try {
       await axios({
         method: "delete",
@@ -62,6 +66,7 @@ export function useTenderly() {
     forkId.value = null;
     window.localStorage.removeItem("forkId");
     refreshWeb3();
+    loading.value = false;
   };
 
   const setForkId = fork => {
@@ -99,6 +104,7 @@ export function useTenderly() {
     forkId,
     canSimulate,
     startSimulation,
-    stopSimulation
+    stopSimulation,
+    loading,
   };
 }

@@ -11,20 +11,20 @@
     @click="toggle"
   >
     <div
-      class="box-content flex w-10 h-5 transition-colors duration-75 rounded-full p-2px"
+      class="box-content flex w-10 h-5 transition-colors duration-75 rounded-full p-0.5 shadow-inner"
       :class="{
-        'bg-green-pure dark:bg-opacity-75': checked,
-        'bg-grey-light  group-hover:bg-grey-pure group-hover:bg-opacity-20 focus:bg-grey-pure focus:bg-opacity-20 dark:group-hover:bg-opacity-38 dark:bg-opacity-20 ': !checked
+        'bg-green-pure': checked,
+        'bg-grey-light  group-hover:bg-grey-pure group-hover:bg-opacity-20 focus:bg-grey-pure focus:bg-opacity-20': !checked
       }"
     />
     <div
-      class="absolute flex items-center justify-center w-5 h-5 transition-transform duration-300 ease-out transform bg-white rounded-full  dark:bg-light"
-      style="top: calc(50% - 0.625rem)"
+      class="absolute shadow flex items-center justify-center w-4 h-4 transition-transform duration-300 ease-out transform bg-white rounded-full"
+      style="top: calc(50% - 0.5rem)"
       :style="{ transform }"
     >
       <spinner v-if="loading" class="text-green-pure" />
     </div>
-    <span v-if="label" class="ml-4 text-12">{{ label }}</span>
+    <span v-if="label" class="ml-2 font-semibold text-primary-gray">{{ label }}</span>
   </div>
 </template>
 

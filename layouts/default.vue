@@ -79,23 +79,6 @@
         Balance
       </button>
     </div>
-
-    <div v-if="active && canSimulate" class="fixed bottom-0 left-0 ml-10 mb-16">
-      <button
-        v-if="forkId"
-        @click="stopSimulation"
-        class="px-9 h-[56px] bg-primary-blue-dark hover:bg-primary-blue-hover text-white rounded-[28px] text-lg font-semibold shadow flex items-center"
-      >
-        Stop Simulation
-      </button>
-      <button
-        v-else
-        @click="startSimulation"
-        class="px-9 h-[56px] bg-primary-blue-dark hover:bg-primary-blue-hover text-white rounded-[28px] text-lg font-semibold shadow flex items-center"
-      >
-        Start Simulation
-      </button>
-    </div>
   </div>
 </template>
 
@@ -122,7 +105,6 @@ export default defineComponent({
     const { isShown: isBackdropShown, close: closeBackdrop } = useBackdrop()
     const { redirect } = useContext()
     const { showSidebarBalances } = useSidebar()
-    const { canSimulate, startSimulation, stopSimulation, forkId } = useTenderly()
     const route = useRoute()
 
     watch(isBackdropShown, () => {
@@ -168,10 +150,6 @@ export default defineComponent({
       closeBackdrop,
       showSidebarBalances,
       activeNetworkId,
-      startSimulation,
-      forkId,
-      stopSimulation,
-      canSimulate,
     }
   }
 
