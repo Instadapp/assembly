@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { defineComponent, nextTick, onErrorCaptured, useContext, useRoute, watch } from "@nuxtjs/composition-api";
+import { defineComponent, nextTick, onErrorCaptured, onMounted, useContext, useRoute, watch } from "@nuxtjs/composition-api";
 import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
 import CompoundIcon from '~/assets/icons/compound.svg?inline'
 import AaveIcon from '~/assets/icons/aave.svg?inline'
@@ -91,6 +91,7 @@ import { useWeb3 } from '~/composables/useWeb3'
 import { init as initSidebars, useSidebar } from '~/composables/useSidebar'
 import { useBackdrop } from '@/composables/useBackdrop'
 import { useNetwork } from "~/composables/useNetwork";
+import { useTenderly } from "~/composables/useTenderly";
 
 export default defineComponent({
   components: {

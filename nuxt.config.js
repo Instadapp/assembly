@@ -43,6 +43,8 @@ export default {
   publicRuntimeConfig: {
     INFURA_ID: process.env.INFURA_ID,
     PORTIS_ID: process.env.PORTIS_ID,
+    TENDERLY_FORK_PATH: process.env.TENDERLY_FORK_PATH,
+    TENDERLY_KEY: process.env.TENDERLY_KEY,
   },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

@@ -23,7 +23,6 @@ export const activeNetwork = computed(
 );
 
 export function useNetwork() {
-  
   const { showWarning } = useNotification();
   const { account, networkName, refreshWeb3 } = useWeb3();
   const { showNetworksMismatchDialog } = useModal();
@@ -108,15 +107,18 @@ export function useNetwork() {
   }
 
   watch(activeNetworkId, () => {
-    localStorage.setItem('network', activeNetworkId.value)
-  })
+    localStorage.setItem("network", activeNetworkId.value);
+  });
 
-  onMounted( () => {
+  onMounted(() => {
+    if (activeNetworkId.value) {
+      return;
+    }
     //@ts-ignore
-    activeNetworkId.value = localStorage.getItem('network') || "mainnet";
+    activeNetworkId.value = localStorage.getItem("network") || "mainnet";
 
-    refreshWeb3()
-  })
+    refreshWeb3();
+  });
 
   return {
     networkMismatch,

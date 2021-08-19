@@ -18,13 +18,13 @@
       }"
     />
     <div
-      class="absolute flex items-center justify-center w-5 h-5 transition-transform duration-300 ease-out transform bg-white rounded-full  dark:bg-light"
-      style="top: calc(50% - 0.625rem)"
+      class="absolute shadow flex items-center justify-center w-4 h-4 transition-transform duration-300 ease-out transform bg-white rounded-full"
+      style="top: calc(50% - 0.5rem)"
       :style="{ transform }"
     >
-      <spinner v-if="loading" class="text-green-pure" />
+      <spinner v-if="loading" class="text-primary-blue-dark" />
     </div>
-    <span v-if="label" class="ml-4 text-12">{{ label }}</span>
+    <span v-if="label" class="ml-2 font-semibold text-primary-gray">{{ label }}</span>
   </div>
 </template>
 

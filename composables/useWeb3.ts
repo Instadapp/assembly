@@ -1,4 +1,4 @@
-import { computed, onMounted, ref } from "@nuxtjs/composition-api";
+import { computed, onMounted, ref, watch } from "@nuxtjs/composition-api";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import { Network } from "./useNetwork";
@@ -122,6 +122,14 @@ export function useWeb3() {
     web3.value = newWeb3;
   };
 
+  const setWeb3 = (newWeb3: Web3) => {
+    web3.value = newWeb3;
+  }
+
+  watch(web3, () => {
+    window.web3 = web3.value;
+  })
+
   return {
     account,
     chainId,
@@ -130,6 +138,7 @@ export function useWeb3() {
     activate,
     deactivate,
     networkName,
-    refreshWeb3
+    refreshWeb3,
+    setWeb3,
   };
 }

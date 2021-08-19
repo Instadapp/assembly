@@ -2,7 +2,8 @@ import {
   computed,
   reactive,
   onMounted,
-  useContext
+  useContext,
+  watch
 } from "@nuxtjs/composition-api";
 import BigNumber from "bignumber.js";
 import abis from "~/constant/abis";
@@ -14,7 +15,6 @@ import { Network } from "./useNetwork";
 import { useWeb3 } from "./useWeb3";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
-import { mainnetWeb3, polygonWeb3 } from "~/utils/web3";
 import { useToken } from "./useToken";
 import { useBigNumber } from "./useBigNumber";
 import { useSorting } from "./useSorting";
@@ -32,7 +32,7 @@ const prices = reactive({
 export function useBalances() {
   const { $axios } = useContext();
   const { times, plus, ensureValue } = useBigNumber();
-  const { account, networkName } = useWeb3();
+  const { account, networkName, web3 } = useWeb3();
   const { activeAccount } = useDSA();
   const { getTokenByKey } = useToken();
   const { by } = useSorting();
@@ -46,23 +46,35 @@ export function useBalances() {
   const fetchBalances = async (refresh = false) => {
     if (!balances.user || refresh) {
       balances.user = {
-        mainnet: await getBalances(account.value, Network.Mainnet, mainnetWeb3),
-        polygon: await getBalances(account.value, Network.Polygon, polygonWeb3)
+        mainnet:
+          networkName.value === Network.Mainnet
+            ? await getBalances(account.value, Network.Mainnet, web3.value)
+            : {},
+        polygon:
+          networkName.value === Network.Polygon
+            ? await getBalances(account.value, Network.Polygon, web3.value)
+            : {}
       };
     }
 
     if (!balances.dsa || refresh) {
       balances.dsa = {
-        mainnet: await getBalances(
-          activeAccount.value.address,
-          Network.Mainnet,
-          mainnetWeb3
-        ),
-        polygon: await getBalances(
-          activeAccount.value.address,
-          Network.Polygon,
-          polygonWeb3
-        )
+        mainnet:
+          networkName.value === Network.Mainnet
+            ? await getBalances(
+                activeAccount.value.address,
+                Network.Mainnet,
+                web3.value
+              )
+            : {},
+        polygon:
+          networkName.value === Network.Polygon
+            ? await getBalances(
+                activeAccount.value.address,
+                Network.Polygon,
+                web3.value
+              )
+            : {}
       };
     }
   };
@@ -110,6 +122,11 @@ export function useBalances() {
       .sort(by("-netWorth"));
   };
 
+  watch(web3, () => {
+    console.log("Fetch balances");
+
+    fetchBalances(true);
+  });
   return {
     balances,
     fetchBalances,
@@ -127,6 +144,8 @@ async function getBalances(
   web3: Web3,
   additionalTokens = []
 ) {
+  console.log("getBalances", owner, network, web3);
+
   try {
     const tokenResolverABI = abis.resolver.balance;
     const tokenResolverAddr = addresses[network].resolver.balance;

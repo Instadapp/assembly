@@ -100,16 +100,18 @@
 
 <script>
 import { defineComponent, nextTick, ref } from '@nuxtjs/composition-api'
-import { useModal } from '~/composables/useModal'
 import { useNetwork } from '~/composables/useNetwork'
+import { useTenderly } from '~/composables/useTenderly'
 
 export default defineComponent({
   setup() {
     const show = ref(false)
 
     const { networks, activeNetworkId, activeNetwork, checkForNetworkMismatch } = useNetwork()
+    const { stopSimulation } = useTenderly()
 
     const setActiveNetwork = async networkId => {
+      await stopSimulation()
       activeNetworkId.value = networkId;
       show.value = false
       await nextTick()
