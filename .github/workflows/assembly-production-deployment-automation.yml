@@ -23,4 +23,5 @@ jobs:
             git pull && \
             npm i && \
             npm run build --if-present && \
+            npm run generate --if-present && \
             pm2 restart assembly --update-env
