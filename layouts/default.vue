@@ -31,15 +31,8 @@
           ></path>
         </svg>
       </div>
-      <div class="text-center py-8">
-        <a
-          class="font-medium text-primary-blue-dark hover:text-primary-blue-hover hover:underline"
-          href="https://github.com/Instadapp/assembly"
-          target="_blank"
-        >
-          Contribute on GitHub
-        </a>
-      </div>
+
+      <Footer />
     </div>
 
     <Backdrop :show="isBackdropShown" @click="closeBackdrop" />
@@ -50,7 +43,7 @@
 
     <NotificationBar />
 
-    <div class="fixed bottom-0 right-0 mr-10 mb-16">
+    <div class="fixed bottom-0 right-0 mr-10 mb-40">
       <button
         @click="showSidebarBalances"
         class="px-9 h-[56px] bg-primary-blue-dark hover:bg-primary-blue-hover text-white rounded-[28px] text-lg font-semibold shadow flex items-center"

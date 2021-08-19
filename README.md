@@ -4,7 +4,7 @@
 
 <img src="https://raw.githubusercontent.com/Instadapp/assembly/master/banner.png">
 
-Instadapp Assembly is an open source dashboard for developing and building on the Instadapp Protocol. Instadapp will host a community led interface here: [Assembly.Instadapp.io](Assembly.Instadapp.io)
+Instadapp Assembly is an open source dashboard for developing and building on the Instadapp Protocol. Instadapp will host a community led interface here: [Assembly.Instadapp.io](https://assembly.Instadapp.io)
 
 ## Directory Structure
 
