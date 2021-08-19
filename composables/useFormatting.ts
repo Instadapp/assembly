@@ -107,14 +107,14 @@ export function useFormatting() {
     return formatter.format(value);
   }
 
-  function shortenHash(hash: any) {
+  function shortenHash(hash: any, size = 4) {
     if (!hash) return;
 
     if (hash.length < 12) return hash;
 
-    const beginningChars = hash.startsWith("0x") ? 6 : 4;
+    const beginningChars = hash.startsWith("0x") ? size + 2 : size;
 
-    const shortened = hash.substr(0, beginningChars) + "…" + hash.substr(-4);
+    const shortened = hash.substr(0, beginningChars) + "…" + hash.substr(-size);
 
     return shortened;
   }

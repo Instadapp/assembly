@@ -45,6 +45,7 @@ export function useBalances() {
   });
   const fetchBalances = async (refresh = false) => {
     if (!balances.user || refresh) {
+      if (!account.value) return;
       balances.user = {
         mainnet:
           networkName.value === Network.Mainnet
@@ -58,6 +59,8 @@ export function useBalances() {
     }
 
     if (!balances.dsa || refresh) {
+      if (!activeAccount.value) return;
+
       balances.dsa = {
         mainnet:
           networkName.value === Network.Mainnet
@@ -123,8 +126,6 @@ export function useBalances() {
   };
 
   watch(web3, () => {
-    console.log("Fetch balances");
-
     fetchBalances(true);
   });
   return {
@@ -144,8 +145,6 @@ async function getBalances(
   web3: Web3,
   additionalTokens = []
 ) {
-  console.log("getBalances", owner, network, web3);
-
   try {
     const tokenResolverABI = abis.resolver.balance;
     const tokenResolverAddr = addresses[network].resolver.balance;

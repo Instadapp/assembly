@@ -55,18 +55,20 @@
             <div class="text-semibold text-sm text-grey-dark uppercase">
               #{{ activeAccount.id }}
             </div>
-            <div v-if="false" class="mt-3 text-2xl font-semibold">Account Name</div>
+            <div class="hidden mt-3 text-2xl font-semibold">Account Name</div>
           </div>
 
           <div>
             <div class="font-medium text-lg">
               Account address
             </div>
-            <div class="mt-4 text-lg font-medium text-grey-dark flex items-center">
+            <div
+              class="mt-4 text-lg font-medium text-grey-dark flex items-center"
+            >
               {{ activeAccount.address }}
 
               <button
-              class="ml-3"
+                class="ml-3"
                 v-tooltip.bottom="tooltip"
                 v-clipboard:copy="activeAccount.address"
                 v-clipboard:success="onCopy"
@@ -101,43 +103,108 @@
       </div>
     </div>
 
-    <div class="mt-12 hidden">
-      <h3 class="text-semibold text-sm text-primary-gray-dark uppercase">
-        Authorities
-      </h3>
+    <div class="mt-12">
+      <div class="flex justify-between items-center">
+        <h3 class="text-semibold text-sm text-primary-gray uppercase">
+          Authorities
+        </h3>
+
+        <ButtonCTA @click="addAuthority" class="h-8 w-52 text-xs uppercase font-semibold">
+          Add authority
+        </ButtonCTA>
+      </div>
+
+      <div
+        class="mt-4 p-8 border border-[#DBE5F4] rounded-[2px] grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6"
+      >
+        <div
+          v-for="authority in authorities"
+          :key="authority"
+          class="border border-[#DBE5F4] text-[#9FB0C9] rounded-[2px] flex items-center px-6 py-7"
+        >
+          <div>
+            <svg
+              width="16"
+              height="18"
+              viewBox="0 0 16 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 9C10.525 9 12.5714 6.98555 12.5714 4.5C12.5714 2.01445 10.525 0 8 0C5.475 0 3.42857 2.01445 3.42857 4.5C3.42857 6.98555 5.475 9 8 9ZM11.4214 10.1461L9.71429 16.875L8.57143 12.0938L9.71429 10.125H6.28571L7.42857 12.0938L6.28571 16.875L4.57857 10.1461C2.03214 10.2656 0 12.3152 0 14.85V16.3125C0 17.2441 0.767857 18 1.71429 18H14.2857C15.2321 18 16 17.2441 16 16.3125V14.85C16 12.3152 13.9679 10.2656 11.4214 10.1461Z"
+                fill="#9FB0C9"
+              />
+            </svg>
+          </div>
+          <a
+            :href="`${addressDetailsLink}/${authority}`"
+            target="_blank"
+            class="hover:underline flex-1 text-center font-medium text-lg text-primary-black truncate px-4"
+          >
+            {{ shortenHash(authority, 16) }}
+          </a>
+          <button @click="deleteAuthority(authority)">
+            <Icon name="trash" class="w-5"></Icon>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, watch } from "@nuxtjs/composition-api";
+import ButtonCTA from "~/components/common/input/ButtonCTA.vue";
+import RemoveAuthorityDialog from "~/components/modal/authority/RemoveAuthorityDialog.vue";
+import AddAuthorityDialog from "~/components/modal/authority/AddAuthorityDialog.vue";
 import { useBalances } from "~/composables/useBalances";
 import { useCopiedToClipboardUx } from "~/composables/useCopiedToClipboardUx";
 import { useDSA } from "~/composables/useDSA";
+import { useFormatting } from "~/composables/useFormatting";
+import { useLink } from "~/composables/useLink";
+import { useModal } from "~/composables/useModal";
+
 export default defineComponent({
-  components: {},
+  components: { ButtonCTA },
   setup() {
     const {
       accounts,
       activeAccount,
       setAccount,
       createAccount,
-      creatingAccount
+      creatingAccount,
+      authorities
     } = useDSA();
+    const { shortenHash } = useFormatting();
     const { fetchBalances } = useBalances();
     const { onCopy, tooltip, copied } = useCopiedToClipboardUx();
+    const { addressDetailsLink } = useLink();
+    const { showComponent } = useModal();
 
     watch(activeAccount, val => val && fetchBalances(true));
 
+    const deleteAuthority = (authority: string) => {
+      showComponent(RemoveAuthorityDialog, { authority });
+    };
+
+    const addAuthority = () => {
+      showComponent(AddAuthorityDialog);
+    };
+
     return {
+      addressDetailsLink,
+      shortenHash,
       accounts,
       activeAccount,
       setAccount,
       createAccount,
       creatingAccount,
+      authorities,
       onCopy,
       tooltip,
-      copied
+      copied,
+      deleteAuthority,
+      addAuthority,
     };
   }
 });

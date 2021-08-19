@@ -23,12 +23,18 @@ export function useModal() {
 
   const isShown = computed(() => !!modal.value);
 
+  function showComponent(component, componentProps = {}) {
+    modal.value = component;
+    props.value = componentProps;
+  }
+  
   return {
     showNetworksMismatchDialog,
     close,
     closePersistent,
     isShown,
     modal: computed(() => modal.value),
-    props: computed(() => props.value)
+    props: computed(() => props.value),
+    showComponent
   };
 }

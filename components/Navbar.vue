@@ -31,7 +31,7 @@
       <toggle-button
         v-if="active && canSimulate"
         @change="checked => (checked ? startSimulation() : stopSimulation())"
-        :checked="forkId"
+        :checked="!! forkId"
         :loading="loading"
         class="ml-4 border-l pl-4"
         label="Simulation Mode"

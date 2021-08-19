@@ -43,7 +43,7 @@
 
     <NotificationBar />
 
-    <div class="fixed bottom-0 right-0 mr-10 mb-40">
+    <div class="fixed bottom-0 right-0 mr-10 mb-28">
       <button
         @click="showSidebarBalances"
         class="px-9 h-[56px] bg-primary-blue-dark hover:bg-primary-blue-hover text-white rounded-[28px] text-lg font-semibold shadow flex items-center"
