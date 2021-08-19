@@ -5,7 +5,13 @@
         <Spinner class="w-6 h-6" />
       </div>
       <div v-else class="flex flex-col flex-grow">
-        <div v-if="items.length" :class="{ ' divide-y divide-grey-light divide-opacity-50': divided }">
+        <div
+          v-if="items.length"
+          :class="[
+            itemsWrapperClasses,
+            { ' divide-y divide-grey-light divide-opacity-50': divided }
+          ]"
+        >
           <div v-for="(item, i) in items" :key="i">
             <slot name="default" :item="item" :index="i"></slot>
           </div>
@@ -26,6 +32,10 @@ export default defineComponent({
     items: {
       type: Array,
       default: () => [],
+    },
+    itemsWrapperClasses: {
+      type: String,
+      default: ''
     },
     divided: {
       type: Boolean,

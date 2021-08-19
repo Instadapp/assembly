@@ -14,7 +14,7 @@ export enum Network {
 
 export const networks = [
   { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
-  { id: "polygon", chainId: 136, name: "Polygon", icon: PolygonSVG }
+  { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG }
 ];
 
 export const activeNetworkId = ref<Network>();

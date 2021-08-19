@@ -14,7 +14,7 @@
         <div
           v-close-popover="closeOnClick"
           :border-radius="borderRadius"
-          class="flex overflow-hidden border border-opacity-50 shadow-lg border-grey-light dark:bg-dark-400"
+          class="flex overflow-hidden border border-opacity-50 shadow-lg border-grey-light"
           :class="{ 'py-2': !noPadding }"
         >
           <slot />
