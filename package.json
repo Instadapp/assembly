@@ -25,6 +25,7 @@
     "v-tooltip": "^2.1.3",
     "vue-clipboard2": "^0.3.1",
     "vue-composable": "^1.0.0-beta.23",
+    "waait": "^1.0.5",
     "walletlink": "^2.1.6",
     "web3": "^1.4.0",
     "web3modal": "^1.9.3"

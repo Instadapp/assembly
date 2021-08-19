@@ -1,0 +1,27 @@
+name: production-deployment-automation
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          script: |
+            cd ${{ secrets.REMOTE_TARGET }} && \
+            git reset --hard && git clean -df && \
+            git pull && \
+            npm i && \
+            npm run build --if-present && \
+            npm run generate --if-present && \
+            pm2 restart assembly --update-env
