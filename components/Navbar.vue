@@ -31,7 +31,7 @@
       <toggle-button
         v-if="active && canSimulate"
         @change="checked => (checked ? startSimulation() : stopSimulation())"
-        :checked="!! forkId"
+        :checked="!!forkId"
         :loading="loading"
         class="ml-4 border-l pl-4"
         label="Simulation Mode"
@@ -42,25 +42,11 @@
     <div
       class="mt-8 md:mt-0 ml-auto flex items-center justify-center space-x-2.5"
     >
-      <button
-        v-if="!active"
-        @click="activate"
-        class="hidden md:flex bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded h-9  items-center justify-center w-40"
-      >
-        Connect
-      </button>
-
-      <button
-        v-else
-        @click="deactivate"
-        class="hidden md:flex bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded h-9 items-center justify-center w-40"
-      >
-        Disconnect
-      </button>
-
       <AccountSwitcher v-if="active" />
 
       <NetworkSwitcher />
+
+      <AccountDropdown />
     </div>
   </div>
 </template>
@@ -79,7 +65,7 @@ export default defineComponent({
       startSimulation,
       stopSimulation,
       forkId,
-      loading,
+      loading
     } = useTenderly();
 
     return {
@@ -90,7 +76,7 @@ export default defineComponent({
       startSimulation,
       stopSimulation,
       forkId,
-      loading,
+      loading
     };
   }
 });
