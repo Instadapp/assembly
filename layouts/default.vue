@@ -85,6 +85,7 @@ import { init as initSidebars, useSidebar } from '~/composables/useSidebar'
 import { useBackdrop } from '@/composables/useBackdrop'
 import { useNetwork } from "~/composables/useNetwork";
 import { useTenderly } from "~/composables/useTenderly";
+import { useModal } from "~/composables/useModal";
 
 export default defineComponent({
   components: {
@@ -98,6 +99,7 @@ export default defineComponent({
     const { isShown: isBackdropShown, close: closeBackdrop } = useBackdrop()
     const { redirect } = useContext()
     const { showSidebarBalances } = useSidebar()
+    const { showNetworksMismatchDialog } = useModal()
     const route = useRoute()
 
     watch(isBackdropShown, () => {
@@ -127,7 +129,11 @@ export default defineComponent({
 
     watch(chainId, (val) => {
       if (val) {
-        checkForNetworkMismatch()
+        if ([1, 137].includes(val)) {
+          checkForNetworkMismatch()
+        } else {
+          showNetworksMismatchDialog();
+        }
       }
     }, { immediate: true })
 
