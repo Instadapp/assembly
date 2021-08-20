@@ -55,7 +55,31 @@
             <div class="text-semibold text-sm text-grey-dark uppercase">
               #{{ activeAccount.id }}
             </div>
-            <div class="hidden mt-3 text-2xl font-semibold">Account Name</div>
+            <div class="mt-3 text-2xl font-semibold flex items-center">
+              {{ getAccountName(activeAccount.id) || 'Account Name' }}
+
+              <button class="ml-2.5" @click="renameAccount(activeAccount.id)">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 5H6.28571C5.67951 5 5.09812 5.21071 4.66947 5.58579C4.24082 5.96086 4 6.46957 4 7V18C4 18.5304 4.24082 19.0391 4.66947 19.4142C5.09812 19.7893 5.67951 20 6.28571 20H17.7143C18.3205 20 18.9019 19.7893 19.3305 19.4142C19.7592 19.0391 20 18.5304 20 18V17V12.5"
+                    stroke="#9FB0C9"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M15.8143 6.18517L18.8147 9.18569L12.2995 15.7012L9.62438 15.9965C9.26626 16.0361 8.96369 15.7333 9.00354 15.3752L9.30118 12.6981L15.8143 6.18517ZM20.6704 5.73845L19.2616 4.3296C18.8222 3.89013 18.1095 3.89013 17.67 4.3296L16.3447 5.65501L19.3451 8.65553L20.6704 7.33011C21.1099 6.89042 21.1099 6.17791 20.6704 5.73845Z"
+                    fill="#9FB0C9"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div>
@@ -109,7 +133,10 @@
           Authorities
         </h3>
 
-        <ButtonCTA @click="addAuthority" class="h-8 w-52 text-xs uppercase font-semibold">
+        <ButtonCTA
+          @click="addAuthority"
+          class="h-8 w-52 text-xs uppercase font-semibold"
+        >
           Add authority
         </ButtonCTA>
       </div>
@@ -157,12 +184,14 @@ import { defineComponent, watch } from "@nuxtjs/composition-api";
 import ButtonCTA from "~/components/common/input/ButtonCTA.vue";
 import RemoveAuthorityDialog from "~/components/modal/authority/RemoveAuthorityDialog.vue";
 import AddAuthorityDialog from "~/components/modal/authority/AddAuthorityDialog.vue";
+import RenameAccountDialog from "~/components/modal/account/RenameAccountDialog.vue";
 import { useBalances } from "~/composables/useBalances";
 import { useCopiedToClipboardUx } from "~/composables/useCopiedToClipboardUx";
 import { useDSA } from "~/composables/useDSA";
 import { useFormatting } from "~/composables/useFormatting";
 import { useLink } from "~/composables/useLink";
 import { useModal } from "~/composables/useModal";
+import { useAccountNames } from "~/composables/useAccountNames";
 
 export default defineComponent({
   components: { ButtonCTA },
@@ -180,6 +209,7 @@ export default defineComponent({
     const { onCopy, tooltip, copied } = useCopiedToClipboardUx();
     const { addressDetailsLink } = useLink();
     const { showComponent } = useModal();
+    const { getAccountName } = useAccountNames()
 
     watch(activeAccount, val => val && fetchBalances(true));
 
@@ -189,6 +219,9 @@ export default defineComponent({
 
     const addAuthority = () => {
       showComponent(AddAuthorityDialog);
+    };
+    const renameAccount = (accountId: string) => {
+      showComponent(RenameAccountDialog, { accountId });
     };
 
     return {
@@ -205,6 +238,8 @@ export default defineComponent({
       copied,
       deleteAuthority,
       addAuthority,
+      renameAccount,
+      getAccountName,
     };
   }
 });
