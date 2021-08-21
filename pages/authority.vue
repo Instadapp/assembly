@@ -8,7 +8,7 @@
       </h3>
 
       <div class="mt-4 md:flex md:justify-between md:items-center">
-        <div class="flex gap-3.5 overflow-y-scroll">
+        <div class="flex gap-3.5 overflow-y-scroll mr-5">
           <div
             @click="setAccount(account)"
             v-for="account in accounts"
