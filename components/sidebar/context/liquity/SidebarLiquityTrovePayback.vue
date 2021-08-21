@@ -1,42 +1,32 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Payback {{ symbol }}</template>
+    <template #title>Payback {{ debtToken.symbol }}</template>
 
-    <SidebarRateTypeSelect
-      class="flex flex-col items-center"
-      v-model="rateType"
-      :items="annualPercentageRateTypes"
-      :borrow-stable-rate="borrowStableRate"
-      :stable-borrow-enabled="stableBorrowEnabled"
-    />
-
-    <div class="mt-6 flex justify-around items-center  w-full">
-      <SidebarSectionValueWithIcon class="" label="Borrowed" center>
+    <div class="mt-6 flex justify-around items-center w-full">
+      <SidebarSectionValueWithIcon class="" label="Debt" center>
         <template #icon
-          ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
+          ><IconCurrency :currency="debtToken.key" class="w-20 h-20" noHeight
         /></template>
-        <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
+        <template #value>{{ formatDecimal(changedDebt) }} {{ debtToken.symbol }}</template>
       </SidebarSectionValueWithIcon>
 
       <SidebarSectionValueWithIcon class="" label="Token Balance" center>
         <template #icon
-          ><IconCurrency :currency="rootTokenKey" class="w-20 h-20" noHeight
+          ><IconCurrency :currency="collateralToken.key" class="w-20 h-20" noHeight
         /></template>
 
-        <template #value
-          >{{ formatNumber(tokenMaxBalance) }} {{ symbol }}</template
-        >
+        <template #value>{{ formatDecimal(changedBalance) }} {{ collateralToken.symbol }}</template>
       </SidebarSectionValueWithIcon>
     </div>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
-        Amount to supply
+        Amount to payback
       </h3>
 
       <input-numeric
         v-model="amount"
-        placeholder="Amount to supply"
+        placeholder="Amount to payback"
         :error="errors.amount.message"
       >
         <template v-if="!isMaxAmount" #suffix>
@@ -58,11 +48,14 @@
 
       <SidebarSectionStatus
         class="mt-8"
-        :liquidation="maxLiquidation"
+        :liquidation="liquidation"
         :status="status"
       />
 
-      <SidebarSectionValueWithIcon class="mt-8" label="Liquidation Price (ETH)">
+      <SidebarSectionValueWithIcon
+        class="mt-8"
+        :label="`Liquidation Price (${collateralToken.symbol})`"
+      >
         <template #value>
           {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }}
           <span class="text-primary-gray"
@@ -90,7 +83,6 @@
 <script>
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
-import { useAaveV2Position } from '~/composables/protocols/useAaveV2Position'
 import { useBalances } from '~/composables/useBalances'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
@@ -100,90 +92,60 @@ import { useToken } from '~/composables/useToken'
 import { useParsing } from '~/composables/useParsing'
 import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
 import { useWeb3 } from '~/composables/useWeb3'
-import atokens from '~/constant/atokens'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
+import { useLiquityPosition } from '~/composables/protocols/useLiquityPosition'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
-  props: {
-    tokenKey: { type: String, required: true },
-  },
-  setup(props) {
+  setup() {
     const { close } = useSidebar()
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
-    const { getTokenByKey, valInt } = useToken()
-    const { getBalanceByKey, getBalanceRawByKey, fetchBalances } = useBalances()
-    const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
-    const { isZero, gt, plus, max, minus } = useBigNumber()
+    const { valInt } = useToken()
+    const { getBalanceByKey } = useBalances()
+    const { formatDecimal, formatUsdMax, formatUsd } = useFormatting()
+    const { isZero, gte, plus, max, minus, min } = useBigNumber()
     const { parseSafeFloat } = useParsing()
     const { showPendingTransaction, showWarning } = useNotification()
-    const { status, displayPositions, liquidation, maxLiquidation, liquidationPrice, liquidationMaxPrice, annualPercentageRateTypes } = useAaveV2Position({
-      overridePosition: (position) => {
-        if (rootTokenKey.value !== position.key) return position
-
-        return {
-          ...position,
-          borrow: max(minus(position.borrow, amountParsed.value), '0').toFixed(),
-        }
-      },
-    })
-
-    const rateType = ref(null)
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const rootTokenKey = computed(() => atokens[networkName.value].rootTokens.includes(props.tokenKey) ? props.tokenKey : 'eth')
+    const {
+      debt,
+      collateral,
+      collateralInWei,
+      liquidation,
+      liquidationMaxPrice,
+      debtToken,
+      collateralToken,
+      getTrovePositionHints,
+    } = useLiquityPosition()
 
-    const currentPosition = computed(() =>
-      displayPositions.value.find((position) => position.key === rootTokenKey.value)
-    )
+    const balance = computed(() => getBalanceByKey(debtToken.value.key))
 
-    const token = computed(() => getTokenByKey(rootTokenKey.value))
-    const symbol = computed(() => token.value?.symbol)
-    const decimals = computed(() => token.value?.decimals)
-    const balance = computed(() => {
-      if (rateType.value?.value === 'stable') {
-        return currentPosition.value?.borrowStable || '0'
-      }
-      return currentPosition.value?.borrow || '0'
-    })
+    const changedDebt = computed(() => max(minus(debt.value, amountParsed.value), '0').toFixed())
+    const changedBalance = computed(() => max(minus(balance.value, amountParsed.value), '0').toFixed())
 
-    const tokenMaxBalance = computed(() => getBalanceByKey(rootTokenKey.value))
-    const tokenMaxBalanceRaw = computed(() => getBalanceRawByKey(rootTokenKey.value))
+    const { liquidationPrice, status } = useLiquityPosition(collateral, changedDebt)
+    const { validateAmount, validateIsLoggedIn, validateLiquityDebt, validateLiquityTroveExists } = useValidators()
 
-    const availableLiquidity = computed(() => currentPosition.value?.availableLiquidity || '0')
-    const borrowStableRate = computed(() => currentPosition.value?.borrowStableRate || '0')
-    const stableBorrowEnabled = computed(
-      () => currentPosition.value?.stableBorrowEnabled && isZero(currentPosition.value?.supply)
-    )
+    const maxBalance = computed(() => min(balance.value, debt.value).toFixed())
+    const { toggle, isMaxAmount } = useMaxAmountActive(amount, maxBalance)
 
-    const address = computed(() => token.value?.address)
-
-    const factor = computed(
-      () => displayPositions.value?.find((position) => rootTokenKey.value === position.key)?.factor
-    )
-
-    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
-
-    const { validateAmount, validateLiquidation, validateLiquidity, validateIsLoggedIn } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
 
       return {
-        amount: { message: validateAmount(amountParsed.value), show: hasAmountValue },
-        liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
+        troveExists: { message: validateLiquityTroveExists(), show: true },
+        amount: { message: validateAmount(amountParsed.value, maxBalance.value), show: hasAmountValue },
+        minDebt: { message: validateLiquityDebt(changedDebt.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
-        liquidity: {
-          message: validateLiquidity(amountParsed.value, availableLiquidity.value, symbol.value),
-          show: hasAmountValue,
-        },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -193,21 +155,21 @@ export default defineComponent({
     async function cast() {
       pending.value = true
 
-      const amount = isMaxAmount.value
-        ? gte(tokenMaxBalance.value, balance.value)
-          ? $dsa().maxValue
-          : tokenMaxBalanceRaw.value
-        : valInt(amountParsed.value, decimals.value)
+      const inputAmountInWei = valInt(amountParsed.value, collateralToken.value.decimals)
+      const totalDebtAmountInWei = valInt(changedDebt.value, debtToken.value.decimals)
+      const { upperHint, lowerHint } = await getTrovePositionHints(collateralInWei.value, totalDebtAmountInWei)
+
+      const getId = 0
+      const setId = 0
 
       const spells = dsa.value.Spell()
 
-      const rateMode = rateType.value?.rateMode
-
       spells.add({
-        connector: 'aave_v2',
-        method: 'payback',
-        args: [address.value, amount, rateMode, 0, 0],
+        connector: 'LIQUITY-A',
+        method: 'repay',
+        args: [inputAmountInWei, upperHint, lowerHint, getId, setId],
       })
+
 
       try {
         const txHash = await dsa.value.cast({
@@ -226,31 +188,27 @@ export default defineComponent({
     }
 
     return {
-      pending,
-      cast,
-      errors,
+      debt,
+      balance,
       amount,
       status,
-      rootTokenKey,
-      token,
-      symbol,
-      balance,
-      formatNumber,
-      formatUsdMax,
-      formatUsd,
-      toggle,
-      isMaxAmount,
-      maxLiquidation,
+      liquidation,
       liquidationPrice,
       liquidationMaxPrice,
+      formatUsd,
+      formatUsdMax,
+      formatDecimal,
+      errors,
       errorMessages,
+      isMaxAmount,
       isValid,
-      annualPercentageRateTypes,
-      availableLiquidity,
-      borrowStableRate,
-      stableBorrowEnabled,
-      rateType,
-      tokenMaxBalance,
+      cast,
+      pending,
+      toggle,
+      debtToken,
+      collateralToken,
+      changedDebt,
+      changedBalance,
     }
   },
 })
