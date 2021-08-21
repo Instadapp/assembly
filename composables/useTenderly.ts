@@ -9,7 +9,7 @@ const forkId = ref(null);
 export function useTenderly() {
   const { $config } = useContext();
   const { setWeb3, refreshWeb3 } = useWeb3();
-  const { accounts } = useDSA();
+  const { accounts, refreshAccounts } = useDSA();
   const canSimulate = computed(
     () => $config.TENDERLY_FORK_PATH && $config.TENDERLY_KEY
   );
@@ -40,12 +40,13 @@ export function useTenderly() {
         })
       });
 
-      setForkId(data?.simulation_fork?.id);
+      await setForkId(data?.simulation_fork?.id);
       if (data?.simulation_fork?.id) {
-        addBalance();
+        await addBalance();
+        await refreshAccounts();
       }
     } catch (error) {
-      stopSimulation();
+      await stopSimulation();
     }
     loading.value = false;
   };
@@ -65,7 +66,7 @@ export function useTenderly() {
 
     forkId.value = null;
     window.localStorage.removeItem("forkId");
-    refreshWeb3();
+    await refreshWeb3();
     loading.value = false;
   };
 
