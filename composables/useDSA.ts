@@ -28,15 +28,19 @@ export function useDSA() {
     }
   });
 
-  watch(dsa, async () => {
-    if (dsa.value) {
-      accounts.value = await dsa.value.getAccounts();
+  const refreshAccounts = async () => {
+    accounts.value = await dsa.value.getAccounts(account.value);
 
       if (accounts.value.length > 0) {
         activeAccount.value = accounts.value[0];
       } else {
         activeAccount.value = undefined;
       }
+  }
+
+  watch(dsa, async () => {
+    if (dsa.value) {
+      refreshAccounts()
     }
     //@ts-ignore
     window.dsa = dsa.value;
@@ -161,6 +165,7 @@ export function useDSA() {
 
   return {
     dsa,
+    refreshAccounts,
     activeAccount: readonly(activeAccount),
     accounts,
     createAccount,
