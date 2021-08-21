@@ -9,6 +9,7 @@ const addresses = {
       compound: "0xcCAa4b1b3931749b8b6EF19C6b0B2c496703321b",
       maker: "0x84addce4fac0b6ee4b0cd132120d6d4b700e35c0",
       unipool: "0x22bddA39D14eD0aafeee36B6e784602fdDE64723",
+      liquity: '0xDAf2A39503463B0F41f899EDD82213b3c96b6Cf8',
     },
   },
 

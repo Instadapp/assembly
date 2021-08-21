@@ -1,12 +1,18 @@
 import { useBigNumber } from "./useBigNumber";
 import { useFormatting } from "./useFormatting";
 import { useMakerdaoPosition } from "~/composables/protocols/useMakerdaoPosition";
+import { useLiquityPosition } from "./protocols/useLiquityPosition";
 
 export function useValidators() {
   const { formatNumber } = useFormatting();
   const { isZero, minus, eq, gt, lt, gte, plus } = useBigNumber();
   const { minDebt: makerMinDebt, vaultTypes } = useMakerdaoPosition();
-
+  const {
+    minDebt: liquityMinDebt,
+    liquidationReserve: liquityLiquidationReserve,
+    troveOpened: liquityTroveOpened
+  } = useLiquityPosition();
+  
   function validateAmount(amountParsed, balance = null, options = null) {
     const mergedOptions = Object.assign(
       { msg: "Your amount exceeds your maximum limit." },
@@ -90,12 +96,39 @@ export function useValidators() {
     return null;
   }
 
+  function validateLiquityDebt(
+    debtParsed,
+    minDebt = liquityMinDebt.value,
+    liquidationReserve = liquityLiquidationReserve.value
+  ) {
+    const totalDebt = plus(debtParsed, liquidationReserve);
+
+    if (isZero(totalDebt))
+      return `Minimum total debt requirement is ${minDebt} LUSD`;
+
+    if (lt(totalDebt, minDebt) && gt(totalDebt, "0")) {
+      return `Minimum total debt requirement is ${minDebt} LUSD`;
+    }
+
+    return null;
+  }
+
+  function validateLiquityTroveExists() {
+    if (!liquityTroveOpened.value) {
+      return "You should open new trove first";
+    }
+
+    return null;
+  }
+
   return {
     validateAmount,
     validateLiquidation,
     validateIsLoggedIn,
     validateLiquidity,
     validateMakerDebt,
-    validateMakerDebtCeiling
+    validateMakerDebtCeiling,
+    validateLiquityDebt,
+    validateLiquityTroveExists
   };
 }

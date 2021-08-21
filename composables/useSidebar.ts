@@ -29,6 +29,13 @@ import SidebarMakerdaoWithdraw from '~/components/sidebar/context/makerdao/Sideb
 import SidebarMakerdaoBorrow from '~/components/sidebar/context/makerdao/SidebarMakerdaoBorrow.vue'
 import SidebarMakerdaoPayback from '~/components/sidebar/context/makerdao/SidebarMakerdaoPayback.vue'
 
+import SidebarLiquityTroveOpenNew from '~/components/sidebar/context/liquity/SidebarLiquityTroveOpenNew.vue'
+import SidebarLiquityTroveSupply from '~/components/sidebar/context/liquity/SidebarLiquityTroveSupply.vue'
+import SidebarLiquityTroveWithdraw from '~/components/sidebar/context/liquity/SidebarLiquityTroveWithdraw.vue'
+import SidebarLiquityTroveBorrow from '~/components/sidebar/context/liquity/SidebarLiquityTroveBorrow.vue'
+import SidebarLiquityTrovePayback from '~/components/sidebar/context/liquity/SidebarLiquityTrovePayback.vue'
+
+
 const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
   "#deposit-overview": {component: SidebarDepositOverview, back: { hash: 'overview' }  },
@@ -59,6 +66,12 @@ const sidebars = {
   "/mainnet/maker#withdraw": { component: SidebarMakerdaoWithdraw },
   "/mainnet/maker#borrow": { component: SidebarMakerdaoBorrow },
   "/mainnet/maker#payback": { component: SidebarMakerdaoPayback },
+
+  '/mainnet/liquity#trove-new': { component: SidebarLiquityTroveOpenNew },
+  '/mainnet/liquity#trove-supply': { component: SidebarLiquityTroveSupply },
+  '/mainnet/liquity#trove-withdraw': { component: SidebarLiquityTroveWithdraw },
+  '/mainnet/liquity#trove-borrow': { component: SidebarLiquityTroveBorrow },
+  '/mainnet/liquity#trove-payback': { component: SidebarLiquityTrovePayback },
 };
 
 const sidebar = ref(null);

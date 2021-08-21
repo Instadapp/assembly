@@ -18,7 +18,7 @@
         <div
           class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
         >
-          <AaveIcon class="w-10 h-10 text-white" />
+          <AaveIcon class="w-8 h-8 text-white" />
         </div>
       </div>
       <h1 class="ml-4 text-primary-black text-2xl font-semibold">Aave v2</h1>

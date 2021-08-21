@@ -11,21 +11,17 @@
     </div>
 
     <div class="mt-10 flex items-center">
-      <div class="flex items-center">
+      <div
+        style="background: radial-gradient(42.15% 42.15% at 48.94% 48.94%, #D6DAE0 75.67%, #F0F3F9 100%), #C4C4C4;"
+        class="w-16 h-16 rounded-full flex items-center justify-center border border-[#CCDCF3]"
+      >
         <div
-          style="background: radial-gradient(42.15% 42.15% at 48.94% 48.94%, #D6DAE0 75.67%, #F0F3F9 100%), #C4C4C4;"
-          class="w-16 h-16 rounded-full flex items-center justify-center border border-[#CCDCF3]"
+          class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
         >
-          <div
-            class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
-          >
-            <MakerDAOIcon Icon class="w-8 h-8 text-white" />
-          </div>
+          <LiquityIcon class="w-8 h-8 text-white" />
         </div>
-        <h1 class="ml-4 text-primary-black text-2xl font-semibold">MakerDAO</h1>
       </div>
-
-      <dropdown-makerdao class="ml-auto" />
+      <h1 class="ml-4 text-primary-black text-2xl font-semibold">Liquity</h1>
     </div>
 
     <div class="mt-10">
@@ -34,22 +30,6 @@
       <div
         class="px-1 mt-6 grid w-full grid-cols-1 gap-4 sm:grid-cols-3 xl:gap-[18px]"
       >
-        <div class="shadow rounded-lg py-8 px-6 flex">
-          <div class="flex-1">
-            <h3 class="text-2xl text-primary-black font-medium">
-              # {{ vaultId }}
-            </h3>
-            <p class="mt-4 text-primary-gray font-medium">Vault ID</p>
-          </div>
-          <div class="flex items-center">
-            <IconBackground
-              name="cube"
-              class="bg-blue-pure text-blue-pure"
-              icon-class="h-7"
-            />
-          </div>
-        </div>
-
         <div class="shadow rounded-lg py-8 px-6 flex">
           <div class="flex-1">
             <h3 class="text-2xl text-primary-black font-medium">
@@ -65,9 +45,9 @@
         <div class="shadow rounded-lg py-8 px-6 flex">
           <div class="flex-1">
             <h3 class="text-2xl text-primary-black font-medium">
-              {{ formatPercent(rate) }}
+              {{ formatPercent(borrowFee) }}
             </h3>
-            <p class="mt-4 text-primary-gray font-medium">Borrow Rate</p>
+            <p class="mt-4 text-primary-gray font-medium">Borrow Fee</p>
           </div>
           <div class="flex items-center">
             <SVGPercent class="h-12" />
@@ -122,60 +102,64 @@
       <div
         class="mt-3 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content px-1"
       >
-        <CardMakerdao
-          :amount="collateral"
+        <CardLiquityTrove
+          v-if="troveOpened"
+          :collateral="collateral"
           :amount-usd="collateralUsd"
+          :price-in-usd="priceInUsd"
           position-type="supply"
-          :token-key="tokenKey"
-          :vault-token-type="vaultTokenType"
-          :supply-or-borrow="showSupply"
-          :withdraw-or-payback="showWithdraw"
-          :price-in-usd="liquidationMaxPrice"
+          :token="collateralToken"
         />
 
-        <CardMakerdao
-          :amount="debt"
+        <CardLiquityTrove
+          v-if="troveOpened"
+          :debt="debt"
+          :collateral="collateral"
           :amount-usd="debt"
-          position-type="borrow"
-          token-key="dai"
-          :vault-token-type="vaultTokenType"
-          :supply-or-borrow="showBorrow"
-          :withdraw-or-payback="showPayback"
           price-in-usd="1"
+          position-type="borrow"
+          :token="debtToken"
         />
+
+        <button-dashed
+          v-if="!troveOpened"
+          color="ocean-blue"
+          class="col-span-full"
+          height="80px"
+          full-width
+          @click="openNewTrove"
+        >
+          <SVGAdd class="w-3 mr-2" />
+          Open Trove
+        </button-dashed>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useRouter } from "@nuxtjs/composition-api";
+import { defineComponent, computed, useRouter } from "@nuxtjs/composition-api";
 import BackIcon from "~/assets/icons/back.svg?inline";
-import SVGIncoming from "@/assets/img/icons/incoming.svg?inline";
 import SVGBalance from "@/assets/img/icons/balance.svg?inline";
-import SVGEarnings from "@/assets/img/icons/earnings.svg?inline";
-import SVGArrowRight from "@/assets/img/icons/arrow-right.svg?inline";
 import SVGPercent from "@/assets/img/icons/percent.svg?inline";
-import CardMakerdao from "~/components/protocols/CardMakerdao.vue";
-import { useBigNumber } from "~/composables/useBigNumber";
+import SVGAdd from "~/assets/img/icons/add.svg?inline";
+import LiquityIcon from "~/assets/icons/liquity.svg?inline";
+import ButtonDashed from "~/components/common/input/ButtonDashed.vue";
+import { useLiquityPosition } from "~/composables/protocols/useLiquityPosition";
 import { useFormatting } from "~/composables/useFormatting";
-import { useMakerdaoPosition } from "~/composables/protocols/useMakerdaoPosition";
 import { useStatus } from "~/composables/useStatus";
-import { useNotification } from "~/composables/useNotification";
-import DropdownMakerdao from "~/components/protocols/DropdownMakerdao.vue";
-import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
+import { useBigNumber } from "~/composables/useBigNumber";
+import CardLiquityTrove from "~/components/protocols/liquity/CardLiquityTrove.vue";
 
 export default defineComponent({
   components: {
     BackIcon,
-    CardMakerdao,
-    SVGIncoming,
+    LiquityIcon,
+    ButtonDashed,
+    SVGAdd,
     SVGBalance,
-    SVGEarnings,
-    SVGArrowRight,
     SVGPercent,
-    DropdownMakerdao,
-    MakerDAOIcon,
+    CardLiquityTrove
   },
   setup() {
     const router = useRouter();
@@ -189,26 +173,21 @@ export default defineComponent({
       formatDecimal
     } = useFormatting();
 
-    const { showWarning } = useNotification();
-
     const {
-      status,
-      vaults,
-      vaultTokenType,
-      collateral,
-      collateralUsd,
-      vaultId,
-      liquidation,
-      tokenKey,
-      symbol,
-      rate,
+      troveOpened,
       netValue,
+      borrowFee,
+      status,
+      liquidation,
       liquidationPrice,
       liquidationMaxPrice,
+      collateral,
+      collateralUsd,
+      priceInUsd,
       debt,
-      minDebt,
-      debtCeilingReached
-    } = useMakerdaoPosition();
+      debtToken,
+      collateralToken
+    } = useLiquityPosition();
 
     const statusLiquidationRatio = computed(() =>
       div(status.value, liquidation.value).toFixed()
@@ -216,67 +195,34 @@ export default defineComponent({
 
     const { color, text } = useStatus(statusLiquidationRatio);
 
-    function showSupply() {
-      if (gt(debt.value, "0") && lt(debt.value, minDebt.value)) {
-        // select("depositAndBorrow");
-      } else if (vaults.value.length === 0) {
-        router.push({ hash: "collateral" });
-      } else {
-        router.push({ hash: "supply" });
-      }
-    }
-    function showWithdraw() {
-      if (isZero(collateral.value)) {
-        showWarning("MakerDAO", "No collateral supplied!!");
-      } else if (gt(debt.value, "0") && lt(debt.value, minDebt.value)) {
-        // select("paybackAndWithdraw");
-      } else {
-        router.push({ hash: "withdraw" });
-      }
-    }
-
-    function showPayback() {
-      if (isZero(collateral.value)) {
-        showWarning("MakerDAO", "No collateral supplied!!");
-      } else {
-        router.push({ hash: "payback?tokenKey=dai" });
-      }
-    }
-
-    function showBorrow() {
-      if (isZero(collateral.value)) {
-        showWarning("MakerDAO", "Deposit collateral before borrowing!!");
-      } else {
-        router.push({ hash: "borrow?tokenKey=dai" });
-      }
+    function openNewTrove() {
+      router.push({ hash: "trove-new" });
     }
 
     return {
+      color,
+      text,
+
       formatUsd,
       formatUsdMax,
       formatPercent,
       formatDecimal,
-      color,
-      text,
-      vaultTokenType,
-      collateral,
-      collateralUsd,
-      vaultId,
-      liquidation,
-      tokenKey,
+
+      troveOpened,
       netValue,
-      rate,
-      symbol,
+      borrowFee,
       status,
+      liquidation,
       liquidationPrice,
       liquidationMaxPrice,
-      showWithdraw,
-      showPayback,
-      showBorrow,
-      showSupply,
+      collateral,
+      collateralUsd,
+      priceInUsd,
       debt,
-      minDebt,
-      debtCeilingReached
+      debtToken,
+      collateralToken,
+
+      openNewTrove
     };
   }
 });

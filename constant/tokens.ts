@@ -12,6 +12,7 @@ export default {
     { key: 'mkr', type: 'token', symbol: 'MKR', name: 'MakerDAO', address: '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', decimals: 18, isStableCoin: false},
     { key: 'comp', type: 'token', symbol: 'COMP', name: 'Compound', address: '0xc00e94Cb662C3520282E6f5717214004A7f26888', decimals: 18, isStableCoin: false},
     { key: 'rai', type: 'token', symbol: 'RAI', name: 'Rai Reflex Index', address: '0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919', decimals: 18, isStableCoin: false},
+    { key: 'lusd', type: 'token', symbol: 'LUSD', name: 'Liquity USD', address: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0', decimals: 18, isStableCoin: true},
     { key: 'zrx', type: 'token', symbol: 'ZRX', name: '0x Protocol', address: '0xE41d2489571d322189246DaFA5ebDe1F4699F498', decimals: 18, isStableCoin: false},
     { key: 'rep', type: 'token', symbol: 'REP', name: 'Augur', address: '0x1985365e9f78359a9B6AD760e32412f4a445E862', decimals: 18, isStableCoin: false},
     { key: 'tusd', type: 'token', symbol: 'TUSD', name: 'TrueUSD', address: '0x0000000000085d4780B73119b644AE5ecd22b376', decimals: 18, isStableCoin: true},
@@ -44,7 +45,8 @@ export default {
     { key: 'eth2xfli', type: 'token', symbol: 'ETH2x-FLI', name: 'ETH 2x Flexible Leverage Index', address: '0xAa6E8127831c9DE45ae56bB1b0d4D4Da6e5665BD', decimals: 18, isStableCoin: false, },
     { key: 'btc2xfli', type: 'token', symbol: 'BTC2x-FLI', name: 'BTC 2x Flexible Leverage Index', address: '0x0B498ff89709d3838a063f1dFA463091F9801c2b', decimals: 18, isStableCoin: false, },
     { key: 'stkaave', type: 'token', symbol: 'stkAAVE', name: 'Staked Aave', address: '0x4da27a545c0c5B758a6BA100e3a049001de870f5', decimals: 18, isStableCoin: false, },
-    { key: 'matic', type: 'token', symbol: 'MATIC', name: 'Matic Token', address: '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0', decimals: 18, isStableCoin: false, }
+    { key: 'matic', type: 'token', symbol: 'MATIC', name: 'Matic Token', address: '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0', decimals: 18, isStableCoin: false, },
+    { key: 'lqty', type: 'token', symbol: 'LQTY', name: 'LQTY', address: '0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D', decimals: 18, isStableCoin: false},
   ]),
 
   polygon: createTokenUtils([
