@@ -67,6 +67,7 @@ export function useLiquityPosition(
   const priceInUsd = computed(() => trove.value.price);
   const ratio = computed(() => trove.value.ratio);
   const debt = computed(() => trove.value.debt);
+  const debtInWei = computed(() => valInt(debt.value, debtToken.value?.decimals))
   const collateralUsd = computed(() =>
     times(collateral.value, priceInUsd.value).toFixed()
   );
@@ -212,9 +213,11 @@ export function useLiquityPosition(
     maxFeePercentageInWei,
     getTrovePositionHints,
     collateral,
+    collateralInWei,
     collateralUsd,
     priceInUsd,
-    debt
+    debt,
+    debtInWei,
   };
 }
 
