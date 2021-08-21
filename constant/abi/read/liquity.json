@@ -1,0 +1,361 @@
+[
+  {
+    "inputs": [],
+    "name": "fetchETHPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "getPosition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "collateral",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "debt",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "icr",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct Helpers.Trove",
+            "name": "trove",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "deposit",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "ethGain",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "lqtyGain",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct Helpers.StabilityDeposit",
+            "name": "stability",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "ethGain",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "lusdGain",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct Helpers.Stake",
+            "name": "stake",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Helpers.Position",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "searchIterations",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "randomSeed",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRedemptionPositionHints",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "partialHintNicr",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "firstHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "lowerHint",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "oracleEthPrice",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "getStabilityDeposit",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "deposit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ethGain",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lqtyGain",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Helpers.StabilityDeposit",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "getStake",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ethGain",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lusdGain",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Helpers.Stake",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSystemState",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "borrowFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ethTvl",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tcr",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isInRecoveryMode",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Helpers.System",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "getTrove",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "collateral",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "icr",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Helpers.Trove",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "collateral",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "debt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "searchIterations",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "randomSeed",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTrovePositionHints",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "lowerHint",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

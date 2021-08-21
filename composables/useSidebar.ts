@@ -29,6 +29,9 @@ import SidebarMakerdaoWithdraw from '~/components/sidebar/context/makerdao/Sideb
 import SidebarMakerdaoBorrow from '~/components/sidebar/context/makerdao/SidebarMakerdaoBorrow.vue'
 import SidebarMakerdaoPayback from '~/components/sidebar/context/makerdao/SidebarMakerdaoPayback.vue'
 
+import SidebarLiquityTroveOpenNew from '~/components/sidebar/context/liquity/SidebarLiquityTroveOpenNew.vue'
+
+
 const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
   "#deposit-overview": {component: SidebarDepositOverview, back: { hash: 'overview' }  },
@@ -59,6 +62,8 @@ const sidebars = {
   "/mainnet/maker#withdraw": { component: SidebarMakerdaoWithdraw },
   "/mainnet/maker#borrow": { component: SidebarMakerdaoBorrow },
   "/mainnet/maker#payback": { component: SidebarMakerdaoPayback },
+
+  '/mainnet/liquity#trove-new': { component: SidebarLiquityTroveOpenNew },
 };
 
 const sidebar = ref(null);

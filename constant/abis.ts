@@ -6,6 +6,7 @@ import compoundABI from "./abi/read/compound.json";
 import makerABI from "./abi/read/maker.json";
 import makerProxyRegistryABI from "./abi/makerProxyRegistry.json";
 import unipoolABI from "./abi/read/unipool.json";
+import liquityABI from "./abi/read/liquity.json";
 
 const abis = {
   makerProxyRegistry: makerProxyRegistryABI,
@@ -17,7 +18,8 @@ const abis = {
     compound: compoundABI,
     maker: makerABI,
     unipool: unipoolABI,
-  },
+    liquity: liquityABI,
+  }
 };
 
 export default abis;
