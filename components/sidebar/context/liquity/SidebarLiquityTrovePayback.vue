@@ -2,20 +2,20 @@
   <SidebarContextRootContainer>
     <template #title>Payback {{ debtToken.symbol }}</template>
 
-    <div class="mt-6 flex justify-around items-center w-full">
+    <div class="flex justify-around items-center w-full">
       <SidebarSectionValueWithIcon class="" label="Debt" center>
         <template #icon
-          ><IconCurrency :currency="debtToken.key" class="w-20 h-20" noHeight
+          ><IconCurrency :currency="debtToken.key" class="w-16 h-16" noHeight
         /></template>
         <template #value>{{ formatDecimal(changedDebt) }} {{ debtToken.symbol }}</template>
       </SidebarSectionValueWithIcon>
 
       <SidebarSectionValueWithIcon class="" label="Token Balance" center>
         <template #icon
-          ><IconCurrency :currency="collateralToken.key" class="w-20 h-20" noHeight
+          ><IconCurrency :currency="debtToken.key" class="w-16 h-16" noHeight
         /></template>
 
-        <template #value>{{ formatDecimal(changedBalance) }} {{ collateralToken.symbol }}</template>
+        <template #value>{{ formatDecimal(changedBalance) }} {{ debtToken.symbol }}</template>
       </SidebarSectionValueWithIcon>
     </div>
 
@@ -155,7 +155,7 @@ export default defineComponent({
     async function cast() {
       pending.value = true
 
-      const inputAmountInWei = valInt(amountParsed.value, collateralToken.value.decimals)
+      const inputAmountInWei = valInt(amountParsed.value, debtToken.value.decimals)
       const totalDebtAmountInWei = valInt(changedDebt.value, debtToken.value.decimals)
       const { upperHint, lowerHint } = await getTrovePositionHints(collateralInWei.value, totalDebtAmountInWei)
 
