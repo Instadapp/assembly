@@ -10,12 +10,10 @@
         'border-grey-pure': !checked
       }"
     >
-      <transition-fade-in>
-        <div
-          v-if="checked"
-          class="w-2 h-2 rounded-full bg-ocean-blue-pure dark:bg-light"
-        ></div>
-      </transition-fade-in>
+      <div
+        v-if="checked"
+        class="w-2 h-2 rounded-full bg-ocean-blue-pure dark:bg-light"
+      ></div>
     </div>
     <div v-if="label" :class="labelClasses">{{ label }}</div>
   </div>

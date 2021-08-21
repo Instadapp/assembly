@@ -35,11 +35,16 @@ import SidebarLiquityTroveWithdraw from '~/components/sidebar/context/liquity/Si
 import SidebarLiquityTroveBorrow from '~/components/sidebar/context/liquity/SidebarLiquityTroveBorrow.vue'
 import SidebarLiquityTrovePayback from '~/components/sidebar/context/liquity/SidebarLiquityTrovePayback.vue'
 
+import SidebarStrategySelection from '~/components/sidebar/context/strategy/SidebarStrategySelection.vue'
+import SidebarStrategy from '~/components/sidebar/context/strategy/SidebarStrategy.vue'
 
 const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
   "#deposit-overview": {component: SidebarDepositOverview, back: { hash: 'overview' }  },
   '#withdraw-token': { component: SidebarWithdraw, back: { hash: 'overview' } },
+  '#strategies': { component: SidebarStrategySelection },
+  '#strategy': { component: SidebarStrategy, back: { hash: 'strategies' } },
+
   "/aave-v2": { component: null },
   "/aave-v2#supply": { component: SidebarAaveV2Supply },
   "/aave-v2#borrow": { component: SidebarAaveV2Borrow },

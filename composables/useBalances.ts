@@ -131,6 +131,7 @@ export function useBalances() {
   return {
     balances,
     fetchBalances,
+    getBalanceByAddress,
     getBalanceByKey,
     getBalanceRawByKey,
     balanceTotal,

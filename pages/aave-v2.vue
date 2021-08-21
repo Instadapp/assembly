@@ -10,18 +10,43 @@
       </nuxt-link>
     </div>
 
-    <div class="mt-10 flex items-center">
-      <div
-        style="background: radial-gradient(42.15% 42.15% at 48.94% 48.94%, #D6DAE0 75.67%, #F0F3F9 100%), #C4C4C4;"
-        class="w-16 h-16 rounded-full flex items-center justify-center border border-[#CCDCF3]"
-      >
+    <div class="mt-10 flex items-center justify-between">
+      <div class="flex items-center">
         <div
-          class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
+          style="background: radial-gradient(42.15% 42.15% at 48.94% 48.94%, #D6DAE0 75.67%, #F0F3F9 100%), #C4C4C4;"
+          class="w-16 h-16 rounded-full flex items-center justify-center border border-[#CCDCF3]"
         >
-          <AaveIcon class="w-8 h-8 text-white" />
+          <div
+            class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
+          >
+            <AaveIcon class="w-8 h-8 text-white" />
+          </div>
         </div>
+        <h1 class="ml-4 text-primary-black text-2xl font-semibold">Aave v2</h1>
       </div>
-      <h1 class="ml-4 text-primary-black text-2xl font-semibold">Aave v2</h1>
+
+      <ButtonCTAOutlined
+        class="px-4 h-9 w-[173px]"
+        @click="$router.push({ hash: 'strategies?protocol=aaveV2' })"
+      >
+        Strategies
+
+        <svg
+          class="ml-auto"
+          width="11"
+          height="10"
+          viewBox="0 0 11 10"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M4.3815 8.76139C4.38149 8.99703 4.64068 9.1407 4.8405 9.01581L10.859 5.25425C11.047 5.13675 11.047 4.86295 10.859 4.74545L4.84088 0.984069C4.64108 0.859187 4.38189 1.00283 4.38188 1.23845L4.38179 2.97869C4.38178 3.14437 4.24747 3.27867 4.08179 3.27867L1.23894 3.27867C1.07325 3.27867 0.93894 3.41299 0.93894 3.57867L0.93894 6.42096C0.93894 6.58664 1.07325 6.72096 1.23894 6.72096L4.08159 6.72096C4.24728 6.72096 4.3816 6.85528 4.38159 7.02097L4.3815 8.76139Z"
+            fill="#1874FF"
+          />
+        </svg>
+      </ButtonCTAOutlined>
     </div>
 
     <div class="mt-10" v-if="position">
@@ -166,12 +191,14 @@ import { useStatus } from "~/composables/useStatus";
 import { useBigNumber } from "~/composables/useBigNumber";
 import CardAave from "~/components/protocols/CardAave.vue";
 import AaveIcon from "~/assets/icons/aave.svg?inline";
+import ButtonCTAOutlined from "~/components/common/input/ButtonCTAOutlined.vue";
 
 export default defineComponent({
   components: {
     BackIcon,
     CardAave,
-    AaveIcon
+    AaveIcon,
+    ButtonCTAOutlined
   },
   setup() {
     const {
