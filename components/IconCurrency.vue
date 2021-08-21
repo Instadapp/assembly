@@ -35,7 +35,9 @@
     <SVGknc v-else-if="currency === 'knc'" class="h-full" />
     <SVGlend v-else-if="currency === 'lend'" class="h-full" />
     <SVGlink v-else-if="currency === 'link'" class="h-full" />
+    <SVGlqty v-else-if="currency === 'lqty'" class="h-full" />
     <SVGlrc v-else-if="currency === 'lrc'" class="h-full" />
+    <SVGlusd v-else-if="currency === 'lusd'" class="h-full" />
     <SVGmana v-else-if="currency === 'mana'" class="h-full" />
     <SVGmatic v-else-if="currency === 'matic'" class="h-full" />
     <SVGmkr v-else-if="currency === 'mkr'" class="h-full" />
@@ -157,6 +159,9 @@ import SVGyfi from '@/assets/icons/currencies/yfi.svg?inline'
 import SVGzil from '@/assets/icons/currencies/zil.svg?inline'
 import SVGzrx from '@/assets/icons/currencies/zrx.svg?inline'
 import SVGCustom from '@/assets/icons/currencies/custom.svg?inline'
+import SVGlqty from '@/assets/icons/currencies/lqty.svg?inline'
+import SVGlusd from '@/assets/icons/currencies/lusd.svg?inline'
+
 export default defineComponent({
   props: {
     currency: { type: String, default: '' },
@@ -232,6 +237,8 @@ export default defineComponent({
     SVGyfi,
     SVGzil,
     SVGzrx,
+    SVGlqty,
+    SVGlusd,
     SVGCustom,
   },
 })

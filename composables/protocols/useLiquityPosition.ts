@@ -210,7 +210,11 @@ export function useLiquityPosition(
     minDebt,
     liquidationReserve,
     maxFeePercentageInWei,
-    getTrovePositionHints
+    getTrovePositionHints,
+    collateral,
+    collateralUsd,
+    priceInUsd,
+    debt
   };
 }
 

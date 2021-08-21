@@ -102,6 +102,25 @@
       <div
         class="mt-3 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content px-1"
       >
+        <CardLiquityTrove
+          v-if="troveOpened"
+          :collateral="collateral"
+          :amount-usd="collateralUsd"
+          :price-in-usd="priceInUsd"
+          position-type="supply"
+          :token="collateralToken"
+        />
+
+        <CardLiquityTrove
+          v-if="troveOpened"
+          :debt="debt"
+          :collateral="collateral"
+          :amount-usd="debt"
+          price-in-usd="1"
+          position-type="borrow"
+          :token="debtToken"
+        />
+
         <button-dashed
           v-if="!troveOpened"
           color="ocean-blue"
@@ -121,10 +140,7 @@
 <script lang="ts">
 import { defineComponent, computed, useRouter } from "@nuxtjs/composition-api";
 import BackIcon from "~/assets/icons/back.svg?inline";
-import SVGIncoming from "@/assets/img/icons/incoming.svg?inline";
 import SVGBalance from "@/assets/img/icons/balance.svg?inline";
-import SVGEarnings from "@/assets/img/icons/earnings.svg?inline";
-import SVGArrowRight from "@/assets/img/icons/arrow-right.svg?inline";
 import SVGPercent from "@/assets/img/icons/percent.svg?inline";
 import SVGAdd from "~/assets/img/icons/add.svg?inline";
 import LiquityIcon from "~/assets/icons/liquity.svg?inline";
@@ -133,6 +149,7 @@ import { useLiquityPosition } from "~/composables/protocols/useLiquityPosition";
 import { useFormatting } from "~/composables/useFormatting";
 import { useStatus } from "~/composables/useStatus";
 import { useBigNumber } from "~/composables/useBigNumber";
+import CardLiquityTrove from "~/components/protocols/liquity/CardLiquityTrove.vue";
 
 export default defineComponent({
   components: {
@@ -142,6 +159,7 @@ export default defineComponent({
     SVGAdd,
     SVGBalance,
     SVGPercent,
+    CardLiquityTrove
   },
   setup() {
     const router = useRouter();
@@ -162,7 +180,13 @@ export default defineComponent({
       status,
       liquidation,
       liquidationPrice,
-      liquidationMaxPrice
+      liquidationMaxPrice,
+      collateral,
+      collateralUsd,
+      priceInUsd,
+      debt,
+      debtToken,
+      collateralToken
     } = useLiquityPosition();
 
     const statusLiquidationRatio = computed(() =>
@@ -191,6 +215,12 @@ export default defineComponent({
       liquidation,
       liquidationPrice,
       liquidationMaxPrice,
+      collateral,
+      collateralUsd,
+      priceInUsd,
+      debt,
+      debtToken,
+      collateralToken,
 
       openNewTrove
     };
