@@ -40,19 +40,11 @@ const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
   "#deposit-overview": {component: SidebarDepositOverview, back: { hash: 'overview' }  },
   '#withdraw-token': { component: SidebarWithdraw, back: { hash: 'overview' } },
-  "/polygon/aave-v2": { component: null },
-  "/polygon/aave-v2#supply": { component: SidebarAaveV2Supply },
-  "/polygon/aave-v2#borrow": { component: SidebarAaveV2Borrow },
-  "/polygon/aave-v2#payback": { component: SidebarAaveV2Payback },
-  "/polygon/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
-
-
-  "/mainnet/aave-v2": { component: null },
-  "/mainnet/aave-v2#supply": { component: SidebarAaveV2Supply },
-  "/mainnet/aave-v2#borrow": { component: SidebarAaveV2Borrow },
-  "/mainnet/aave-v2#payback": { component: SidebarAaveV2Payback },
-  "/mainnet/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
-
+  "/aave-v2": { component: null },
+  "/aave-v2#supply": { component: SidebarAaveV2Supply },
+  "/aave-v2#borrow": { component: SidebarAaveV2Borrow },
+  "/aave-v2#payback": { component: SidebarAaveV2Payback },
+  "/aave-v2#withdraw": { component: SidebarAaveV2Withdraw },
 
   "/mainnet/compound": { component: null },
   "/mainnet/compound#withdraw": { component: SidebarCompoundWithdraw },

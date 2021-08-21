@@ -44,7 +44,7 @@ const appsPerNetwork = {
       id: "aave-v2",
       icon: AaveIcon,
       name: "Aave v2",
-      url: "/mainnet/aave-v2",
+      url: "/aave-v2",
       description: "Money Market"
     },
     {
@@ -81,7 +81,7 @@ const appsPerNetwork = {
       id: "aave-v2",
       icon: AaveIcon,
       name: "Aave v2",
-      url: "/polygon/aave-v2",
+      url: "/aave-v2",
       description: "Lend and borrow straight from your Gnosis Safe"
     },
     {
