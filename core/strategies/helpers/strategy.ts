@@ -34,6 +34,8 @@ export class Strategy {
 
   setProps(props: object) {
     Object.assign(this.props, props);
+
+    this.notifyListeners()
   }
 
   getInputs() {
@@ -68,7 +70,7 @@ export class Strategy {
         this.notifyListeners();
       },
       onCustomInput: (values: object) => {
-        // input = Object.assign(input, values);
+        input = Object.assign(input, values);
 
         input.error = input.validate({
           ...this.getContext(),
@@ -85,8 +87,6 @@ export class Strategy {
     const allSpells = await this.schema.spells(this.getContext());
 
     const spells = this.context.dsa.Spell();
-
-    console.log(allSpells);
 
     for (const spell of allSpells) {
       spells.add(spell);

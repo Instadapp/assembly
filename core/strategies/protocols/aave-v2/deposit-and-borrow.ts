@@ -1,3 +1,4 @@
+import tokens from "~/constant/tokens";
 import { defineStrategy, defineInput, StrategyInputType } from "../../helpers";
 
 export default defineStrategy({
@@ -19,17 +20,13 @@ export default defineStrategy({
           return "Your amount exceeds your maximum limit.";
         }
       },
-      tokenKeys: ["eth", "dai"],
-      tokens: [{ key: "eth", symbol: "ETH" }],
-      token: { key: "eth", symbol: "ETH", address : "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" }
+      token: tokens.mainnet.getTokenByKey("eth")
     }),
     defineInput({
       type: StrategyInputType.INPUT_WITH_TOKEN,
       name: "Collateral",
       placeholder: ({ input }) => `${input.token.symbol} to Withdraw`,
-      tokenKeys: ["eth", "dai"],
-      tokens: [{ key: "eth", symbol: "ETH" }],
-      token: { key: "dai", symbol: "DAI", address : "0x6B175474E89094C44Da98b954EedeAC495271d0F" }
+      token: tokens.mainnet.getTokenByKey("dai")
     })
   ],
 

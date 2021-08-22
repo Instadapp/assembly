@@ -1,4 +1,5 @@
 import { nextTick, onMounted, ref, watch } from "@nuxtjs/composition-api";
+import tokens from "~/constant/tokens";
 import { buildStrategy, DefineStrategy, IStrategy } from "~/core/strategies";
 import { useBalances } from "./useBalances";
 import { useDSA } from "./useDSA";
@@ -60,6 +61,15 @@ export function useStrategy(defineStrategy: DefineStrategy) {
         userTokens: balances.user[networkName.value]
       });
     },
+    { immediate: true }
+  );
+  watch(
+    networkName,
+    () =>
+      strategy.setProps({
+        tokens: tokens[networkName.value].allTokens,
+        tokenKeys: tokens[networkName.value].tokenKeys
+      }),
     { immediate: true }
   );
 
