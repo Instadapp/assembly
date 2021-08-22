@@ -1,10 +1,10 @@
-import DSA from "dsa-connect";
+import DSA, { Spell } from "dsa-connect";
 import Web3 from "web3";
 import slugify from "slugify";
 export interface IStrategyContext {
-  dsa: typeof DSA;
+  dsa: DSA;
   web3: Web3;
-  inputs: IStrategyInput[];
+  inputs: IStrategyInput<StrategyInputType>[];
 }
 
 export interface IStrategyToken {
@@ -22,24 +22,27 @@ export enum StrategyInputType {
   INPUT_WITH_TOKEN = "input-with-token"
 }
 
-// type InputTypes  = {
-//   [StrategyInputType.INPUT] : {
-//     token?: IStrategyToken;
-//     value?: any;
-//   };
-// }
+export type StrategyInputParameterMap = {
+  [StrategyInputType.INPUT]: {};
 
-export interface IStrategyInput {
-  type: StrategyInputType;
+  [StrategyInputType.INPUT_WITH_TOKEN]: {
+    token?: IStrategyToken;
+  };
+};
+
+export interface IStrategyInput<InputType extends StrategyInputType> {
+  type: InputType;
   name: string;
-  placeholder:
-    | string
-    | ((context: IStrategyContext & { input: IStrategyInput }) => string);
+  placeholder: (
+    context: IStrategyContext & {
+      input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
+    }
+  ) => string;
   validate?: (
-    context: IStrategyContext & { input: IStrategyInput }
-  ) => boolean | string;
-  // If type is "input-with-token", this is the token
-  token?: IStrategyToken;
+    context: IStrategyContext & {
+      input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
+    }
+  ) => string | void;
   value?: any;
 
   [key: string]: any;
@@ -51,41 +54,71 @@ export interface IStrategy {
   description: string;
   author?: string;
 
-  inputs: IStrategyInput[];
+  inputs: IStrategyInput<any>[];
 
-  spells: (context: IStrategyContext) => any;
+  spells: (context: IStrategyContext) => Promise<Spell[]> | Spell[];
 
   submitText?: string;
 }
 
+export function defineInput<InputType extends StrategyInputType>(
+  input: IStrategyInput<InputType>
+) {
+  return input as IStrategyInput<any>;
+}
+
 export function defineStrategy(strategy: IStrategy) {
+  const context = {
+    web3: null,
+    dsa: null
+  };
+
   return {
     ...strategy,
-    id: strategy.id ? strategy.id  : slugify(strategy.name).toLowerCase(),
+    id: strategy.id ? strategy.id : slugify(strategy.name).toLowerCase(),
     inputs: strategy.inputs.map(input => ({
       ...input,
       value: null,
+      placeholder: () =>
+        input.placeholder
+          ? input.placeholder({
+              ...context,
+              inputs: strategy.inputs,
+              input: {
+                ...input,
+                token: {
+                    // todo
+                }
+              }
+            })
+          : null,
       onInput: (val: any) => {
         input.value = val;
       }
     })),
-    submit: async (context: Pick<IStrategyContext, "web3" | "dsa">) => {
+    submit: async () => {
       await this.validate({
         ...context,
         inputs: strategy.inputs
       });
 
-      const spells = strategy.spells({
+      const allSpells = await strategy.spells({
         ...context,
         inputs: strategy.inputs
       });
+
+      const spells = context.dsa.Spell();
+
+      for (const spell of allSpells) {
+        spells.add(spell);
+      }
 
       return await context.dsa.cast({
         spells,
         onReceipt: this.onReceipt
       });
     },
-    validate: async (context: IStrategyContext) => {
+    validate: async () => {
       for (const input of this.inputs) {
         const result = await input.validate({
           ...context,

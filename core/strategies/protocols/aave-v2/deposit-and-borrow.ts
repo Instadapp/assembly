@@ -1,4 +1,8 @@
-import { defineStrategy, StrategyInputType } from "../../helpers/strategy";
+import {
+  defineStrategy,
+  defineInput,
+  StrategyInputType
+} from "../../helpers/strategy";
 
 export default defineStrategy({
   name: "Deposit & Borrow",
@@ -6,7 +10,7 @@ export default defineStrategy({
   author: "Instadapp Team",
 
   inputs: [
-    {
+    defineInput({
       type: StrategyInputType.INPUT_WITH_TOKEN,
       name: "Debt",
       placeholder: ({ input }) => `${input.token.symbol} to Payback`,
@@ -18,32 +22,27 @@ export default defineStrategy({
         if (input.token.balance < input.value) {
           return "Your amount exceeds your maximum limit.";
         }
-
-        return true;
       }
-    },
-    {
+    }),
+    defineInput({
       type: StrategyInputType.INPUT_WITH_TOKEN,
       name: "Collateral",
       placeholder: ({ input }) => `${input.token.symbol} to Withdraw`
-    }
+    })
   ],
 
-  spells: async ({ dsa, inputs }) => {
-    const spells = dsa.Spells();
-
-    spells.add({
-      connector: "aave_v2",
-      method: "deposit",
-      args: [inputs[0].token.address, inputs[0].value, 0, 0]
-    });
-
-    spells.add({
-      connector: "aave_v2",
-      method: "borrow",
-      args: [inputs[1].token.address, inputs[1].value, 0, 0, 0]
-    });
-
-    return spells;
+  spells: async ({ inputs }) => {
+    return [
+      {
+        connector: "aave_v2",
+        method: "deposit",
+        args: [inputs[0].token.address, inputs[0].value, 0, 0]
+      },
+      {
+        connector: "aave_v2",
+        method: "borrow",
+        args: [inputs[1].token.address, inputs[1].value, 0, 0, 0]
+      }
+    ];
   }
 });

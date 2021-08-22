@@ -14,6 +14,7 @@
             :key="index"
             :value="input.value"
             @input="$event => input.onInput($event.target.value)"
+            :placeholder="input.placeholder()"
           />
         </div>
       </div>
@@ -53,7 +54,7 @@ export default defineComponent({
       strategies.find(strategy => strategy.id === props.strategy)
     );
 
-    watch(() => {
+    watch([], () => {
       selectedStrategy.value = strategies.find(
         strategy => strategy.id === props.strategy
       );
