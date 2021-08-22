@@ -85,10 +85,12 @@ export function init() {
     async ([route, active, dsa], [oldRoute, oldActive, oldDsa]) => {
       await nextTick();
 
+      //@ts-ignore
       const hasPathChanged = !oldRoute || route.path !== oldRoute.path;
       const hasIsLoggedInChanged = active !== oldActive;
       const hasDsaChanged = dsa !== oldDsa;
 
+      //@ts-ignore
       const [hash, params] = route.hash.split("?");
       
       if (hasPathChanged){
@@ -96,6 +98,7 @@ export function init() {
         return
       }
 
+       //@ts-ignore
       sidebar.value = sidebars[route.path + hash] || sidebars[hash];
         
       if (!sidebar.value) {
