@@ -67,7 +67,7 @@
   </SidebarContextRootContainer>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
 import { useAaveV2Position } from '~/composables/protocols/useAaveV2Position'
@@ -87,7 +87,7 @@ import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
-
+import DSA from "dsa-connect"
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
   props: {
@@ -102,7 +102,7 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { showPendingTransaction, showWarning, showConfirmedTransaction } = useNotification()
     const { status, displayPositions, maxLiquidation, liquidationPrice, liquidationMaxPrice } = useAaveV2Position({
       overridePosition: (position) => {
         if (rootTokenKey.value !== position.key) return position
@@ -160,9 +160,12 @@ export default defineComponent({
       })
 
       try {
-        const txHash = await dsa.value.cast({
+        const txHash = await (dsa.value as DSA).cast({
           spells,
           from: account.value,
+          onReceipt: (receipt) => {
+            showConfirmedTransaction(receipt.transactionHash)
+          }
         })
 
         showPendingTransaction(txHash)

@@ -23,7 +23,7 @@ const chains = [
 ];
 
 const active = ref(false);
-const chainId = ref<number>();
+const chainId = ref<1|137>();
 const networkName = computed<Network>(
   () => chains.find(c => c.chainId === chainId.value)?.name || Network.Mainnet
 );
@@ -60,6 +60,7 @@ export function useWeb3() {
       account.value = web3Provider.accounts[0];
     }
     let newWeb3 = new Web3(web3Provider);
+     //@ts-ignore
     chainId.value = await newWeb3.eth.getChainId();
     web3.value = newWeb3;
 
@@ -118,6 +119,7 @@ export function useWeb3() {
       return;
     }
     let newWeb3 = new Web3(web3Provider);
+     //@ts-ignore
     chainId.value = await newWeb3.eth.getChainId();
     web3.value = newWeb3;
   };

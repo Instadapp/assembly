@@ -1,3 +1,4 @@
+import { Spell } from "dsa-connect";
 import { useBigNumber } from "../useBigNumber";
 import { useDSA } from "../useDSA";
 import { useFormatting } from "../useFormatting";
@@ -35,7 +36,7 @@ export const use1InchSwap = () => {
     unitAmt,
     calldata,
     setId
-  }) {
+  }): Spell {
     if (
       activeNetworkId.value === Network.Polygon ||
       activeAccount.value.version == 2

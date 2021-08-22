@@ -1,6 +1,5 @@
 import { computed, readonly, ref, watch } from "@nuxtjs/composition-api";
 import { useWeb3 } from "./useWeb3";
-//@ts-ignore
 import DSA from "dsa-connect";
 import addresses from "~/constant/addresses";
 import abis from "~/constant/abis";
@@ -69,7 +68,7 @@ export function useDSA() {
     try {
       const transactionHash = await dsa.value.build({ version: 2 });
 
-      accounts.value = await dsa.value.getAccounts();
+      accounts.value = await dsa.value.getAccounts(account.value);
       return transactionHash;
     } catch (error) {
     } finally {
