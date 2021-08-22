@@ -5,17 +5,19 @@
     <div class="h-full overflow-y-scroll scrollbar-hover">
       <div class="mx-auto" style="max-width: 296px">
         <div class="py-2 sm:py-4">
-          <pre>{{ $props }}</pre>
-          <pre>{{ selectedStrategy }}</pre>
+          <div v-for="(input, index) in inputs" :key="index">
+            <input
+              type="text"
+              :value="input.value"
+              @input="$event => input.onInput($event.target.value)"
+              :placeholder="input.placeholder()"
+            />
+            {{ input.error }}
+          </div>
 
-          <input
-            type="text"
-            v-for="(input, index) in selectedStrategy.inputs"
-            :key="index"
-            :value="input.value"
-            @input="$event => input.onInput($event.target.value)"
-            :placeholder="input.placeholder()"
-          />
+          <button @submit="submit">Submit</button>
+
+          {{ error }}
         </div>
       </div>
     </div>
@@ -23,15 +25,10 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  watch,
-  watchEffect,
-  ref
-} from "@nuxtjs/composition-api";
+import { defineComponent } from "@nuxtjs/composition-api";
 import { useSidebar } from "~/composables/useSidebar";
 import { protocolStrategies, DefineStrategy } from "~/core/strategies";
+import { useStrategy } from "~/composables/useStrategy";
 
 export default defineComponent({
   props: {
@@ -50,18 +47,14 @@ export default defineComponent({
     const strategies: DefineStrategy[] =
       protocolStrategies[props.protocol] || [];
 
-    const selectedStrategy = ref(
+    const { inputs, submit, error } = useStrategy(
       strategies.find(strategy => strategy.id === props.strategy)
     );
 
-    watch([], () => {
-      selectedStrategy.value = strategies.find(
-        strategy => strategy.id === props.strategy
-      );
-    });
-
     return {
-      selectedStrategy
+      inputs,
+      error,
+      submit
     };
   }
 });

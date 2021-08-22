@@ -20,8 +20,14 @@ import { useBigNumber } from "./useBigNumber";
 import { useSorting } from "./useSorting";
 
 const balances = reactive({
-  user: null,
-  dsa: null
+  user: {
+    mainnet: {},
+    polygon: {}
+  },
+  dsa: {
+    mainnet: {},
+    polygon: {}
+  }
 });
 
 const prices = reactive({

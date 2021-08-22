@@ -4,4 +4,4 @@ export const protocolStrategies = {
     aaveV2 : AaveV2,
 }
 
-export * from "./helpers/strategy"
+export * from "./helpers"

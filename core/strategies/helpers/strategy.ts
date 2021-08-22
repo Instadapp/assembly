@@ -1,140 +1,130 @@
-import DSA, { Spell } from "dsa-connect";
+import DSA from "dsa-connect";
 import Web3 from "web3";
-import slugify from "slugify";
-export interface IStrategyContext {
-  dsa: DSA;
-  web3: Web3;
-  inputs: IStrategyInput<StrategyInputType>[];
-}
+import { DefineStrategy, IStrategyContext } from ".";
 
-export interface IStrategyToken {
-  address: string;
-  key: string;
-  symbol: string;
-  balance: string;
-
-  supply: string;
-  borrow: string;
-}
-
-export enum StrategyInputType {
-  INPUT = "input",
-  INPUT_WITH_TOKEN = "input-with-token"
-}
-
-export type StrategyInputParameterMap = {
-  [StrategyInputType.INPUT]: {};
-
-  [StrategyInputType.INPUT_WITH_TOKEN]: {
-    token?: IStrategyToken;
-  };
-};
-
-export interface IStrategyInput<InputType extends StrategyInputType> {
-  type: InputType;
-  name: string;
-  placeholder: (
-    context: IStrategyContext & {
-      input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
-    }
-  ) => string;
-  validate?: (
-    context: IStrategyContext & {
-      input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
-    }
-  ) => string | void;
-  value?: any;
-
-  [key: string]: any;
-}
-
-export interface IStrategy {
-  id?: string;
-  name: string;
-  description: string;
-  author?: string;
-
-  inputs: IStrategyInput<any>[];
-
-  spells: (context: IStrategyContext) => Promise<Spell[]> | Spell[];
-
-  submitText?: string;
-}
-
-export function defineInput<InputType extends StrategyInputType>(
-  input: IStrategyInput<InputType>
-) {
-  return input as IStrategyInput<any>;
-}
-
-export function defineStrategy(strategy: IStrategy) {
-  const context = {
+export class Strategy {
+  schema: DefineStrategy;
+  inputs = [];
+  context = {
     web3: null,
     dsa: null
   };
 
-  return {
-    ...strategy,
-    id: strategy.id ? strategy.id : slugify(strategy.name).toLowerCase(),
-    inputs: strategy.inputs.map(input => ({
+  listeners = [];
+
+  props: object = {
+    prices: {},
+    dsaTokens: {},
+    userTokens: {},
+  };
+
+  constructor(schema: DefineStrategy) {
+    this.schema = schema;
+
+    this.inputs = this.schema.inputs;
+  }
+
+  getContext(): IStrategyContext {
+    return {
+      ...this.context,
+      ...this.props,
+      inputs: this.getInputs()
+    };
+  }
+
+  setProps(props: object) {
+    Object.assign(this.props, props);
+  }
+
+  getInputs() {
+    return this.inputs.map(input => ({
       ...input,
-      value: null,
+      value: input.value || "",
+      error: input.error || "",
       placeholder: () =>
         input.placeholder
           ? input.placeholder({
-              ...context,
-              inputs: strategy.inputs,
+              ...this.context,
+              inputs: this.inputs,
               input: {
                 ...input,
                 token: {
-                    // todo
+                  // todo
                 }
               }
             })
           : null,
       onInput: (val: any) => {
+        input.error = "";
         input.value = val;
-      }
-    })),
-    submit: async () => {
-      await this.validate({
-        ...context,
-        inputs: strategy.inputs
-      });
 
-      const allSpells = await strategy.spells({
-        ...context,
-        inputs: strategy.inputs
-      });
-
-      const spells = context.dsa.Spell();
-
-      for (const spell of allSpells) {
-        spells.add(spell);
-      }
-
-      return await context.dsa.cast({
-        spells,
-        onReceipt: this.onReceipt
-      });
-    },
-    validate: async () => {
-      for (const input of this.inputs) {
-        const result = await input.validate({
-          ...context,
-          inputs: strategy.inputs,
-          input
-        });
-
-        if (result !== true) {
-          throw new Error(result || "Error has occurred");
+        if (val) {
+          input.error = input.validate({
+            ...this.getContext(),
+            input
+          });
         }
-      }
-    },
-    onReceipt: (txHash: string, txReceipt: any) => {
-      // do something
-    }
-  };
-}
 
-export type DefineStrategy = ReturnType<typeof defineStrategy>;
+        this.notifyListeners();
+      }
+    }));
+  }
+
+  async submit() {
+    await this.validate();
+
+    const allSpells = await this.schema.spells(this.getContext());
+
+    const spells = this.context.dsa.Spell();
+
+    console.log(spells);
+    
+    for (const spell of allSpells) {
+      spells.add(spell);
+    }
+
+    return await this.context.dsa.cast({
+      spells,
+      onReceipt: this.onReceipt
+    });
+  }
+
+  async validate() {
+    const inputs = this.getInputs();
+
+    for (const input of inputs) {
+      const result = await input.validate({
+        ...this.getContext(),
+        input
+      });
+
+      if (typeof result === "string") {
+        throw new Error(result || "Error has occurred");
+      }
+    }
+  }
+
+  onReceipt(txHash: string, txReceipt: any) {
+    // do something
+  }
+
+  setWeb3(web3: Web3) {
+    console.log(web3);
+    
+    this.context.web3 = web3;
+  }
+
+  setDSA(dsa: DSA) {
+    this.context.dsa = dsa;
+  }
+
+  async notifyListeners() {
+    for (const listener of this.listeners) {
+      await listener(this);
+    }
+  }
+
+  onUpdated(cb) {
+    this.listeners.push(cb);
+  }
+}

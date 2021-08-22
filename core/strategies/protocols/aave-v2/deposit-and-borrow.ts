@@ -2,7 +2,7 @@ import {
   defineStrategy,
   defineInput,
   StrategyInputType
-} from "../../helpers/strategy";
+} from "../../helpers";
 
 export default defineStrategy({
   name: "Deposit & Borrow",
