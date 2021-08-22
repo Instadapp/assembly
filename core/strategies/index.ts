@@ -1,5 +1,5 @@
 import AaveV2 from "./protocols/aave-v2"
 
-export const strategies = {
+export const protocolStrategies = {
     aaveV2 : AaveV2,
 }

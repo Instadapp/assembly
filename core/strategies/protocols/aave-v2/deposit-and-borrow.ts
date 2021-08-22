@@ -16,8 +16,8 @@ export default defineStrategy({
         }
 
         if (input.token.balance < input.value) {
-            return "Your amount exceeds your maximum limit.";
-          }
+          return "Your amount exceeds your maximum limit.";
+        }
 
         return true;
       }
