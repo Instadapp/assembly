@@ -2,12 +2,19 @@ import { nextTick, onMounted, ref, watch } from "@nuxtjs/composition-api";
 import { buildStrategy, DefineStrategy, IStrategy } from "~/core/strategies";
 import { useBalances } from "./useBalances";
 import { useDSA } from "./useDSA";
+import { useNotification } from "./useNotification";
+import { useSidebar } from "./useSidebar";
 import { useWeb3 } from "./useWeb3";
 
 export function useStrategy(defineStrategy: DefineStrategy) {
-  const { web3, networkName } = useWeb3();
+  const { web3, networkName, account } = useWeb3();
   const { dsa } = useDSA();
-  const { prices, balances } = useBalances();
+  const { prices, balances, fetchBalances } = useBalances();
+  const { close } = useSidebar();
+  const {
+    showPendingTransaction,
+    showConfirmedTransaction
+  } = useNotification();
 
   const strategy = buildStrategy(defineStrategy);
   const inputs = ref(strategy.getInputs());
@@ -17,11 +24,22 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     await nextTick();
 
     inputs.value = strategy.getInputs();
+
+    console.log("onUpdated");
   });
 
   const submit = async () => {
+    error.value = "";
     try {
-      await strategy.submit();
+      const tx = await strategy.submit({
+        onReceipt: async () => {
+          showConfirmedTransaction(tx);
+          await fetchBalances(true);
+        },
+        from: account.value
+      });
+      showPendingTransaction(tx);
+      close();
     } catch (e) {
       error.value = e.message;
     }
@@ -55,6 +73,6 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     strategy,
     inputs,
     submit,
-    error,
+    error
   };
 }

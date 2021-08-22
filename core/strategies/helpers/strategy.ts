@@ -15,7 +15,7 @@ export class Strategy {
   props: object = {
     prices: {},
     dsaTokens: {},
-    userTokens: {},
+    userTokens: {}
   };
 
   constructor(schema: DefineStrategy) {
@@ -47,10 +47,10 @@ export class Strategy {
               ...this.context,
               inputs: this.inputs,
               input: {
-                ...input,
                 token: {
                   // todo
-                }
+                },
+                ...input
               }
             })
           : null,
@@ -66,26 +66,36 @@ export class Strategy {
         }
 
         this.notifyListeners();
+      },
+      onCustomInput: (values: object) => {
+        // input = Object.assign(input, values);
+
+        input.error = input.validate({
+          ...this.getContext(),
+          input
+        });
+        this.notifyListeners();
       }
     }));
   }
 
-  async submit() {
+  async submit(options) {
     await this.validate();
 
     const allSpells = await this.schema.spells(this.getContext());
 
     const spells = this.context.dsa.Spell();
 
-    console.log(spells);
-    
+    console.log(allSpells);
+
     for (const spell of allSpells) {
       spells.add(spell);
     }
 
     return await this.context.dsa.cast({
       spells,
-      onReceipt: this.onReceipt
+      onReceipt: options?.onReceipt,
+      from: options?.from
     });
   }
 
@@ -93,6 +103,10 @@ export class Strategy {
     const inputs = this.getInputs();
 
     for (const input of inputs) {
+      if (typeof input.validate !== "function") {
+        continue;
+      }
+
       const result = await input.validate({
         ...this.getContext(),
         input
@@ -104,13 +118,7 @@ export class Strategy {
     }
   }
 
-  onReceipt(txHash: string, txReceipt: any) {
-    // do something
-  }
-
   setWeb3(web3: Web3) {
-    console.log(web3);
-    
     this.context.web3 = web3;
   }
 

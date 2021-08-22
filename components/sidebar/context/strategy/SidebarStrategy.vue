@@ -6,16 +6,28 @@
       <div class="mx-auto" style="max-width: 296px">
         <div class="py-2 sm:py-4">
           <div v-for="(input, index) in inputs" :key="index">
-            <input
-              type="text"
+            <input-amount
+              :key="index"
               :value="input.value"
-              @input="$event => input.onInput($event.target.value)"
+              :token-key="input.token ? input.token.key : 'eth'"
+              :token-keys="input.tokenKeys ? input.tokenKeys : []"
               :placeholder="input.placeholder()"
+              :error="input.error"
+              @input="$event => input.onInput($event)"
+              @tokenKeyChanged="
+                tokenKey => {
+                  input.onCustomInput({
+                    token: {
+                      key: tokenKey,
+                      symbol: tokenKey.toUpperCase(),
+                    }
+                  });
+                }
+              "
             />
-            {{ input.error }}
           </div>
 
-          <button @submit="submit">Submit</button>
+          <button @click="submit">Submit</button>
 
           {{ error }}
         </div>
@@ -29,8 +41,10 @@ import { defineComponent } from "@nuxtjs/composition-api";
 import { useSidebar } from "~/composables/useSidebar";
 import { protocolStrategies, DefineStrategy } from "~/core/strategies";
 import { useStrategy } from "~/composables/useStrategy";
+import InputAmount from "~/components/common/input/InputAmount.vue";
 
 export default defineComponent({
+  components: { InputAmount },
   props: {
     protocol: {
       type: String,

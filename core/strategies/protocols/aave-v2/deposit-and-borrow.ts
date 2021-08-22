@@ -1,8 +1,4 @@
-import {
-  defineStrategy,
-  defineInput,
-  StrategyInputType
-} from "../../helpers";
+import { defineStrategy, defineInput, StrategyInputType } from "../../helpers";
 
 export default defineStrategy({
   name: "Deposit & Borrow",
@@ -22,12 +18,18 @@ export default defineStrategy({
         if (input.token.balance < input.value) {
           return "Your amount exceeds your maximum limit.";
         }
-      }
+      },
+      tokenKeys: ["eth", "dai"],
+      tokens: [{ key: "eth", symbol: "ETH" }],
+      token: { key: "eth", symbol: "ETH", address : "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" }
     }),
     defineInput({
       type: StrategyInputType.INPUT_WITH_TOKEN,
       name: "Collateral",
-      placeholder: ({ input }) => `${input.token.symbol} to Withdraw`
+      placeholder: ({ input }) => `${input.token.symbol} to Withdraw`,
+      tokenKeys: ["eth", "dai"],
+      tokens: [{ key: "eth", symbol: "ETH" }],
+      token: { key: "dai", symbol: "DAI", address : "0x6B175474E89094C44Da98b954EedeAC495271d0F" }
     })
   ],
 
@@ -41,7 +43,7 @@ export default defineStrategy({
       {
         connector: "aave_v2",
         method: "borrow",
-        args: [inputs[1].token.address, inputs[1].value, 0, 0, 0]
+        args: [inputs[1].token.address, inputs[1].value, 1, 0, 0]
       }
     ];
   }
