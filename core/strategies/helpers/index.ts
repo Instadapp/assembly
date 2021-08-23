@@ -6,8 +6,8 @@ export interface IStrategyContext {
   dsa: DSA;
   web3: Web3;
   inputs: IStrategyInput<StrategyInputType>[];
-  dsaTokens?: IStrategyToken,
-  userTokens?: IStrategyToken,
+  dsaTokens?: { [address: string]: IStrategyToken };
+  userTokens?: { [address: string]: IStrategyToken };
 }
 
 export interface IStrategyToken {
@@ -46,6 +46,9 @@ export interface IStrategyInput<InputType extends StrategyInputType> {
       input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
     }
   ) => string | void;
+
+  defaults?: (context: Omit<IStrategyContext, 'inputs'>) => object;
+  
   value?: any;
 
   [key: string]: any;
@@ -78,7 +81,7 @@ export function defineStrategy(strategy: IStrategy) {
 }
 
 export function buildStrategy(schema: DefineStrategy) {
-  return new Strategy(schema)
+  return new Strategy(schema);
 }
 
 export type DefineStrategy = ReturnType<typeof defineStrategy>;

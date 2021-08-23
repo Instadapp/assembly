@@ -21,64 +21,94 @@ export class Strategy {
   constructor(schema: DefineStrategy) {
     this.schema = schema;
 
-    this.inputs = this.schema.inputs;
+    this.inputs = this.generateInputs(this.schema.inputs);
+  }
+
+  getBaseContext(): Omit<IStrategyContext, "inputs"> {
+    return {
+      ...this.context,
+      ...this.props
+    };
   }
 
   getContext(): IStrategyContext {
     return {
       ...this.context,
       ...this.props,
-      inputs: this.getInputs()
+      inputs: this.inputs
     };
   }
 
   setProps(props: object) {
     Object.assign(this.props, props);
 
-    this.notifyListeners()
+    const inputs = this.inputs;
+
+    for (const input of inputs) {
+      if (typeof input.defaults !== "function") {
+        continue;
+      }
+
+      Object.assign(input, input.defaults(this.getBaseContext()));
+    }
+
+    this.notifyListeners();
   }
 
-  getInputs() {
-    return this.inputs.map(input => ({
-      ...input,
-      value: input.value || "",
-      error: input.error || "",
-      placeholder: () =>
-        input.placeholder
-          ? input.placeholder({
-              ...this.context,
-              inputs: this.inputs,
-              input: {
-                token: {
-                  // todo
-                },
-                ...input
-              }
-            })
-          : null,
-      onInput: (val: any) => {
-        input.error = "";
-        input.value = val;
-
-        if (val) {
-          input.error = input.validate({
+  generateInputs(inputs) {
+    return inputs.map((input, idx) => {
+      const computedInput = {
+        ...input,
+        value: input.value || "",
+        error: input.error || "",
+        placeholder: () => {
+          console.log({
             ...this.getContext(),
-            input
+            input: this.inputs[idx]
           });
+
+          return input.placeholder
+            ? input.placeholder({
+                ...this.getContext(),
+                input: this.inputs[idx]
+              })
+            : null;
+        },
+        onInput: (val: any) => {
+          this.inputs[idx].error = "";
+          this.inputs[idx].value = val;
+
+          if (val) {
+            this.inputs[idx].error = this.inputs[idx].validate({
+              ...this.getContext(),
+              input: this.inputs[idx]
+            });
+          }
+
+          this.notifyListeners();
+        },
+        onCustomInput: (values: object) => {
+          this.inputs[idx] = Object.assign(this.inputs[idx], values);
+
+          this.inputs[idx].error = this.inputs[idx].validate({
+            ...this.getContext(),
+            input: this.inputs[idx]
+          });
+          this.notifyListeners();
         }
+      };
 
-        this.notifyListeners();
-      },
-      onCustomInput: (values: object) => {
-        input = Object.assign(input, values);
+      let defaults = {};
 
-        input.error = input.validate({
-          ...this.getContext(),
-          input
-        });
-        this.notifyListeners();
+      if (input.defaults) {
+        defaults = input.defaults(this.getBaseContext());
       }
-    }));
+
+      return {
+        ...computedInput,
+        ...defaults
+      };
+    });
   }
 
   async submit(options) {
@@ -100,7 +130,7 @@ export class Strategy {
   }
 
   async validate() {
-    const inputs = this.getInputs();
+    const inputs = this.inputs;
 
     for (const input of inputs) {
       if (typeof input.validate !== "function") {
@@ -120,10 +150,14 @@ export class Strategy {
 
   setWeb3(web3: Web3) {
     this.context.web3 = web3;
+
+    this.notifyListeners();
   }
 
   setDSA(dsa: DSA) {
     this.context.dsa = dsa;
+
+    this.notifyListeners();
   }
 
   async notifyListeners() {

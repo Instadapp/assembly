@@ -2,15 +2,15 @@ import tokens from "~/constant/tokens";
 import { defineStrategy, defineInput, StrategyInputType } from "../../helpers";
 
 export default defineStrategy({
-  name: "Deposit & Borrow",
-  description: "Deposit collateral & borrow asset in a single txn.",
+  name: "Payback & Withdraw",
+  description: "Payback debt & withdraw collateral in a single txn.",
   author: "Instadapp Team",
 
   inputs: [
     defineInput({
       type: StrategyInputType.INPUT_WITH_TOKEN,
       name: "Debt",
-      placeholder: ({ input }) => `${input.token?.symbol} to Payback`,
+      placeholder: ({ input }) => `${input.token.symbol} to Payback`,
       validate: ({ input }) => {
         if (!input.token) {
           return "Token is required";
@@ -20,23 +20,13 @@ export default defineStrategy({
           return "Your amount exceeds your maximum limit.";
         }
       },
-      defaults: context => {
-        return {
-          token: context.dsaTokens
-            ? Object.values(context.dsaTokens).find(t => t.key === "eth")
-            : null
-        };
-      }
+      token: tokens.mainnet.getTokenByKey("eth")
     }),
     defineInput({
       type: StrategyInputType.INPUT_WITH_TOKEN,
       name: "Collateral",
-      placeholder: ({ input }) => `${input.token?.symbol} to Withdraw`,
-      defaults: ({ dsaTokens }) => ({
-        token: dsaTokens
-          ? Object.values(dsaTokens).find(t => t.key === "dai")
-          : null
-      })
+      placeholder: ({ input }) => `${input.token.symbol} to Withdraw`,
+      token: tokens.mainnet.getTokenByKey("dai")
     })
   ],
 
@@ -44,13 +34,13 @@ export default defineStrategy({
     return [
       {
         connector: "aave_v2",
-        method: "deposit",
-        args: [inputs[0].token.address, inputs[0].value, 0, 0]
+        method: "payback",
+        args: [inputs[0].token.address, inputs[0].value, 1, 0, 0]
       },
       {
         connector: "aave_v2",
-        method: "borrow",
-        args: [inputs[1].token.address, inputs[1].value, 1, 0, 0]
+        method: "withdraw",
+        args: [inputs[1].token.address, inputs[1].value, 0, 0]
       }
     ];
   }

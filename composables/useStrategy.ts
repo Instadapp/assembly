@@ -18,13 +18,13 @@ export function useStrategy(defineStrategy: DefineStrategy) {
   } = useNotification();
 
   const strategy = buildStrategy(defineStrategy);
-  const inputs = ref(strategy.getInputs());
+  const inputs = ref(strategy.inputs);
   const error = ref("");
 
   strategy.onUpdated(async () => {
     await nextTick();
 
-    inputs.value = strategy.getInputs();
+    inputs.value = strategy.inputs;
 
     console.log("onUpdated");
   });
