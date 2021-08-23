@@ -7,7 +7,9 @@
         <template #icon
           ><IconCurrency :currency="debtToken.key" class="w-16 h-16" noHeight
         /></template>
-        <template #value>{{ formatDecimal(changedDebt) }} {{ debtToken.symbol }}</template>
+        <template #value
+          >{{ formatDecimal(changedDebt) }} {{ debtToken.symbol }}</template
+        >
       </SidebarSectionValueWithIcon>
 
       <SidebarSectionValueWithIcon class="" label="Token Balance" center>
@@ -15,7 +17,9 @@
           ><IconCurrency :currency="debtToken.key" class="w-16 h-16" noHeight
         /></template>
 
-        <template #value>{{ formatDecimal(changedBalance) }} {{ debtToken.symbol }}</template>
+        <template #value
+          >{{ formatDecimal(changedBalance) }} {{ debtToken.symbol }}</template
+        >
       </SidebarSectionValueWithIcon>
     </div>
 
@@ -107,11 +111,11 @@ export default defineComponent({
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { valInt } = useToken()
-    const { getBalanceByKey } = useBalances()
+    const { getBalanceByKey, fetchBalances } = useBalances()
     const { formatDecimal, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gte, plus, max, minus, min } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
@@ -125,6 +129,7 @@ export default defineComponent({
       debtToken,
       collateralToken,
       getTrovePositionHints,
+      fetchPosition,
     } = useLiquityPosition()
 
     const balance = computed(() => getBalanceByKey(debtToken.value.key))
@@ -175,6 +180,12 @@ export default defineComponent({
         const txHash = await dsa.value.cast({
           spells,
           from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+            await fetchPosition();
+          }
         })
 
         showPendingTransaction(txHash)

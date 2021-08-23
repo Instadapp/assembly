@@ -104,6 +104,7 @@ import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
 import { useLiquityPosition } from '~/composables/protocols/useLiquityPosition'
+import { useBalances } from '~/composables/useBalances'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
@@ -112,7 +113,8 @@ export default defineComponent({
     const { account } = useWeb3()
     const { dsa } = useDSA()
     const { valInt } = useToken()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { fetchBalances } = useBalances()
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
     const { formatUsd, formatUsdMax, formatDecimal, formatNumber } = useFormatting()
     const { parseSafeFloat } = useParsing()
     const { isZero, minus, max, plus } = useBigNumber()
@@ -129,6 +131,7 @@ export default defineComponent({
       liquidation,
       liquidationMaxPrice,
       getTrovePositionHints,
+      fetchPosition,
     } = useLiquityPosition()
 
     const changedCollateral = computed(() => max(minus(collateral.value, amountParsed.value), '0').toFixed())
@@ -159,7 +162,7 @@ export default defineComponent({
     async function cast() {
       pending.value = true
 
-      const inputAmountInWei = valInt(amountParsed.value,collateralToken.value.decimals)
+      const inputAmountInWei = valInt(amountParsed.value, collateralToken.value.decimals)
       const totalDepositAmountInWei = minus(collateralInWei.value, inputAmountInWei).toFixed()
       const { upperHint, lowerHint } = await getTrovePositionHints(totalDepositAmountInWei, debtInWei.value)
 
@@ -167,7 +170,7 @@ export default defineComponent({
       const setId = 0
 
       const spells = dsa.value.Spell()
-      
+
       spells.add({
         connector: 'LIQUITY-A',
         method: 'withdraw',
@@ -178,6 +181,12 @@ export default defineComponent({
         const txHash = await dsa.value.cast({
           spells,
           from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+            await fetchPosition();
+          }
         })
 
         showPendingTransaction(txHash)

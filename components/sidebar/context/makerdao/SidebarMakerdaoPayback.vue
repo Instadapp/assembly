@@ -15,9 +15,7 @@
           ><IconCurrency :currency="daiTokenKey" class="w-20 h-20" noHeight
         /></template>
 
-        <template #value
-          >{{ formatNumber(balance) }} {{ symbol }}</template
-        >
+        <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
       </SidebarSectionValueWithIcon>
     </div>
 
@@ -54,7 +52,10 @@
         :status="status"
       />
 
-      <SidebarSectionValueWithIcon class="mt-8" :label="`Liquidation Price (${tokenSymbol})`">
+      <SidebarSectionValueWithIcon
+        class="mt-8"
+        :label="`Liquidation Price (${tokenSymbol})`"
+      >
         <template #value>
           {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }}
           <span class="text-primary-gray"
@@ -113,9 +114,9 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gte, plus, max, minus, min } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
 
-    const { debt, collateral, liquidation, liquidationMaxPrice, vaultId, symbol: tokenSymbol } = useMakerdaoPosition()
+    const { debt, collateral, liquidation, liquidationMaxPrice, vaultId, symbol: tokenSymbol, fetchPosition, minDebt } = useMakerdaoPosition()
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
@@ -129,7 +130,7 @@ export default defineComponent({
     const balance = computed(() => getBalanceByKey(tokenKey.value))
     const balanceRaw = computed(() => getBalanceRawByKey(tokenKey.value))
 
-    const changedDebt = computed(() => plus(debt.value, amountParsed.value).toFixed())
+    const changedDebt = computed(() => max(minus(debt.value, amountParsed.value), '0').toFixed())
     const { liquidationPrice, status } = useMakerdaoPosition(collateral, changedDebt)
 
     const maxBalance = computed(() => min(balance.value, debt.value).toFixed())
@@ -156,7 +157,7 @@ export default defineComponent({
 
       const amount = isMaxAmount.value
         ? gte(balance.value, balance.value)
-          ? $dsa().maxValue
+          ? dsa.value.maxValue
           : balanceRaw.value
         : valInt(amountParsed.value, decimals.value)
 
@@ -172,10 +173,17 @@ export default defineComponent({
         const txHash = await dsa.value.cast({
           spells,
           from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+            await fetchPosition();
+          }
         })
 
         showPendingTransaction(txHash)
       } catch (error) {
+        console.log(error);
         showWarning(error.message)
       }
 
@@ -205,6 +213,7 @@ export default defineComponent({
       pending,
       toggle,
       tokenSymbol,
+      minDebt,
     }
   },
 })

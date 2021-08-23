@@ -99,11 +99,11 @@ export default defineComponent({
     const { account } = useWeb3()
     const { dsa } = useDSA()
     const { valInt } = useToken()
-    const { getBalanceByKey } = useBalances()
+    const { getBalanceByKey, fetchBalances } = useBalances()
     const { formatDecimal, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
@@ -117,6 +117,7 @@ export default defineComponent({
       liquidation,
       liquidationMaxPrice,
       getTrovePositionHints,
+      fetchPosition,
     } = useLiquityPosition()
 
     const changedCollateral = computed(() => max(plus(collateral.value, amountParsed.value), '0').toFixed())
@@ -147,7 +148,7 @@ export default defineComponent({
       pending.value = true
       try {
         const inputAmountInWei = valInt(amountParsed.value, collateralToken.value.decimals)
-        console.log(inputAmountInWei);
+
         const totalDepositAmountInWei = plus(inputAmountInWei, collateralInWei.value).toFixed()
         const { upperHint, lowerHint } = await getTrovePositionHints(totalDepositAmountInWei, debtInWei.value)
 
@@ -166,6 +167,12 @@ export default defineComponent({
         const txHash = await dsa.value.cast({
           spells,
           from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+            await fetchPosition();
+          }
         })
 
         showPendingTransaction(txHash)

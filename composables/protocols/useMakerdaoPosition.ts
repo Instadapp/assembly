@@ -109,7 +109,7 @@ export function useMakerdaoPosition(
   });
 
   const debt = computed(() => ensureValue(vault.value.debt).toFixed());
-  const minDebt = computed(() => vaultTypes.value[0]?.totalFloor || "5000");
+  const minDebt = computed(() => vaultTypes.value[0]?.totalFloor.toString() || "5000");
   const debtCeilingReached = computed(() =>
     vaultTypes.value?.some(v =>
       gt(v.overallTotalDebt, v.overallTotalDebtCeiling)
