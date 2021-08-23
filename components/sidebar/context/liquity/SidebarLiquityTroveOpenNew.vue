@@ -126,9 +126,9 @@ export default defineComponent({
     const { formatPercent, formatNumber, formatDecimal, formatUsdMax, formatUsd } = useFormatting()
     const { plus, times, isZero } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { getBalanceByKey } = useBalances()
+    const { getBalanceByKey, fetchBalances } = useBalances()
     const { valInt } = useToken()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
     const { dsa } = useDSA()
 
     const {
@@ -140,6 +140,7 @@ export default defineComponent({
       borrowFee,
       maxFeePercentageInWei,
       getTrovePositionHints,
+      fetchPosition,
     } = useLiquityPosition()
 
     const collateralAmount = ref('')
@@ -214,6 +215,12 @@ export default defineComponent({
         const txHash = await dsa.value.cast({
           spells,
           from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+            await fetchPosition();
+          }
         })
 
         showPendingTransaction(txHash)

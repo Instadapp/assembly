@@ -199,6 +199,7 @@ export function useLiquityPosition(
   );
 
   return {
+    fetchPosition,
     troveOpened,
     netValue,
     borrowFee,

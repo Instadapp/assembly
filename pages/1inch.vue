@@ -58,6 +58,7 @@ import { useDSA } from "~/composables/useDSA";
 import { use1InchSwap } from "~/composables/swap/use1InchSwap";
 import { useWeb3 } from "~/composables/useWeb3";
 import { useNotification } from "~/composables/useNotification";
+import { useBalances } from "~/composables/useBalances";
 
 export default defineComponent({
   components: {
@@ -71,7 +72,8 @@ export default defineComponent({
     const { dsa } = useDSA();
     const { getSellSpell } = use1InchSwap();
     const { account } = useWeb3();
-    const { showPendingTransaction, showWarning } = useNotification();
+    const { fetchBalances } = useBalances();
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification();
     const { valInt } = useToken();
     const sellToken = ref();
     const buyToken = ref();
@@ -96,7 +98,7 @@ export default defineComponent({
         getSellSpell({
           buyAddr: buyToken.value.address,
           sellAddr: sellToken.value.address,
-          sellAmt:  valInt(sellToken.value.amount, sellToken.value.decimals),
+          sellAmt: valInt(sellToken.value.amount, sellToken.value.decimals),
           unitAmt: caculateUnitAmt(),
           calldata: result.tx.data,
           setId: 0
@@ -106,7 +108,12 @@ export default defineComponent({
       try {
         const txHash = await dsa.value.cast({
           spells,
-          from: account.value
+          from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+          }
         });
 
         showPendingTransaction(txHash);

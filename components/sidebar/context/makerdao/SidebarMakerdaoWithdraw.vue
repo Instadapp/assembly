@@ -85,6 +85,7 @@ import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
 import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
+import { useBalances } from '~/composables/useBalances'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
@@ -93,15 +94,16 @@ export default defineComponent({
     const { account } = useWeb3()
     const { dsa } = useDSA()
     const { valInt } = useToken()
+    const { fetchBalances } = useBalances()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, vaultId } = useMakerdaoPosition()
+    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, vaultId, fetchPosition } = useMakerdaoPosition()
 
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
@@ -142,10 +144,16 @@ export default defineComponent({
         args: [vaultId.value, amount, 0, 0],
       })
 
-     try {
+      try {
         const txHash = await dsa.value.cast({
           spells,
           from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+            await fetchPosition();
+          }
         })
 
         showPendingTransaction(txHash)

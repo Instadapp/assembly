@@ -103,14 +103,14 @@ export default defineComponent({
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
 
     const tokenId = computed(() => props.tokenId)
     const tokenKey = computed(() => tokenIdMapping.idToToken[tokenId.value])
 
     const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
 
-    const { status, position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+    const { status, position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice, refreshPosition } = useCompoundPosition({
       overridePosition: (position) => {
         if (tokenId.value !== position.cTokenId) return position
 
@@ -173,6 +173,12 @@ export default defineComponent({
         const txHash = await dsa.value.cast({
           spells,
           from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+            await refreshPosition();
+          }
         })
 
         showPendingTransaction(txHash)

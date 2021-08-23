@@ -75,6 +75,7 @@ import { useSidebar } from '~/composables/useSidebar'
 import { useCompoundPosition } from '~/composables/protocols/useCompoundPosition'
 import ctokens from '~/constant/ctokens'
 import tokenIdMapping from '~/constant/tokenIdMapping'
+import { useBalances } from '~/composables/useBalances'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
@@ -86,17 +87,18 @@ export default defineComponent({
     const { networkName, account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
+    const { fetchBalances } = useBalances()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
     const { isZero, gt, div, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction, showWarning } = useNotification()
+    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
 
     const tokenId = computed(() => props.tokenId)
     const tokenKey = computed(() => tokenIdMapping.idToToken[tokenId.value])
 
     const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
 
-    const { stats, status: initialStatus, position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice } = useCompoundPosition({
+    const { stats, status: initialStatus, position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice, refreshPosition } = useCompoundPosition({
       overridePosition: (position) => {
         if (tokenId.value !== position.cTokenId) return position
 
@@ -158,6 +160,12 @@ export default defineComponent({
         const txHash = await dsa.value.cast({
           spells,
           from: account.value,
+          onReceipt: async receipt => {
+            showConfirmedTransaction(receipt.transactionHash);
+
+            await fetchBalances(true);
+            await refreshPosition();
+          }
         })
 
         showPendingTransaction(txHash)
