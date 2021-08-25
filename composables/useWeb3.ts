@@ -41,10 +41,12 @@ export function useWeb3() {
     }
 
     web3Modal = new SafeAppWeb3Modal({
-      disableInjectedProvider: false,
       cacheProvider: true,
       providerOptions
     });
+    
+    //@ts-ignore
+    window.web3Modal = web3Modal;
 
     if (web3Modal.cachedProvider) {
       await activate();
