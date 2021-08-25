@@ -8,6 +8,8 @@ export interface IStrategyContext {
   inputs: IStrategyInput<StrategyInputType>[];
   dsaTokens?: { [address: string]: IStrategyToken };
   userTokens?: { [address: string]: IStrategyToken };
+  convertTokenAmountToBigNumber?: (value: any, decimals: any) => string;
+  getTokenByKey?: (key: string) => IStrategyToken;
 }
 
 export interface IStrategyToken {
@@ -47,17 +49,22 @@ export interface IStrategyInput<InputType extends StrategyInputType> {
     }
   ) => string | void;
 
-  defaults?: (context: Omit<IStrategyContext, 'inputs'>) => object;
-  
+  defaults?: (context: Omit<IStrategyContext, "inputs">) => object;
+
   value?: any;
 
   [key: string]: any;
 }
 
+export enum StrategyProtocol {
+  AAVE_V2 = "aaveV2"
+}
 export interface IStrategy {
+  protocol: StrategyProtocol;
   id?: string;
   name: string;
   description: string;
+  details?: string;
   author?: string;
 
   inputs: IStrategyInput<StrategyInputType>[];

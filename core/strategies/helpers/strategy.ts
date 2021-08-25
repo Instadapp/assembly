@@ -6,8 +6,8 @@ export class Strategy {
   schema: DefineStrategy;
   inputs = [];
   context = {
-    web3: null,
-    dsa: null
+    web3: null as Web3,
+    dsa: null as DSA
   };
 
   listeners = [];
@@ -62,11 +62,6 @@ export class Strategy {
         value: input.value || "",
         error: input.error || "",
         placeholder: () => {
-          console.log({
-            ...this.getContext(),
-            input: this.inputs[idx]
-          });
-
           return input.placeholder
             ? input.placeholder({
                 ...this.getContext(),
@@ -111,10 +106,14 @@ export class Strategy {
     });
   }
 
+  async spells() {
+    return await this.schema.spells(this.getContext());
+  }
+
   async submit(options) {
     await this.validate();
 
-    const allSpells = await this.schema.spells(this.getContext());
+    const allSpells = await this.spells();
 
     const spells = this.context.dsa.Spell();
 

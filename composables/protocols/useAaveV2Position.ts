@@ -12,6 +12,7 @@ import { useBigNumber } from "~/composables/useBigNumber";
 import { usePosition } from "~/composables/usePosition";
 import { useToken } from "~/composables/useToken";
 import { useSorting } from "~/composables/useSorting";
+import useEventBus from "../useEventBus";
 
 const {
   times,
@@ -69,6 +70,7 @@ export function useAaveV2Position(
   const { activeAccount } = useDSA();
   const { getTokenByKey, allATokensV2 } = useToken();
   const { byMaxSupplyOrBorrowDesc } = useSorting()
+  const { onEvent } = useEventBus()
   
   const resolver = computed(() =>
     chainId.value === 1
@@ -107,6 +109,7 @@ export function useAaveV2Position(
     position.value = await fetchPosition();
   };
 
+  onEvent("protocol::aaveV2::refresh", refreshPosition);
 
   watch(
     web3,
