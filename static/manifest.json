@@ -1,7 +1,7 @@
 {
     "short_name": "Assembly",
     "name": "Instadapp - Assembly",
-    "description": "The Most Powerful DeFi Management Platform",
+    "description": "The Open Source Dashboard for the Instadapp Protocol",
     "iconPath": "/android-icon-192x192.png",
     "providedBy": {
         "name": "InstaDApp Labs LLC",
