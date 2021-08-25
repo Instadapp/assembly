@@ -1,9 +1,9 @@
 import { computed, onMounted, ref, watch } from "@nuxtjs/composition-api";
 import Web3 from "web3";
-import Web3Modal from "web3modal";
+import { SafeAppWeb3Modal } from '@gnosis.pm/safe-apps-web3modal'
 import { Network } from "./useNetwork";
 
-let web3Modal: Web3Modal;
+let web3Modal: SafeAppWeb3Modal;
 let web3Provider: any;
 
 let providerOptions = {};
@@ -40,7 +40,7 @@ export function useWeb3() {
       return;
     }
 
-    web3Modal = new Web3Modal({
+    web3Modal = new SafeAppWeb3Modal({
       disableInjectedProvider: false,
       cacheProvider: true,
       providerOptions
@@ -52,7 +52,7 @@ export function useWeb3() {
   });
 
   const activate = async () => {
-    web3Provider = await web3Modal.connect();
+    web3Provider = await web3Modal.requestProvider();
     active.value = true;
     if (web3Provider.selectedAddress) {
       account.value = web3Provider.selectedAddress;
