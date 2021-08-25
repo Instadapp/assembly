@@ -12,6 +12,7 @@ export interface IStrategyContext {
   convertTokenAmountToBigNumber?: (value: any, decimals: any) => string;
   getTokenByKey?: (key: string) => IStrategyToken;
   position?: any;
+  variables?: object;
 }
 
 export interface IStrategyToken {
@@ -76,6 +77,8 @@ export interface IStrategy {
   author?: string;
 
   inputs: IStrategyInput<StrategyInputType>[];
+
+  variables?: object;
 
   spells: (context: IStrategyContext) => Promise<Spell[]> | Spell[];
 

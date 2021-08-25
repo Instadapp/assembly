@@ -27,7 +27,8 @@ export class Strategy {
   getBaseContext(): Omit<IStrategyContext, "inputs"> {
     return {
       ...this.context,
-      ...this.props
+      ...this.props,
+      variables: this.schema.variables || {}
     };
   }
 
