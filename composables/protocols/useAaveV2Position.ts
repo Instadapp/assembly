@@ -26,7 +26,7 @@ const {
 } = useBigNumber();
 const { getType } = usePosition();
 
-const position = ref<any>({
+export const position = ref<any>({
   totalSupplyInEth: new BigNumber(0),
   totalBorrowInEth: new BigNumber(0),
   totalBorrowStableInEth: new BigNumber(0),

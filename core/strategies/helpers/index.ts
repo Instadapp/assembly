@@ -6,10 +6,12 @@ export interface IStrategyContext {
   dsa: DSA;
   web3: Web3;
   inputs: IStrategyInput<StrategyInputType>[];
-  dsaTokens?: { [address: string]: IStrategyToken };
-  userTokens?: { [address: string]: IStrategyToken };
+  dsadsaBalances?: { [address: string]: IStrategyToken };
+  userdsaBalances?: { [address: string]: IStrategyToken };
+  tokens?: { [address: string]: IStrategyToken };
   convertTokenAmountToBigNumber?: (value: any, decimals: any) => string;
   getTokenByKey?: (key: string) => IStrategyToken;
+  position?: any;
 }
 
 export interface IStrategyToken {
@@ -38,6 +40,9 @@ export type StrategyInputParameterMap = {
 export interface IStrategyInput<InputType extends StrategyInputType> {
   type: InputType;
   name: string;
+
+  variables?: object;
+
   placeholder?: (
     context: IStrategyContext & {
       input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
@@ -57,7 +62,10 @@ export interface IStrategyInput<InputType extends StrategyInputType> {
 }
 
 export enum StrategyProtocol {
-  AAVE_V2 = "aaveV2"
+  AAVE_V2 = "aaveV2",
+  COMPOUND = "compound",
+  MAKERDAO = "makerdao",
+  LIQUITY = "liquity",
 }
 export interface IStrategy {
   protocol: StrategyProtocol;

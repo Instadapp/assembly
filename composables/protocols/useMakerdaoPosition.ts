@@ -31,7 +31,7 @@ const isNewVault = ref(false);
 const vaultTypes = ref([]);
 const vaultType = ref("");
 
-const vault = computed(() => {
+export const vault = computed(() => {
   const vlt = vaults.value.find(v => v.id === vaultId.value);
   if (!isNewVault.value && !!vlt) {
     return vlt;

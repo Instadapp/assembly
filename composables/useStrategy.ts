@@ -1,6 +1,21 @@
-import { nextTick, onMounted, ref, watch } from "@nuxtjs/composition-api";
+import {
+  nextTick,
+  onMounted,
+  ref,
+  watch,
+  watchEffect
+} from "@nuxtjs/composition-api";
 import tokens from "~/constant/tokens";
-import { buildStrategy, DefineStrategy, IStrategy } from "~/core/strategies";
+import {
+  buildStrategy,
+  DefineStrategy,
+  IStrategy,
+  StrategyProtocol
+} from "~/core/strategies";
+import { position as aaveV2Position } from "./protocols/useAaveV2Position";
+import { position as compoundPosition } from "./protocols/useCompoundPosition";
+import { vault as makerPosition } from "./protocols/useMakerdaoPosition";
+import { trove as liquityPosition } from "./protocols/useLiquityPosition";
 import { useBalances } from "./useBalances";
 import { useDSA } from "./useDSA";
 import useEventBus from "./useEventBus";
@@ -42,7 +57,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
           showConfirmedTransaction(tx);
           await fetchBalances(true);
 
-          emitEvent(`protocol::${strategy.schema.protocol}::refresh`,{});
+          emitEvent(`protocol::${strategy.schema.protocol}::refresh`, {});
         },
         from: account.value
       });
@@ -50,16 +65,31 @@ export function useStrategy(defineStrategy: DefineStrategy) {
       close();
     } catch (e) {
       console.error(e);
-      
+
       error.value = e.message;
     }
     pending.value = false;
   };
 
-  strategy.setProps({
-    convertTokenAmountToBigNumber: valInt,
-    getTokenByKey,
-  })
+  watchEffect(() => {
+    let position = null;
+
+    if (strategy.schema.protocol == StrategyProtocol.AAVE_V2) {
+      position = aaveV2Position.value;
+    } else if (strategy.schema.protocol == StrategyProtocol.MAKERDAO) {
+      position = makerPosition.value;
+    } else if (strategy.schema.protocol == StrategyProtocol.COMPOUND) {
+      position = compoundPosition.value;
+    } else if (strategy.schema.protocol == StrategyProtocol.LIQUITY) {
+      position = liquityPosition.value;
+    }
+
+    strategy.setProps({
+      convertTokenAmountToBigNumber: valInt,
+      getTokenByKey,
+      position
+    });
+  });
 
   watch(web3, () => strategy.setWeb3(web3.value), { immediate: true });
   watch(dsa, () => strategy.setDSA(dsa.value), { immediate: true });
@@ -72,8 +102,8 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     balances,
     () => {
       strategy.setProps({
-        dsaTokens: balances.dsa[networkName.value],
-        userTokens: balances.user[networkName.value]
+        dsaBalances: balances.dsa[networkName.value],
+        userBalances: balances.user[networkName.value]
       });
     },
     { immediate: true }
@@ -99,6 +129,6 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     inputs,
     submit,
     error,
-    pending,
+    pending
   };
 }

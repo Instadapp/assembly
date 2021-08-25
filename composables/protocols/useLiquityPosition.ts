@@ -10,7 +10,7 @@ import abis from "~/constant/abis";
 import addresses from "~/constant/addresses";
 import { useDSA } from "../useDSA";
 
-const trove = ref<any>({
+export const trove = ref<any>({
   collateral: "0",
   debt: "0",
   stabilityAmount: "0",
