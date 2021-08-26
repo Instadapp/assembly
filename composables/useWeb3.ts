@@ -1,9 +1,9 @@
 import { computed, onMounted, ref, watch } from "@nuxtjs/composition-api";
 import Web3 from "web3";
-import Web3Modal from "web3modal";
+import { SafeAppWeb3Modal } from "@gnosis.pm/safe-apps-web3modal";
 import { Network } from "./useNetwork";
 
-let web3Modal: Web3Modal;
+let web3Modal: SafeAppWeb3Modal;
 let web3Provider: any;
 
 let providerOptions = {};
@@ -23,7 +23,7 @@ const chains = [
 ];
 
 const active = ref(false);
-const chainId = ref<1|137>();
+const chainId = ref<1 | 137>();
 const networkName = computed<Network>(
   () => chains.find(c => c.chainId === chainId.value)?.name || Network.Mainnet
 );
@@ -40,19 +40,25 @@ export function useWeb3() {
       return;
     }
 
-    web3Modal = new Web3Modal({
-      disableInjectedProvider: false,
+    web3Modal = new SafeAppWeb3Modal({
       cacheProvider: true,
       providerOptions
     });
+    
+    //@ts-ignore
+    window.web3Modal = web3Modal;
 
     if (web3Modal.cachedProvider) {
+      await activate();
+    }
+
+    if (await web3Modal.isSafeApp()) {
       await activate();
     }
   });
 
   const activate = async () => {
-    web3Provider = await web3Modal.connect();
+    web3Provider = await web3Modal.requestProvider();
     active.value = true;
     if (web3Provider.selectedAddress) {
       account.value = web3Provider.selectedAddress;
@@ -60,7 +66,7 @@ export function useWeb3() {
       account.value = web3Provider.accounts[0];
     }
     let newWeb3 = new Web3(web3Provider);
-     //@ts-ignore
+    //@ts-ignore
     chainId.value = await newWeb3.eth.getChainId();
     web3.value = newWeb3;
 
@@ -119,18 +125,18 @@ export function useWeb3() {
       return;
     }
     let newWeb3 = new Web3(web3Provider);
-     //@ts-ignore
+    //@ts-ignore
     chainId.value = await newWeb3.eth.getChainId();
     web3.value = newWeb3;
   };
 
   const setWeb3 = (newWeb3: Web3) => {
     web3.value = newWeb3;
-  }
+  };
 
   watch(web3, () => {
     window.web3 = web3.value;
-  })
+  });
 
   return {
     account,
@@ -141,6 +147,6 @@ export function useWeb3() {
     deactivate,
     networkName,
     refreshWeb3,
-    setWeb3,
+    setWeb3
   };
 }

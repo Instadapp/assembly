@@ -142,7 +142,7 @@
       </div>
     </div>
     <button
-      v-if="!active"
+      v-else-if="!active"
       @click="activate"
       class="hidden md:flex bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded h-9  items-center justify-center w-40"
     >

@@ -3,7 +3,7 @@
     <div class="text-[#9FB0C9] font-medium text-xs">
       Build on top of
       <a
-        class="ml-2 font-medium text-sm text-primary-blue-dark hover:text-primary-blue-hover py-1"
+        class="ml-1 font-medium text-primary-blue-dark hover:text-primary-blue-hover py-1"
         href="https://instadapp.io/"
         target="_blank"
       >
