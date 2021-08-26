@@ -30,7 +30,7 @@ export default defineStrategy({
         }
 
         if (!input.value) {
-          return "Deb amount is required";
+          return "Debt amount is required";
         }
 
         // if (input.token.balance < input.value) {
