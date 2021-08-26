@@ -1,4 +1,4 @@
-import { computed, onMounted, ref, watch } from "@nuxtjs/composition-api";
+import { computed, onMounted, ref } from "@nuxtjs/composition-api";
 import Web3 from "web3";
 import { SafeAppWeb3Modal } from "@gnosis.pm/safe-apps-web3modal";
 import { Network } from "./useNetwork";
@@ -133,10 +133,6 @@ export function useWeb3() {
   const setWeb3 = (newWeb3: Web3) => {
     web3.value = newWeb3;
   };
-
-  watch(web3, () => {
-    window.web3 = web3.value;
-  });
 
   return {
     account,

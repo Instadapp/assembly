@@ -45,7 +45,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
   strategy.onUpdated(async () => {
     await nextTick();
 
-    inputs.value = strategy.inputs;
+    // inputs.value = strategy.inputs;
 
     console.log("onUpdated");
   });
@@ -66,8 +66,6 @@ export function useStrategy(defineStrategy: DefineStrategy) {
       showPendingTransaction(tx);
       close();
     } catch (e) {
-      console.error(e);
-
       error.value = e.message;
     }
     pending.value = false;

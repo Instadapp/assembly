@@ -24,7 +24,7 @@
         <div class="mx-auto h-full" style="max-width: 296px">
           <div class="space-y-4 py-9 h-full flex flex-col">
             <div class="flex-1">
-              <div v-for="(input, index) in inputs" :key="index">
+              <div v-for="(input, index) in inputs" :key="index" class="mb-6">
                 <input-amount
                   :key="index"
                   :value="input.value"
@@ -34,6 +34,7 @@
                       ? input.tokenKeys
                       : activeStrategy.getContext()['tokenKeys']
                   "
+                  :error="input.error"
                   :placeholder="input.placeholder()"
                   @input="$event => input.onInput($event)"
                   @tokenKeyChanged="
