@@ -48,14 +48,14 @@ export default defineStrategy({
     })
   ],
 
-  spells: async ({ inputs, convertTokenAmountToBigNumber }) => {
+  spells: async ({ inputs, convertTokenAmountToWei }) => {
     return [
       {
         connector: "aave_v2",
         method: "payback",
         args: [
           inputs[0].token.address,
-          convertTokenAmountToBigNumber(
+          convertTokenAmountToWei(
             inputs[0].value,
             inputs[0].token.decimals
           ),
@@ -69,7 +69,7 @@ export default defineStrategy({
         method: "withdraw",
         args: [
           inputs[1].token.address,
-          convertTokenAmountToBigNumber(
+          convertTokenAmountToWei(
             inputs[1].value,
             inputs[1].token.decimals
           ),

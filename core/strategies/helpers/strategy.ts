@@ -34,8 +34,7 @@ export class Strategy {
 
   getContext(): IStrategyContext {
     return {
-      ...this.context,
-      ...this.props,
+      ...this.getBaseContext(),
       inputs: this.inputs
     };
   }

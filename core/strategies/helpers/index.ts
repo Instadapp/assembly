@@ -6,13 +6,13 @@ export interface IStrategyContext {
   dsa: DSA;
   web3: Web3;
   inputs: IStrategyInput<StrategyInputType>[];
-  dsadsaBalances?: { [address: string]: IStrategyToken };
-  userdsaBalances?: { [address: string]: IStrategyToken };
+  dsaBalances?: { [address: string]: IStrategyToken };
+  userBalances?: { [address: string]: IStrategyToken };
   tokens?: { [address: string]: IStrategyToken };
-  convertTokenAmountToBigNumber?: (value: any, decimals: any) => string;
+  convertTokenAmountToWei?: (value: any, decimals: any) => string;
   getTokenByKey?: (key: string) => IStrategyToken;
   position?: any;
-  variables?: object;
+  variables?: { [key: string]: any };
 }
 
 export interface IStrategyToken {
@@ -42,7 +42,7 @@ export interface IStrategyInput<InputType extends StrategyInputType> {
   type: InputType;
   name: string;
 
-  variables?: object;
+  variables?: { [key: string]: any };
 
   placeholder?: (
     context: IStrategyContext & {

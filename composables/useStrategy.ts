@@ -85,7 +85,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     }
 
     strategy.setProps({
-      convertTokenAmountToBigNumber: valInt,
+      convertTokenAmountToWei: valInt,
       getTokenByKey,
       position
     });
