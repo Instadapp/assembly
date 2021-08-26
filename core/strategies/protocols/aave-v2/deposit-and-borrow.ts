@@ -75,7 +75,7 @@ export default defineStrategy({
   ],
 
   validate: async ({ position, inputs, toBN }) => {
-    if (toBN(inputs[0].value).isZero() && toBN(inputs[0].value).isZero()) {
+    if (toBN(inputs[0].value).isZero() && toBN(inputs[1].value).isZero()) {
       return;
     }
 
