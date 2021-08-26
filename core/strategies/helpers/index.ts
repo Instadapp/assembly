@@ -2,6 +2,7 @@ import DSA, { Spell } from "dsa-connect";
 import Web3 from "web3";
 import slugify from "slugify";
 import { Strategy } from "./strategy";
+import BigNumber from "bignumber.js";
 export interface IStrategyContext {
   dsa: DSA;
   web3: Web3;
@@ -13,6 +14,7 @@ export interface IStrategyContext {
   getTokenByKey?: (key: string) => IStrategyToken;
   position?: any;
   variables?: { [key: string]: any };
+  toBN?: (value: any) => BigNumber;
 }
 
 export interface IStrategyToken {
@@ -66,7 +68,7 @@ export enum StrategyProtocol {
   AAVE_V2 = "aaveV2",
   COMPOUND = "compound",
   MAKERDAO = "makerdao",
-  LIQUITY = "liquity",
+  LIQUITY = "liquity"
 }
 export interface IStrategy {
   protocol: StrategyProtocol;
@@ -81,6 +83,9 @@ export interface IStrategy {
   variables?: object;
 
   spells: (context: IStrategyContext) => Promise<Spell[]> | Spell[];
+  validate?: (
+    context: IStrategyContext
+  ) => Promise<void | string> | void | string;
 
   submitText?: string;
 }

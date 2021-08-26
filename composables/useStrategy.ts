@@ -9,7 +9,6 @@ import tokens from "~/constant/tokens";
 import {
   buildStrategy,
   DefineStrategy,
-  IStrategy,
   StrategyProtocol
 } from "~/core/strategies";
 import { position as aaveV2Position } from "./protocols/useAaveV2Position";
@@ -23,6 +22,8 @@ import { useNotification } from "./useNotification";
 import { useSidebar } from "./useSidebar";
 import { useToken } from "./useToken";
 import { useWeb3 } from "./useWeb3";
+import { useBigNumber } from "./useBigNumber";
+
 export function useStrategy(defineStrategy: DefineStrategy) {
   const { web3, networkName, account } = useWeb3();
   const { dsa } = useDSA();
@@ -30,6 +31,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
   const { close } = useSidebar();
   const { valInt, getTokenByKey } = useToken();
   const { emitEvent } = useEventBus();
+  const { toBN } = useBigNumber();
   const {
     showPendingTransaction,
     showConfirmedTransaction
@@ -87,6 +89,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     strategy.setProps({
       convertTokenAmountToWei: valInt,
       getTokenByKey,
+      toBN,
       position
     });
   });

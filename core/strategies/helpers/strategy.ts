@@ -145,6 +145,14 @@ export class Strategy {
         throw new Error(result || "Error has occurred");
       }
     }
+
+    if (this.schema.validate) {
+      const result = await this.schema.validate(this.getContext());
+
+      if (typeof result === "string") {
+        throw new Error(result || "Error has occurred");
+      }
+    }
   }
 
   setWeb3(web3: Web3) {
