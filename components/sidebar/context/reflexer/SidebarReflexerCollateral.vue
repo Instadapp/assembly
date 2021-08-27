@@ -54,11 +54,11 @@ export default defineComponent({
     const { store, app, route } = useContext()
     const { formatPercent } = useFormatting()
     const { back } = useSidebar()
-    const { safeTypes: makerSafeTypes, safeType, isNewSafe } = useReflexerPosition()
+    const { safeTypes: reflexerSafeTypes, safeType, isNewSafe } = useReflexerPosition()
 
     const safeTypes = computed(() => {
       const shouldFilter = !!props.safeType && (props.safeType === 'token' || props.safeType === 'uniLPT')
-      const filtered = makerSafeTypes.value.filter((safe) => !safe.disabled)
+      const filtered = reflexerSafeTypes.value.filter((safe) => !safe.disabled)
       const final = shouldFilter ? filtered.filter((safe) => safe.safeTokenType === props.safeType) : filtered
       if (route.value.hash.startsWith('#collateral')) return final
       return filtered.filter((safe) => safe.safeTokenType === 'token')

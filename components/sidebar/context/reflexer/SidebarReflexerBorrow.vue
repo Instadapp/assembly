@@ -4,7 +4,7 @@
 
     <SidebarSectionValueWithIcon class="mt-6" label="Borrowed" center>
       <template #icon
-        ><IconCurrency :currency="daiTokenKey" class="w-20 h-20" noHeight
+        ><IconCurrency :currency="raiTokenKey" class="w-20 h-20" noHeight
       /></template>
       <template #value>{{ formatNumber(debt) }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
@@ -109,10 +109,10 @@ export default defineComponent({
     const changedDebt = computed(() => plus(debt.value, amountParsed.value).toFixed())
     const { liquidationPrice, status } = useReflexerPosition(collateral, changedDebt)
 
-    const daiTokenKey = ref('dai')
-    const daiToken = computed(() => getTokenByKey(daiTokenKey.value))
-    const symbol = computed(() => daiToken.value?.symbol)
-    const decimals = computed(() => daiToken.value?.decimals)
+    const raiTokenKey = ref('rai')
+    const raiToken = computed(() => getTokenByKey(raiTokenKey.value))
+    const symbol = computed(() => raiToken.value?.symbol)
+    const decimals = computed(() => raiToken.value?.decimals)
 
     const {
       validateAmount,
@@ -173,7 +173,7 @@ export default defineComponent({
     }
 
     return {
-      daiTokenKey,
+      raiTokenKey,
       symbol,
       debt,
       amount,

@@ -137,7 +137,7 @@
           :amount="debt"
           :amount-usd="debt"
           position-type="borrow"
-          token-key="dai"
+          token-key="rai"
           :safe-token-type="safeTokenType"
           :supply-or-borrow="showBorrow"
           :withdraw-or-payback="showPayback"
@@ -239,7 +239,7 @@ export default defineComponent({
       if (isZero(collateral.value)) {
         showWarning("ReflexerDAO", "No collateral supplied!!");
       } else {
-        router.push({ hash: "payback?tokenKey=dai" });
+        router.push({ hash: "payback?tokenKey=rai" });
       }
     }
 
@@ -247,7 +247,7 @@ export default defineComponent({
       if (isZero(collateral.value)) {
         showWarning("ReflexerDAO", "Deposit collateral before borrowing!!");
       } else {
-        router.push({ hash: "borrow?tokenKey=dai" });
+        router.push({ hash: "borrow?tokenKey=rai" });
       }
     }
 

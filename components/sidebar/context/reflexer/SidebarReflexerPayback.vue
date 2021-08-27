@@ -5,14 +5,14 @@
     <div class="mt-6 flex justify-around items-center  w-full">
       <SidebarSectionValueWithIcon class="" label="Borrowed" center>
         <template #icon
-          ><IconCurrency :currency="daiTokenKey" class="w-20 h-20" noHeight
+          ><IconCurrency :currency="raiTokenKey" class="w-20 h-20" noHeight
         /></template>
         <template #value>{{ formatNumber(debt) }} {{ symbol }}</template>
       </SidebarSectionValueWithIcon>
 
       <SidebarSectionValueWithIcon class="" label="Token Balance" center>
         <template #icon
-          ><IconCurrency :currency="daiTokenKey" class="w-20 h-20" noHeight
+          ><IconCurrency :currency="raiTokenKey" class="w-20 h-20" noHeight
         /></template>
 
         <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
@@ -121,7 +121,7 @@ export default defineComponent({
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const daiTokenKey = ref('dai')
+    const raiTokenKey = ref('rai')
     const tokenKey = computed(() => props.tokenKey)
     const token = computed(() => getTokenByKey(tokenKey.value))
     const symbol = computed(() => token.value?.symbol)
@@ -136,7 +136,7 @@ export default defineComponent({
     const maxBalance = computed(() => min(balance.value, debt.value).toFixed())
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, maxBalance)
 
-    const { validateAmount, validateLiquidation, validateIsLoggedIn, validateMakerDebt } = useValidators()
+    const { validateAmount, validateLiquidation, validateIsLoggedIn, validateReflexerDebt } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
 
@@ -145,7 +145,7 @@ export default defineComponent({
         amount: { message: validateAmount(amountParsed.value, maxBalance.value), show: hasAmountValue },
         liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
-        minDebt: { message: validateMakerDebt(changedDebt.value), show: hasAmountValue },
+        minDebt: { message: validateReflexerDebt(changedDebt.value), show: hasAmountValue },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -193,7 +193,7 @@ export default defineComponent({
     }
 
     return {
-      daiTokenKey,
+      raiTokenKey,
       symbol,
       debt,
       balance,
