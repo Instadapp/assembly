@@ -156,7 +156,7 @@ export default defineComponent({
       pending.value = true
 
       const amount = isMaxAmount.value
-        ? gte(balance.value, balance.value)
+        ? gte(balance.value, debt.value)
           ? dsa.value.maxValue
           : balanceRaw.value
         : valInt(amountParsed.value, decimals.value)
