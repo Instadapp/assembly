@@ -127,7 +127,7 @@ export function useMakerdaoPosition(
       return;
     }
     vaults.value = await getVaults(activeAccount.value.address, web3.value);
-    if (vaults.value.length > 0) {
+    if (vaults.value.length > 0 && !vaultId.value) {
       vaultId.value = vaults.value[0].id;
     }
   };
