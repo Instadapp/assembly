@@ -129,7 +129,7 @@ export function useReflexerPosition(
       return;
     }
     safes.value = await getSafes(activeAccount.value.address, web3.value);
-    if (safes.value.length > 0) {
+    if (safes.value.length > 0 && !safeId.value) {
       safeId.value = safes.value[0].id;
     }
   };
