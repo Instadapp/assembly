@@ -2,17 +2,19 @@ import { useBigNumber } from "./useBigNumber";
 import { useFormatting } from "./useFormatting";
 import { useMakerdaoPosition } from "~/composables/protocols/useMakerdaoPosition";
 import { useLiquityPosition } from "./protocols/useLiquityPosition";
+import { useReflexerPosition } from "./protocols/useReflexerPosition";
 
 export function useValidators() {
   const { formatNumber } = useFormatting();
   const { isZero, minus, eq, gt, lt, gte, plus } = useBigNumber();
   const { minDebt: makerMinDebt, vaultTypes } = useMakerdaoPosition();
+  const { minDebt: reflexerMinDebt, safeTypes } = useReflexerPosition();
   const {
     minDebt: liquityMinDebt,
     liquidationReserve: liquityLiquidationReserve,
     troveOpened: liquityTroveOpened
   } = useLiquityPosition();
-  
+
   function validateAmount(amountParsed, balance = null, options = null) {
     const mergedOptions = Object.assign(
       { msg: "Your amount exceeds your maximum limit." },
@@ -96,6 +98,36 @@ export function useValidators() {
     return null;
   }
 
+  function validateReflexerDebtCeiling(safeType, debtParsed = 0) {
+    const safe = safeTypes.value.find(v => v.type === safeType);
+    const { debtCeiling, totalDebt } = safe || {};
+
+    if (!isZero(debtCeiling) && !isZero(totalDebt)) {
+      const total = plus(totalDebt, debtParsed);
+      return gte(total, debtCeiling)
+        ? `${safeType} Collateral reached debt ceiling`
+        : null;
+    }
+    return null;
+  }
+
+  function validateReflexerDebt(
+    debtParsed,
+    minDebt = reflexerMinDebt.value,
+    vaultId
+  ) {
+    if (lt(debtParsed, minDebt) && gt(debtParsed, "0")) {
+      const vaultText = vaultId
+        ? vaultId !== "0"
+          ? `on vault #${vaultId}`
+          : `on new vault`
+        : "";
+      return `Minimum debt requirement is ${minDebt} DAI ${vaultText}`;
+    }
+
+    return null;
+  }
+
   function validateLiquityDebt(
     debtParsed,
     minDebt = liquityMinDebt.value,
@@ -129,6 +161,8 @@ export function useValidators() {
     validateMakerDebt,
     validateMakerDebtCeiling,
     validateLiquityDebt,
-    validateLiquityTroveExists
+    validateLiquityTroveExists,
+    validateReflexerDebtCeiling,
+    validateReflexerDebt,
   };
 }

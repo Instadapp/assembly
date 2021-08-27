@@ -37,6 +37,7 @@ import CompoundIcon from "~/assets/icons/compound.svg?inline";
 import MakerIcon from "~/assets/icons/makerdao.svg?inline";
 import OneInchIcon from "~/assets/icons/1inch.svg?inline";
 import LiquityIcon from "~/assets/icons/liquity.svg?inline";
+import ReflexerIcon from "~/assets/icons/reflexer.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [
@@ -68,11 +69,18 @@ const appsPerNetwork = {
       url: "/1inch",
       description: "DEX Aggregator"
     },
-      {
+    {
       id: "liquity",
       icon: LiquityIcon,
       name: "Liquity",
       url: "/mainnet/liquity",
+      description: "Collateralized Debt"
+    },
+    {
+      id: "reflexer",
+      icon: ReflexerIcon,
+      name: "Reflexer Finance",
+      url: "/mainnet/reflexer",
       description: "Collateralized Debt"
     }
   ],
