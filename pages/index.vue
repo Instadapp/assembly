@@ -60,7 +60,7 @@ const appsPerNetwork = {
       icon: MakerIcon,
       name: "MakerDAO",
       url: "/mainnet/maker",
-      description: "Collateralized Debt"
+      description: "Collateralized DAI Debt"
     },
     {
       id: "1inch",
@@ -74,14 +74,14 @@ const appsPerNetwork = {
       icon: LiquityIcon,
       name: "Liquity",
       url: "/mainnet/liquity",
-      description: "Collateralized Debt"
+      description: "Collateralized LUSD Debt"
     },
     {
       id: "reflexer",
       icon: ReflexerIcon,
       name: "Reflexer Finance",
       url: "/mainnet/reflexer",
-      description: "Collateralized Debt"
+      description: "Collateralized RAI Debt"
     }
   ],
   polygon: [
