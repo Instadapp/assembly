@@ -110,7 +110,7 @@ export function useReflexerPosition(
 
   const debt = computed(() => ensureValue(safe.value.debt).toFixed());
   const minDebt = computed(
-    () => safeTypes.value[0]?.totalFloor?.toString() || "5000"
+    () => safeTypes.value[0]?.totalFloor?.toString() || "699"
   );
   const debtCeilingReached = computed(() =>
     safeTypes.value?.some(v =>

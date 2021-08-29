@@ -104,7 +104,7 @@ export default defineComponent({
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewSafe, safeId, safeType, fetchPosition} = useReflexerPosition()
+    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewSafe, safeId, safeType, fetchPosition } = useReflexerPosition()
 
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
@@ -163,7 +163,7 @@ export default defineComponent({
           from: account.value,
           onReceipt: async receipt => {
             showConfirmedTransaction(receipt.transactionHash);
-
+            isNewSafe.value = false
             await fetchBalances(true);
             await fetchPosition();
           }

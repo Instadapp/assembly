@@ -104,7 +104,7 @@ export default defineComponent({
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewVault, vaultId, vaultType, fetchPosition} = useMakerdaoPosition()
+    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewVault, vaultId, vaultType, fetchPosition } = useMakerdaoPosition()
 
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
@@ -163,6 +163,8 @@ export default defineComponent({
           from: account.value,
           onReceipt: async receipt => {
             showConfirmedTransaction(receipt.transactionHash);
+            
+            isNewVault.value = false;
 
             await fetchBalances(true);
             await fetchPosition();
