@@ -122,7 +122,7 @@ export function useValidators() {
           ? `on vault #${vaultId}`
           : `on new vault`
         : "";
-      return `Minimum debt requirement is ${minDebt} DAI ${vaultText}`;
+      return `Minimum debt requirement is ${minDebt} RAI ${vaultText}`;
     }
 
     return null;
