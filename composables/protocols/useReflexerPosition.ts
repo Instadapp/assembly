@@ -25,6 +25,8 @@ const defaultSafe = {
   netvalue: "0"
 };
 
+const oracleRelayerAddress = "0x4ed9C0dCa0479bC64d8f4EB3007126D5791f7851";
+
 const safeId = ref(null);
 const safes = ref([]);
 const isNewSafe = ref(false);
@@ -202,6 +204,10 @@ async function getSafeTypes(web3) {
       .getColInfo(reflexerSafes.types)
       .call();
 
+    const rawRedemptionPrice = await web3.eth.getStorageAt(
+      oracleRelayerAddress,
+      4
+    );
     return reflexerSafes.allSafes.map(
       ({ type, token, key: tokenKey, disabled, safeTokenType }, i) => {
         const [rate, price, ratioCbyD, debtCeiling, totalDebt] = rawData[i];
@@ -213,7 +219,13 @@ async function getSafeTypes(web3) {
           disabled,
           safeTokenType,
           rate: calRate(rate),
-          price: new BigNumber(price).dividedBy(1e27).toFixed(),
+          redemptionPrice: new BigNumber(rawRedemptionPrice)
+            .dividedBy(1e27)
+            .toFixed(),
+          price: new BigNumber(price)
+            .times(rawRedemptionPrice)
+            .dividedBy(1e54)
+            .toFixed(),
           liquidation: new BigNumber(1)
             .dividedBy(new BigNumber(ratioCbyD).dividedBy(1e27))
             .toFixed(),
@@ -244,6 +256,10 @@ async function getSafes(user, web3) {
       .getSafes(user)
       .call();
 
+    const rawRedemptionPrice = await web3.eth.getStorageAt(
+      oracleRelayerAddress,
+      4
+    );
     return rawData.map(
       ([
         id,
@@ -260,7 +276,9 @@ async function getSafes(user, web3) {
       ]) => {
         const collateral = new BigNumber(collInWei).dividedBy(1e18);
         const debt = new BigNumber(debtInWei).dividedBy(1e18);
-        const price = new BigNumber(priceInWei).dividedBy(1e27);
+        const price = new BigNumber(priceInWei)
+          .times(rawRedemptionPrice)
+          .dividedBy(1e54);
 
         const safe = reflexerSafes.getSafeByType(type);
 
