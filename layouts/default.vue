@@ -80,12 +80,13 @@ import { defineComponent, nextTick, onErrorCaptured, onMounted, useContext, useR
 import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
 import CompoundIcon from '~/assets/icons/compound.svg?inline'
 import AaveIcon from '~/assets/icons/aave.svg?inline'
-import { useWeb3 } from '~/composables/useWeb3'
+import { useWeb3 } from '@kabbouchi/vue-web3'
 import { init as initSidebars, useSidebar } from '~/composables/useSidebar'
 import { useBackdrop } from '@/composables/useBackdrop'
 import { useNetwork } from "~/composables/useNetwork";
 import { useTenderly } from "~/composables/useTenderly";
 import { useModal } from "~/composables/useModal";
+import { useEagerConnect } from "~/composables/useEagerConnect";
 
 export default defineComponent({
   components: {
@@ -100,6 +101,7 @@ export default defineComponent({
     const { redirect } = useContext()
     const { showSidebarBalances } = useSidebar()
     const { showNetworksMismatchDialog } = useModal()
+    useEagerConnect()
     const route = useRoute()
 
     watch(isBackdropShown, () => {

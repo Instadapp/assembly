@@ -1,10 +1,11 @@
 import { computed, readonly, ref, watch } from "@nuxtjs/composition-api";
-import { useWeb3 } from "./useWeb3";
+import { useWeb3 } from "@kabbouchi/vue-web3";
 import DSA from "dsa-connect";
 import addresses from "~/constant/addresses";
 import abis from "~/constant/abis";
 import { AbiItem } from "web3-utils";
 import { useNotification } from "./useNotification";
+import { useNetwork } from "./useNetwork";
 
 const dsa = ref<DSA>();
 const accounts = ref<any[]>([]);
@@ -12,18 +13,28 @@ const activeAccount = ref<any>();
 const authorities = ref<string[]>();
 
 export function useDSA() {
-  const { web3, chainId, networkName, account } = useWeb3();
+  const { active, library, chainId, account } = useWeb3();
+  const { activeNetworkId } = useNetwork()
   const { showWarning } = useNotification();
 
-  watch(web3, () => {
-    if (web3.value) {
-      dsa.value = new DSA(web3.value, chainId.value);
+  watch(library, () => {
+    if (library.value) {
+      dsa.value = new DSA(library.value, chainId.value);
+    }
+  });
+
+
+  watch(active, () => {
+    console.log("here");
+    
+    if (library.value) {
+      dsa.value = new DSA(library.value, chainId.value);
     }
   });
 
   watch(chainId, () => {
-    if (web3.value) {
-      dsa.value = new DSA(web3.value, chainId.value);
+    if (library.value) {
+      dsa.value = new DSA(library.value, chainId.value);
     }
   });
 
@@ -82,9 +93,9 @@ export function useDSA() {
 
   async function fethAuthorities() {
     try {
-      const accountsResolverInstance = new web3.value.eth.Contract(
+      const accountsResolverInstance = new library.value.eth.Contract(
         abis.resolver.accounts as AbiItem[],
-        addresses[networkName.value].resolver.accounts
+        addresses[activeNetworkId.value].resolver.accounts
       );
       const rawData = await accountsResolverInstance.methods
         .getAccountAuthorities(activeAccount.value.address)
@@ -170,7 +181,7 @@ export function useDSA() {
     createAccount,
     creatingAccount,
     setAccount,
-    web3,
+    library,
     chainId,
     authorities,
     createAuthority,

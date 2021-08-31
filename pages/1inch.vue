@@ -56,7 +56,7 @@ import { useBigNumber } from "~/composables/useBigNumber";
 import { useNetwork } from "~/composables/useNetwork";
 import { useDSA } from "~/composables/useDSA";
 import { use1InchSwap } from "~/composables/swap/use1InchSwap";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@kabbouchi/vue-web3";
 import { useNotification } from "~/composables/useNotification";
 import { useBalances } from "~/composables/useBalances";
 

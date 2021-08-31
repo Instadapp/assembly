@@ -1,14 +1,14 @@
 import { useContext, ref, onMounted, computed } from "@nuxtjs/composition-api";
 import axios from "axios";
 import { activeNetwork, useNetwork } from "./useNetwork";
-import { useWeb3 } from "./useWeb3";
+import { useWeb3 } from "@kabbouchi/vue-web3";
 import Web3 from "web3";
 import { useDSA } from "./useDSA";
 
 const forkId = ref(null);
 export function useTenderly() {
   const { $config } = useContext();
-  const { setWeb3, refreshWeb3 } = useWeb3();
+  const { activate, provider } = useWeb3();
   const { accounts, refreshAccounts } = useDSA();
   const canSimulate = computed(
     () => $config.TENDERLY_FORK_PATH && $config.TENDERLY_KEY
@@ -66,7 +66,7 @@ export function useTenderly() {
 
     forkId.value = null;
     window.localStorage.removeItem("forkId");
-    await refreshWeb3();
+    // await refreshWeb3();
     loading.value = false;
   };
 
@@ -77,13 +77,13 @@ export function useTenderly() {
     }
 
     forkId.value = fork;
-    setWeb3(
-      new Web3(
-        new Web3.providers.HttpProvider(
-          `https://rpc.tenderly.co/fork/${forkId.value}`
-        )
-      )
-    );
+    // setWeb3(
+    //   new Web3(
+    //     new Web3.providers.HttpProvider(
+    //       `https://rpc.tenderly.co/fork/${forkId.value}`
+    //     )
+    //   )
+    // );
     window.localStorage.setItem("forkId", forkId.value);
   };
 

@@ -91,7 +91,7 @@ import { useValidation } from '~/composables/useValidation'
 import { useToken } from '~/composables/useToken'
 import { useParsing } from '~/composables/useParsing'
 import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
-import { useWeb3 } from '~/composables/useWeb3'
+import { useWeb3 } from '@kabbouchi/vue-web3'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
@@ -107,7 +107,7 @@ export default defineComponent({
   },
   setup(props) {
     const { close } = useSidebar()
-    const { networkName, account } = useWeb3()
+    const { account } = useWeb3()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
     const { getBalanceByKey, getBalanceRawByKey, fetchBalances } = useBalances()

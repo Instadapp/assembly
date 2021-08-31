@@ -1,22 +1,25 @@
-import { computed } from '@nuxtjs/composition-api'
-import { useWeb3 } from './useWeb3'
+import { computed } from "@nuxtjs/composition-api";
+import { useNetwork } from "./useNetwork";
 
 export function useLink() {
-  const { networkName } = useWeb3()
+  const { activeNetworkId } = useNetwork();
 
   const addressDetailsLink = computed(() => {
-    if (networkName.value === 'polygon') {
-      return 'https://polygonscan.com/address'
+    if (activeNetworkId.value === "polygon") {
+      return "https://polygonscan.com/address";
     }
 
-    return 'https://etherscan.io/address'
-  })
+    return "https://etherscan.io/address";
+  });
 
-  return { addressDetailsLink }
+  return { addressDetailsLink };
 }
 
-export const getEtherscanLink = (transactionHash) => `https://etherscan.io/tx/${transactionHash}`
-export const getMaticLink = (transactionHash) => `https://polygonscan.com/tx/${transactionHash}`
-export const getPolygonLink = (transactionHash) => `https://polygonscan.com/tx/${transactionHash}`
-export const getTenderlyLink = (simulationId) =>
-  `https://dashboard.tenderly.co/public/InstaDApp/dsa-simulations/fork-simulation/${simulationId}?hideSidebar=true`
+export const getEtherscanLink = transactionHash =>
+  `https://etherscan.io/tx/${transactionHash}`;
+export const getMaticLink = transactionHash =>
+  `https://polygonscan.com/tx/${transactionHash}`;
+export const getPolygonLink = transactionHash =>
+  `https://polygonscan.com/tx/${transactionHash}`;
+export const getTenderlyLink = simulationId =>
+  `https://dashboard.tenderly.co/public/InstaDApp/dsa-simulations/fork-simulation/${simulationId}?hideSidebar=true`;

@@ -79,7 +79,7 @@ import { useValidation } from '~/composables/useValidation'
 import { useToken } from '~/composables/useToken'
 import { useParsing } from '~/composables/useParsing'
 import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
-import { useWeb3 } from '~/composables/useWeb3'
+import { useWeb3 } from '@kabbouchi/vue-web3'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
@@ -90,6 +90,7 @@ import tokenIdMapping from '~/constant/tokenIdMapping'
 import ctokens from '~/constant/ctokens'
 import { useCompoundPosition } from '~/composables/protocols/useCompoundPosition'
 import { useBalances } from '~/composables/useBalances'
+import { useNetwork } from '~/composables/useNetwork'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
@@ -98,7 +99,8 @@ export default defineComponent({
   },
   setup(props) {
     const { close } = useSidebar()
-    const { networkName, account } = useWeb3()
+    const { account } = useWeb3()
+    const { activeNetworkId } = useNetwork()
     const { dsa } = useDSA()
     const { fetchBalances } = useBalances()
     const { getTokenByKey, valInt } = useToken()
@@ -110,7 +112,7 @@ export default defineComponent({
     const tokenId = computed(() => props.tokenId)
     const tokenKey = computed(() => tokenIdMapping.idToToken[tokenId.value])
 
-    const rootTokenKey = computed(() => ctokens[networkName.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
+    const rootTokenKey = computed(() => ctokens[activeNetworkId.value].rootTokens.includes(tokenKey.value) ? tokenKey.value : 'eth')
 
 
     const { stats, status, position, displayPositions, liquidation, liquidationPrice, liquidationMaxPrice, refreshPosition } = useCompoundPosition({

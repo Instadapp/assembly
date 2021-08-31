@@ -79,7 +79,7 @@ import { useValidation } from '~/composables/useValidation'
 import { useToken } from '~/composables/useToken'
 import { useParsing } from '~/composables/useParsing'
 import { useMaxAmountActive } from '~/composables/useMaxAmountActive'
-import { useWeb3 } from '~/composables/useWeb3'
+import { useWeb3 } from '@kabbouchi/vue-web3'
 import atokens from '~/constant/atokens'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
@@ -87,6 +87,7 @@ import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
+import { useNetwork } from '~/composables/useNetwork'
 
 export default defineComponent({
   components: { InputNumeric, Input, ToggleButton, ButtonCTA, Button },
@@ -95,7 +96,8 @@ export default defineComponent({
   },
   setup(props) {
     const { close } = useSidebar()
-    const { networkName, account, web3 } = useWeb3()
+    const { account, library } = useWeb3()
+    const { activeNetworkId } = useNetwork()
     const { dsa } = useDSA()
     const { getTokenByKey, valInt } = useToken()
     const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
@@ -109,7 +111,7 @@ export default defineComponent({
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const rootTokenKey = computed(() => atokens[networkName.value].rootTokens.includes(props.tokenKey) ? props.tokenKey : 'eth')
+    const rootTokenKey = computed(() => atokens[activeNetworkId.value].rootTokens.includes(props.tokenKey) ? props.tokenKey : 'eth')
 
     const token = computed(() => getTokenByKey(rootTokenKey.value))
     const symbol = computed(() => token.value?.symbol)
@@ -126,7 +128,7 @@ export default defineComponent({
 
       return {
         amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
-        accountAddress: { message: web3.value && !web3.value.utils.isAddress(accountAddress.value) ? 'Enter valid address!' : null, show: accountAddress.value.length > 0 },
+        accountAddress: { message: library.value && !library.value.utils.isAddress(accountAddress.value) ? 'Enter valid address!' : null, show: accountAddress.value.length > 0 },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
       }
     })

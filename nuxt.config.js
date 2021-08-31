@@ -50,7 +50,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     "~/plugins/v-click-outside.js",
-    "~/plugins/web3modal.js",
+    // "~/plugins/web3modal.js",
     { src: '~/plugins/v-tooltip', mode: 'client' },
     { src: '~/plugins/v-clipboard2', mode: 'client' },
   ],

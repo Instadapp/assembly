@@ -80,7 +80,7 @@ import { useValidation } from "~/composables/useValidation";
 import { useToken } from "~/composables/useToken";
 import { useParsing } from "~/composables/useParsing";
 import { useMaxAmountActive } from "~/composables/useMaxAmountActive";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@kabbouchi/vue-web3";
 import atokens from "~/constant/atokens";
 import ToggleButton from "~/components/common/input/ToggleButton.vue";
 import { useDSA } from "~/composables/useDSA";
@@ -88,6 +88,7 @@ import ButtonCTA from "~/components/common/input/ButtonCTA.vue";
 import Button from "~/components/Button.vue";
 import { useSidebar } from "~/composables/useSidebar";
 import DSA from "dsa-connect";
+import { useNetwork } from "~/composables/useNetwork";
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
   props: {
@@ -95,7 +96,8 @@ export default defineComponent({
   },
   setup(props) {
     const { close } = useSidebar();
-    const { networkName, account } = useWeb3();
+    const { account } = useWeb3();
+    const { activeNetworkId } = useNetwork()
     const { dsa } = useDSA();
     const { getTokenByKey, valInt } = useToken();
     const { getBalanceByKey, fetchBalances } = useBalances();
@@ -129,7 +131,7 @@ export default defineComponent({
     const amountParsed = computed(() => parseSafeFloat(amount.value));
 
     const rootTokenKey = computed(() =>
-      atokens[networkName.value].rootTokens.includes(props.tokenKey)
+      atokens[activeNetworkId.value].rootTokens.includes(props.tokenKey)
         ? props.tokenKey
         : "eth"
     );
