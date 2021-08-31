@@ -256,6 +256,10 @@ async function getSafes(user, web3) {
       .getSafes(user)
       .call();
 
+    const rawRedemptionPrice = await web3.eth.getStorageAt(
+      oracleRelayerAddress,
+      4
+    );
     return rawData.map(
       ([
         id,
@@ -272,7 +276,9 @@ async function getSafes(user, web3) {
       ]) => {
         const collateral = new BigNumber(collInWei).dividedBy(1e18);
         const debt = new BigNumber(debtInWei).dividedBy(1e18);
-        const price = new BigNumber(priceInWei).dividedBy(1e27);
+        const price = new BigNumber(priceInWei)
+          .times(rawRedemptionPrice)
+          .dividedBy(1e54);
 
         const safe = reflexerSafes.getSafeByType(type);
 
