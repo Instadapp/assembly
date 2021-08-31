@@ -58,13 +58,15 @@ export function useReflexerPosition(
 ) {
   const { web3, chainId, networkName } = useWeb3();
   const { activeAccount } = useDSA();
-  const { isZero, ensureValue, times, div, max, gt } = useBigNumber();
+  const { isZero, ensureValue, times, div, max, gt, toBN } = useBigNumber();
   const { getTokenByKey } = useToken();
 
   const safeTokenType = computed(() => safe.value.safeTokenType);
 
   const price = computed(() => ensureValue(safe.value.price).toFixed());
+  const spotPrice = computed(() => ensureValue(safe.value.spotPrice).toFixed());
 
+  
   const collateralUsd = computed(() =>
     times(collateral.value, price.value).toFixed()
   );
@@ -89,7 +91,7 @@ export function useReflexerPosition(
       ? "1.1"
       : div(
           debtAmountRef.value,
-          times(collateralAmountRef.value, price.value)
+          times(collateralAmountRef.value, spotPrice.value)
         ).toFixed();
   });
 
@@ -99,12 +101,13 @@ export function useReflexerPosition(
         div(div(debt.value, collateral.value), liquidation.value),
         "0"
       ).toFixed();
+
     return isZero(collateralAmountRef.value) && !isZero(debtAmountRef.value)
       ? times(price.value, "1.1").toFixed()
       : max(
           div(
             div(debtAmountRef.value, collateralAmountRef.value),
-            liquidation.value
+            toBN(liquidation.value ).multipliedBy(spotPrice.value).dividedBy(price.value)
           ),
           "0"
         ).toFixed();
@@ -222,17 +225,13 @@ async function getSafeTypes(web3) {
           redemptionPrice: new BigNumber(rawRedemptionPrice)
             .dividedBy(1e27)
             .toFixed(),
-          price: new BigNumber(price)
-            .times(rawRedemptionPrice)
-            .dividedBy(1e54)
-            .toFixed(),
+          spotPrice: new BigNumber(price).dividedBy(1e27).toFixed(),
+          price: new BigNumber(price).times(rawRedemptionPrice).dividedBy(1e54).toFixed(),
           liquidation: new BigNumber(1)
             .dividedBy(new BigNumber(ratioCbyD).dividedBy(1e27))
             .toFixed(),
           debtCeiling: debtCeiling,
-          totalDebt: new BigNumber(totalDebt)
-            .multipliedBy(1.00002)
-            .toFixed()
+          totalDebt: new BigNumber(totalDebt).multipliedBy(1.00002).toFixed()
         };
       }
     );
@@ -275,6 +274,7 @@ async function getSafes(user, web3) {
       ]) => {
         const collateral = new BigNumber(collInWei).dividedBy(1e18);
         const debt = new BigNumber(debtInWei).dividedBy(1e18);
+        const spotPrice = new BigNumber(priceInWei).dividedBy(1e27);
         const price = new BigNumber(priceInWei)
           .times(rawRedemptionPrice)
           .dividedBy(1e54);
@@ -295,6 +295,7 @@ async function getSafes(user, web3) {
             .toFixed(),
           rate: calRate(ratePerBlock),
           price: price.toFixed(),
+          spotPrice,
           liquidation: new BigNumber(1)
             .dividedBy(new BigNumber(liquidationRatioCbyD).dividedBy(1e27))
             .toFixed(),
@@ -305,7 +306,7 @@ async function getSafes(user, web3) {
             .toFixed(),
           status: collateral.isZero()
             ? "0"
-            : debt.dividedBy(collateral.multipliedBy(price)).toFixed()
+            : debt.dividedBy(collateral.multipliedBy(spotPrice)).toFixed()
         };
       }
     );
