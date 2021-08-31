@@ -9,6 +9,7 @@ import { useDSA } from "~/composables/useDSA";
 import { useToken } from "~/composables/useToken";
 import { useWeb3 } from "~/composables/useWeb3";
 import { AbiItem } from "web3-utils";
+import { useBalances } from "../useBalances";
 
 const defaultSafe = {
   id: null,
@@ -60,13 +61,18 @@ export function useReflexerPosition(
   const { activeAccount } = useDSA();
   const { isZero, ensureValue, times, div, max, gt, toBN } = useBigNumber();
   const { getTokenByKey } = useToken();
+  const { prices } = useBalances();
+
+  const raiToken = computed(() => getTokenByKey("rai"));
+  const raiInUsd = computed(() =>
+    raiToken.value ? prices.mainnet[raiToken.value.address] || "0" : "0"
+  );
 
   const safeTokenType = computed(() => safe.value.safeTokenType);
 
   const price = computed(() => ensureValue(safe.value.price).toFixed());
   const spotPrice = computed(() => ensureValue(safe.value.spotPrice).toFixed());
 
-  
   const collateralUsd = computed(() =>
     times(collateral.value, price.value).toFixed()
   );
@@ -107,7 +113,9 @@ export function useReflexerPosition(
       : max(
           div(
             div(debtAmountRef.value, collateralAmountRef.value),
-            toBN(liquidation.value ).multipliedBy(spotPrice.value).dividedBy(price.value)
+            toBN(liquidation.value)
+              .multipliedBy(spotPrice.value)
+              .dividedBy(price.value)
           ),
           "0"
         ).toFixed();
@@ -178,6 +186,7 @@ export function useReflexerPosition(
     collateralUsd,
     collateral,
     price,
+    raiInUsd,
     liquidation,
     tokenKey,
     token,
@@ -226,7 +235,10 @@ async function getSafeTypes(web3) {
             .dividedBy(1e27)
             .toFixed(),
           spotPrice: new BigNumber(price).dividedBy(1e27).toFixed(),
-          price: new BigNumber(price).times(rawRedemptionPrice).dividedBy(1e54).toFixed(),
+          price: new BigNumber(price)
+            .times(rawRedemptionPrice)
+            .dividedBy(1e54)
+            .toFixed(),
           liquidation: new BigNumber(1)
             .dividedBy(new BigNumber(ratioCbyD).dividedBy(1e27))
             .toFixed(),

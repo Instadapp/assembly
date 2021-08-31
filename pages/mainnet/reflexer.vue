@@ -141,7 +141,7 @@
           :safe-token-type="safeTokenType"
           :supply-or-borrow="showBorrow"
           :withdraw-or-payback="showPayback"
-          price-in-usd="1"
+          :price-in-usd="raiInUsd"
         />
       </div>
     </div>
@@ -207,7 +207,8 @@ export default defineComponent({
       liquidationMaxPrice,
       debt,
       minDebt,
-      debtCeilingReached
+      debtCeilingReached,
+      raiInUsd,
     } = useReflexerPosition();
 
     const statusLiquidationRatio = computed(() =>
@@ -276,7 +277,8 @@ export default defineComponent({
       showSupply,
       debt,
       minDebt,
-      debtCeilingReached
+      debtCeilingReached,
+      raiInUsd,
     };
   }
 });
