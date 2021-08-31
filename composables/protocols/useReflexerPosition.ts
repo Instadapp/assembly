@@ -112,7 +112,7 @@ export function useReflexerPosition(
 
   const debt = computed(() => ensureValue(safe.value.debt).toFixed());
   const minDebt = computed(
-    () => safeTypes.value[0]?.totalFloor?.toString() || "699"
+    () => safeTypes.value[0]?.totalDebt?.toString() || "699"
   );
   const debtCeilingReached = computed(() =>
     safeTypes.value?.some(v =>
@@ -231,7 +231,6 @@ async function getSafeTypes(web3) {
             .toFixed(),
           debtCeiling: debtCeiling,
           totalDebt: new BigNumber(totalDebt)
-            .dividedBy(1e18)
             .multipliedBy(1.00002)
             .toFixed()
         };
