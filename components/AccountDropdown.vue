@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="active && activeAccount" class="relative w-[193px]" v-click-outside="hide">
+  <div class="mt-3 w-full md:w-auto md:mt-0">
+    <div v-if="active && activeAccount" class="relative w-full md:w-[193px]" v-click-outside="hide">
       <button
         type="button"
         class=" relative w-full border border-primary-blue-border rounded pl-3 pr-10 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0846E4] focus:border-[#0846E4] sm:text-sm"
@@ -10,7 +10,7 @@
         @click="show = !show"
       >
         <span
-          class="flex items-center capitalize text-center text-sm font-bold"
+          class="flex items-center capitalize text-center text-sm font-bold truncate"
         >
           <div class="mr-2">
             <svg

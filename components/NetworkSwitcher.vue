@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-[160px] md:w-[178px]" v-click-outside="hide">
+  <div class="relative w-1/2 md:w-[178px]" v-click-outside="hide">
     <button
       type="button"
       class="bg-primary-blue-dark hover:bg-primary-blue-hover relative w-full border border-primary-blue-border rounded pl-2.5 pr-10 py-1.5 text-left focus:outline-none focus:ring-1 focus:ring-[#0846E4] focus:border-[#0846E4] sm:text-sm"
