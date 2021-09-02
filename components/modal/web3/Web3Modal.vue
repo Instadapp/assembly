@@ -1,11 +1,18 @@
 <template>
   <div
-    class="relative inline-block w-full max-w-md px-8 py-8 overflow-hidden text-left align-bottom transition-all transform bg-white border border-opacity-50 rounded-lg shadow-xl  dark:bg-dark-400 sm:my-16 sm:align-middle sm:p-6 border-green-light"
+    class="relative inline-block w-full max-w-md px-8 py-8 overflow-hidden text-left align-bottom transition-all transform bg-white  sm:my-16 sm:align-middle sm:p-6 "
+    :class="{
+      'border border-opacity-50 rounded-lg shadow-xl border-green-light': !slim
+    }"
     role="dialog"
     aria-modal="true"
     aria-labelledby="modal-headline"
   >
-    <div class="py-8">
+    <div
+      :class="{
+        'py-8': !slim
+      }"
+    >
       <div class="text-center">
         <h3 id="modal-headline" class="font-bold text-2xl text-[#374253]">
           Connect your wallet
@@ -42,7 +49,7 @@
       </div>
     </div>
 
-    <button class="absolute top-0 right-0 p-4" @click="close">
+    <button v-if="!slim" class="absolute top-0 right-0 p-4" @click="close">
       <svg
         width="10"
         height="10"
@@ -70,6 +77,12 @@ import ButtonCTA from '../../common/input/ButtonCTA.vue'
 import ButtonCTAOutlined from '../../common/input/ButtonCTAOutlined.vue'
 
 export default defineComponent({
+  props: {
+    slim: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: { ButtonCTA, ButtonCTAOutlined, Input },
   setup() {
     const { close } = useModal()

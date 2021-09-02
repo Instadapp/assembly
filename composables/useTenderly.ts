@@ -4,7 +4,6 @@ import { activeNetwork, useNetwork } from "./useNetwork";
 import { useWeb3 } from "@kabbouchi/vue-web3";
 import Web3 from "web3";
 import { useDSA } from "./useDSA";
-import { injected } from "~/connectors";
 
 const forkId = ref(null);
 export function useTenderly() {
@@ -22,7 +21,7 @@ export function useTenderly() {
     }
 
     setTimeout(() => {
-      setForkId(window.localStorage.getItem("forkId"));
+      setForkId(window.localStorage.getItem("forkId"), true);
     }, 1000);
   });
 
@@ -52,14 +51,8 @@ export function useTenderly() {
     loading.value = false;
   };
 
-  const stopSimulation = async () => {
+  const stopSimulation = async (silent = false) => {
     loading.value = true;
-    if (connector.value) {
-      deactivate();
-      activate(connector.value);
-    } else {
-      deactivate();
-    }
 
     try {
       await axios({
@@ -74,13 +67,18 @@ export function useTenderly() {
 
     forkId.value = null;
     window.localStorage.removeItem("forkId");
-    // await refreshWeb3();
+
+    if (!silent && connector.value) {
+      deactivate();
+      activate(connector.value);
+    }
+
     loading.value = false;
   };
 
-  const setForkId = async fork => {
+  const setForkId = async (fork, silent = false) => {
     if (!fork) {
-      stopSimulation();
+      stopSimulation(silent);
       return;
     }
 
