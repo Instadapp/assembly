@@ -39,6 +39,10 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
+  env: {
+    PORTIS_ID: process.env.PORTIS_ID,
+    INFURA_ID: process.env.INFURA_ID,
+  },
 
   publicRuntimeConfig: {
     INFURA_ID: process.env.INFURA_ID,

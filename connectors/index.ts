@@ -25,8 +25,8 @@ export const walletconnect = new WalletConnectConnector({
 
 // mainnet only
 export const portis = new PortisConnector({
-  dAppId: process.env.PORTIS_ID,
-  networks: [1]
+  dAppId: process.env.PORTIS_ID as string,
+  networks: [1],
 });
 
 export const walletlink = new WalletLinkConnector({
