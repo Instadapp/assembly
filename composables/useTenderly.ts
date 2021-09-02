@@ -4,11 +4,12 @@ import { activeNetwork, useNetwork } from "./useNetwork";
 import { useWeb3 } from "@kabbouchi/vue-web3";
 import Web3 from "web3";
 import { useDSA } from "./useDSA";
+import { injected } from "~/connectors";
 
 const forkId = ref(null);
 export function useTenderly() {
   const { $config } = useContext();
-  const { activate, provider } = useWeb3();
+  const { activate, deactivate, connector, library } = useWeb3();
   const { accounts, refreshAccounts } = useDSA();
   const canSimulate = computed(
     () => $config.TENDERLY_FORK_PATH && $config.TENDERLY_KEY
@@ -53,6 +54,13 @@ export function useTenderly() {
 
   const stopSimulation = async () => {
     loading.value = true;
+    if (connector.value) {
+      deactivate();
+      activate(connector.value);
+    } else {
+      deactivate();
+    }
+
     try {
       await axios({
         method: "delete",
@@ -70,20 +78,20 @@ export function useTenderly() {
     loading.value = false;
   };
 
-  const setForkId = fork => {
+  const setForkId = async fork => {
     if (!fork) {
       stopSimulation();
       return;
     }
 
     forkId.value = fork;
-    // setWeb3(
-    //   new Web3(
-    //     new Web3.providers.HttpProvider(
-    //       `https://rpc.tenderly.co/fork/${forkId.value}`
-    //     )
-    //   )
-    // );
+
+    library.value = new Web3(
+      new Web3.providers.HttpProvider(
+        `https://rpc.tenderly.co/fork/${forkId.value}`
+      )
+    );
+
     window.localStorage.setItem("forkId", forkId.value);
   };
 
@@ -106,6 +114,6 @@ export function useTenderly() {
     canSimulate,
     startSimulation,
     stopSimulation,
-    loading,
+    loading
   };
 }
