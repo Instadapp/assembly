@@ -12,7 +12,7 @@ import tokens from "~/constant/tokens";
 import uniPoolTokens from "~/constant/uniPoolTokens";
 import { useDSA } from "./useDSA";
 import { Network, useNetwork } from "./useNetwork";
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { useToken } from "./useToken";

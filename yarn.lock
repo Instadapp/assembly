@@ -1156,6 +1156,18 @@
   dependencies:
     "@gnosis.pm/safe-apps-provider" "0.7.1"
 
+"@instadapp/vue-web3@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@instadapp/vue-web3/-/vue-web3-0.3.0.tgz#1dd367e4ac29a56e9b0d8af714c3ff5447e2d4f8"
+  integrity sha512-qcYoCJ/YiWC8OpJWmo2IXQwcJNGCz9OG4x8GVBSQxOPYvLq0CLpchFXs3QfwzIzo5GN+QOmfJq4eGHES498vww==
+  dependencies:
+    "@ethersproject/bytes" "^5.4.0"
+    "@ethersproject/keccak256" "^5.4.0"
+    "@web3-react/abstract-connector" "^6.0.7"
+    "@web3-react/types" "^6.0.7"
+    tiny-invariant "^1.1.0"
+    vue-demi "^0.11.3"
+
 "@json-rpc-tools/types@^1.6.1":
   version "1.7.6"
   resolved "https://registry.yarnpkg.com/@json-rpc-tools/types/-/types-1.7.6.tgz#5abd5fde01364a130c46093b501715bcce5bdc0e"
@@ -1169,18 +1181,6 @@
   integrity sha512-cNwP4QapAls+xATU8zLLqPYa9qCbgwEyWEK7vE1oH91b3LfbUYwHtiWZ1+rv0X/mh/9cWNTo2Oi2Sah/QX0WwA==
   dependencies:
     "@json-rpc-tools/types" "^1.6.1"
-
-"@kabbouchi/vue-web3@^0.2.16":
-  version "0.2.16"
-  resolved "https://registry.yarnpkg.com/@kabbouchi/vue-web3/-/vue-web3-0.2.16.tgz#be6af2c1f83350a4fddc1004455d76cd5fe6a436"
-  integrity sha512-JjZhr8xXj0ugq15ZSDBB29jG+VhOdPlMB+a7szuk6IpU+bdSAK1g02vZir8KP0n5OQuLf3ITxv+bwkClbon/IA==
-  dependencies:
-    "@ethersproject/bytes" "^5.4.0"
-    "@ethersproject/keccak256" "^5.4.0"
-    "@web3-react/abstract-connector" "^6.0.7"
-    "@web3-react/types" "^6.0.7"
-    tiny-invariant "^1.1.0"
-    vue-demi "^0.11.3"
 
 "@koa/router@^9.0.1":
   version "9.4.0"

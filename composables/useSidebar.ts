@@ -8,7 +8,7 @@ import {
 } from "@nuxtjs/composition-api";
 
 import { useDSA } from "./useDSA";
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import SidebarAaveV2Supply from "~/components/sidebar/context/aaveV2/SidebarAaveV2Supply.vue";
 import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAaveV2Withdraw.vue'
 import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAaveV2Borrow.vue'

@@ -1,5 +1,5 @@
 import { computed, readonly, ref, watch } from "@nuxtjs/composition-api";
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import DSA from "dsa-connect";
 import addresses from "~/constant/addresses";
 import abis from "~/constant/abis";

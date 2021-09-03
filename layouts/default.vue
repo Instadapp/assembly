@@ -88,7 +88,7 @@ import { defineComponent, nextTick, onErrorCaptured, onMounted, useContext, useR
 import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
 import CompoundIcon from '~/assets/icons/compound.svg?inline'
 import AaveIcon from '~/assets/icons/aave.svg?inline'
-import { useWeb3 } from '@kabbouchi/vue-web3'
+import { useWeb3 } from '@instadapp/vue-web3'
 import { init as initSidebars, useSidebar } from '~/composables/useSidebar'
 import { useBackdrop } from '@/composables/useBackdrop'
 import { useNetwork } from "~/composables/useNetwork";

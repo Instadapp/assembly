@@ -3,7 +3,7 @@ import { AbiItem } from "web3-utils";
 import compoundABI from "~/abis/read/compound.json";
 import { computed, ref, watch } from "@nuxtjs/composition-api";
 import { useDSA } from "~/composables/useDSA";
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import BigNumber from "bignumber.js";
 import tokens from "~/constant/tokens";
 import { Network, useNetwork } from "~/composables/useNetwork";

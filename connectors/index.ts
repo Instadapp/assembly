@@ -1,4 +1,4 @@
-import { setWeb3LibraryCallback } from "@kabbouchi/vue-web3";
+import { setWeb3LibraryCallback } from "@instadapp/vue-web3";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { PortisConnector } from "@web3-react/portis-connector";

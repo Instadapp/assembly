@@ -1,7 +1,7 @@
 import { useContext, ref, onMounted, computed } from "@nuxtjs/composition-api";
 import axios from "axios";
 import { activeNetwork, useNetwork } from "./useNetwork";
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import Web3 from "web3";
 import { useDSA } from "./useDSA";
 

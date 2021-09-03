@@ -1,4 +1,4 @@
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import { injected } from "../connectors";
 import { onMounted, ref, watch } from "@nuxtjs/composition-api";
 

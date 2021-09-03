@@ -5,7 +5,7 @@ import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
 import { useModal } from "./useModal";
 import { useNotification } from "./useNotification";
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 
 export enum Network {
   Mainnet = "mainnet",

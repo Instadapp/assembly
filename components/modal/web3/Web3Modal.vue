@@ -70,7 +70,7 @@
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import Input from '~/components/common/input/Input.vue'
 import { useModal } from '~/composables/useModal'
-import { useWeb3 } from '@kabbouchi/vue-web3'
+import { useWeb3 } from '@instadapp/vue-web3'
 import { injected } from '~/connectors'
 import { SUPPORTED_WALLETS } from '~/constant/wallet'
 import ButtonCTA from '../../common/input/ButtonCTA.vue'

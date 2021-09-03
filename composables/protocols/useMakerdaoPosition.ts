@@ -7,7 +7,7 @@ import makerVaults from "~/constant/tokens/vaults";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { useDSA } from "~/composables/useDSA";
 import { useToken } from "~/composables/useToken";
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import { AbiItem } from "web3-utils";
 
 const defaultVault = {

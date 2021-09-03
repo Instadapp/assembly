@@ -156,7 +156,7 @@ import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { useDSA } from "~/composables/useDSA";
 import { useFormatting } from '~/composables/useFormatting';
 import { useWeb3Modal } from '~/composables/useWeb3Modal';
-import { useWeb3 } from '@kabbouchi/vue-web3';
+import { useWeb3 } from '@instadapp/vue-web3';
 
 export default defineComponent({
   setup() {

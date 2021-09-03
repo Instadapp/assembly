@@ -2,7 +2,7 @@ import { computed, Ref, ref, watch } from "@nuxtjs/composition-api";
 import { useBalances } from "../useBalances";
 import { useBigNumber } from "../useBigNumber";
 import { useToken } from "../useToken";
-import { useWeb3 } from "@kabbouchi/vue-web3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import { AbiItem } from "web3-utils";
 import BigNumber from "bignumber.js";
 BigNumber.config({ POW_PRECISION: 200 });
