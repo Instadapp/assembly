@@ -23,6 +23,7 @@ import { useSidebar } from "./useSidebar";
 import { useToken } from "./useToken";
 import { useWeb3 } from "./useWeb3";
 import { useBigNumber } from "./useBigNumber";
+import tokenIdMapping from "~/constant/tokenIdMapping";
 
 export function useStrategy(defineStrategy: DefineStrategy) {
   const { web3, networkName, account } = useWeb3();
@@ -84,7 +85,8 @@ export function useStrategy(defineStrategy: DefineStrategy) {
       convertTokenAmountToWei: valInt,
       getTokenByKey,
       toBN,
-      position
+      position,
+      tokenIdMapping
     });
   });
 

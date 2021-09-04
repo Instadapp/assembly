@@ -3,10 +3,16 @@ import Web3 from "web3";
 import slugify from "slugify";
 import { Strategy } from "./strategy";
 import BigNumber from "bignumber.js";
+import tokenIdMapping from "~/constant/tokenIdMapping";
+
 export interface IStrategyContext {
   dsa: DSA;
   web3: Web3;
   inputs: IStrategyInput<StrategyInputType>[];
+
+
+
+  // TODO: add types in useStrategy.ts
   dsaBalances?: { [address: string]: IStrategyToken };
   userBalances?: { [address: string]: IStrategyToken };
   tokens?: { [address: string]: IStrategyToken };
@@ -15,6 +21,8 @@ export interface IStrategyContext {
   position?: any;
   variables?: { [key: string]: any };
   toBN?: (value: any) => BigNumber;
+  tokenIdMapping?: typeof tokenIdMapping;
+  
 }
 
 export interface IStrategyToken {
