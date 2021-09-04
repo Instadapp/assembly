@@ -19,6 +19,7 @@ export interface IStrategyContext {
   convertTokenAmountToWei?: (value: any, decimals: any) => string;
   getTokenByKey?: (key: string) => IStrategyToken;
   position?: any;
+  positionExtra?: { [key: string]: any };
   variables?: { [key: string]: any };
   toBN?: (value: any) => BigNumber;
   tokenIdMapping?: typeof tokenIdMapping;
@@ -30,6 +31,7 @@ export interface IStrategyToken {
   key: string;
   symbol: string;
   balance: string;
+  decimals: string;
 
   // supply: string;
   // borrow: string;

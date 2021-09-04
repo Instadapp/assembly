@@ -14,7 +14,7 @@ import {
 import { position as aaveV2Position } from "./protocols/useAaveV2Position";
 import { position as compoundPosition } from "./protocols/useCompoundPosition";
 import { vault as makerPosition } from "./protocols/useMakerdaoPosition";
-import { trove as liquityPosition } from "./protocols/useLiquityPosition";
+import { trove as liquityPosition, troveTypes, troveOverallDetails } from "./protocols/useLiquityPosition";
 import { useBalances } from "./useBalances";
 import { useDSA } from "./useDSA";
 import useEventBus from "./useEventBus";
@@ -70,6 +70,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
 
   watchEffect(() => {
     let position = null;
+    let positionExtra = {}
 
     if (strategy.schema.protocol == StrategyProtocol.AAVE_V2) {
       position = aaveV2Position.value;
@@ -79,6 +80,9 @@ export function useStrategy(defineStrategy: DefineStrategy) {
       position = compoundPosition.value;
     } else if (strategy.schema.protocol == StrategyProtocol.LIQUITY) {
       position = liquityPosition.value;
+      
+      positionExtra["troveTypes"] = troveTypes.value;
+      positionExtra["troveOverallDetails"] = troveOverallDetails.value;
     }
 
     strategy.setProps({
@@ -86,6 +90,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
       getTokenByKey,
       toBN,
       position,
+      positionExtra,
       tokenIdMapping
     });
   });

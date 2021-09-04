@@ -27,7 +27,7 @@ export const trove = ref<any>({
   liquidation: "0"
 });
 
-const troveTypes = ref([
+export const troveTypes = ref([
   {
     totalCollateral: "0",
     price: "0",
@@ -42,7 +42,7 @@ const troveTypes = ref([
   }
 ]);
 
-const troveOverallDetails = computed(() =>
+export const troveOverallDetails = computed(() =>
   troveTypes.value.find(t => t.tokenKey === trove.value.tokenKey)
 );
 
