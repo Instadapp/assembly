@@ -49,12 +49,12 @@ export class Strategy {
         continue;
       }
 
-      if(input.defaulted){
-       continue;
+      if (input.defaulted) {
+        continue;
       }
 
       Object.assign(input, input.defaults(this.getBaseContext()));
-      
+
       input.defaulted = true;
     }
 

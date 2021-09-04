@@ -17,6 +17,8 @@ export default defineStrategy({
     <li>Borrow Debt</li>
   </ul>`,
 
+  submitText: 'Deposit & Borrow',
+
   author: "Instadapp Team",
 
   variables: {
@@ -117,6 +119,7 @@ export default defineStrategy({
 
         stats.totalMaxBorrowLimitInEth = toBN(priceInEth)
           .times(factor)
+          .times(supply)
           .plus(stats.totalMaxBorrowLimitInEth)
           .toFixed();
 

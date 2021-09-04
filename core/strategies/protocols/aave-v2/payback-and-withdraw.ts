@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import tokens from "~/constant/tokens";
 import {
   defineStrategy,
@@ -12,6 +13,8 @@ export default defineStrategy({
   description: "Payback debt & withdraw collateral in a single txn.",
   author: "Instadapp Team",
 
+  submitText: "Payback & Withdraw",
+
   details: `<p class="text-center">This strategy executes:</p>
   <ul>
     <li>Payback debt</li>
@@ -24,13 +27,15 @@ export default defineStrategy({
       name: "Debt",
       placeholder: ({ input }) =>
         input.token ? `${input.token.symbol} to Payback` : "",
-      validate: ({ input }) => {
+      validate: ({ input, toBN, dsaBalances }) => {
         if (!input.token) {
-          return "Token is required";
+          return "Debt token is required";
         }
 
-        if (input.token.balance < input.value) {
-          return "Your amount exceeds your maximum limit.";
+        const balance = toBN(dsaBalances[input.token.address]?.balance);
+
+        if (toBN(balance).lt(input.value)) {
+          return "You don't have enough balance to payback.";
         }
       },
       defaults: ({ getTokenByKey }) => ({
@@ -42,11 +47,118 @@ export default defineStrategy({
       name: "Collateral",
       placeholder: ({ input }) =>
         input.token ? `${input.token.symbol} to Withdraw` : "",
+      validate: ({ input, position, toBN }) => {
+        if (!input.token) {
+          return "Collateral token is required";
+        }
+
+        if (!input.value) {
+          return "Collateral amount is required";
+        }
+
+        if (position) {
+          const collateralPosition = position.data.find(
+            item => item.key === input.token.key
+          );
+          if (collateralPosition) {
+            const collateralBalance = toBN(collateralPosition.supply);
+            if (collateralBalance.lt(input.value)) {
+              const collateralBalanceFormatted = collateralBalance.toFixed(2);
+              return `Your amount exceeds your maximum limit of ${collateralBalanceFormatted} ${input.token.symbol}`;
+            }
+          }
+        }
+      },
       defaults: ({ getTokenByKey }) => ({
         token: getTokenByKey?.("eth")
       })
     })
   ],
+
+  validate: async ({ position, inputs, toBN }) => {
+    if (toBN(inputs[0].value).isZero() && toBN(inputs[1].value).isZero()) {
+      return;
+    }
+
+    const newPositionData = position.data.map(position => {
+      const changedPosition = { ...position };
+      if (inputs[0].token.key === position.key) {
+        changedPosition.borrow = BigNumber.max(
+          toBN(position.borrow).minus(inputs[0].value),
+          "0"
+        ).toFixed();
+      }
+
+      if (inputs[1].token.key === position.key) {
+        changedPosition.supply = BigNumber.max(
+          toBN(position.supply).minus(inputs[1].value),
+          "0"
+        ).toFixed();
+      }
+
+      return changedPosition;
+    });
+
+    const stats = newPositionData.reduce(
+      (
+        stats,
+        { key, supply, borrow, borrowStable, priceInEth, factor, liquidation }
+      ) => {
+        if (key === "eth") {
+          stats.ethSupplied = supply;
+        }
+
+        const borrowTotal = toBN(borrow).plus(borrowStable);
+
+        stats.totalSupplyInEth = toBN(supply)
+          .times(priceInEth)
+          .plus(stats.totalSupplyInEth)
+          .toFixed();
+        stats.totalBorrowInEth = toBN(borrowTotal)
+          .times(priceInEth)
+          .plus(stats.totalBorrowInEth)
+          .toFixed();
+
+        stats.totalMaxBorrowLimitInEth = toBN(priceInEth)
+          .times(factor)
+          .times(supply)
+          .plus(stats.totalMaxBorrowLimitInEth)
+          .toFixed();
+
+        stats.totalMaxLiquidationLimitInEth = toBN(priceInEth)
+          .times(liquidation)
+          .times(supply)
+          .plus(stats.totalMaxLiquidationLimitInEth)
+          .toFixed();
+
+        return stats;
+      },
+      {
+        totalSupplyInEth: "0",
+        totalBorrowInEth: "0",
+        totalMaxBorrowLimitInEth: "0",
+        totalMaxLiquidationLimitInEth: "0"
+      }
+    );
+
+    let maxLiquidation = "0";
+
+    if (!toBN(stats.totalSupplyInEth).isZero()) {
+      maxLiquidation = BigNumber.max(
+        toBN(stats.totalMaxLiquidationLimitInEth).div(stats.totalSupplyInEth),
+        "0"
+      ).toFixed();
+    }
+
+    const status = BigNumber.max(
+      toBN(stats.totalBorrowInEth).div(stats.totalSupplyInEth),
+      "0"
+    );
+
+    if (status.gt(toBN(maxLiquidation).minus("0.0001"))) {
+      return "Position will liquidate.";
+    }
+  },
 
   spells: async ({ inputs, convertTokenAmountToWei }) => {
     return [
@@ -55,11 +167,8 @@ export default defineStrategy({
         method: "payback",
         args: [
           inputs[0].token.address,
-          convertTokenAmountToWei(
-            inputs[0].value,
-            inputs[0].token.decimals
-          ),
-          12,
+          convertTokenAmountToWei(inputs[0].value, inputs[0].token.decimals),
+          2,
           0,
           0
         ]
@@ -69,10 +178,7 @@ export default defineStrategy({
         method: "withdraw",
         args: [
           inputs[1].token.address,
-          convertTokenAmountToWei(
-            inputs[1].value,
-            inputs[1].token.decimals
-          ),
+          convertTokenAmountToWei(inputs[1].value, inputs[1].token.decimals),
           0,
           0
         ]

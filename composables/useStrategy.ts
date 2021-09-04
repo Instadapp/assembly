@@ -42,13 +42,9 @@ export function useStrategy(defineStrategy: DefineStrategy) {
   const error = ref("");
   const pending = ref(false);
 
-  strategy.onUpdated(async () => {
-    await nextTick();
-
-    // inputs.value = strategy.inputs;
-
-    console.log("onUpdated");
-  });
+  // strategy.onUpdated(async () => {
+  //   await nextTick();
+  // });
 
   const submit = async () => {
     error.value = "";
