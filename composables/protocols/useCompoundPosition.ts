@@ -14,6 +14,7 @@ import addresses from "~/constant/addresses";
 import ctokens from "~/constant/ctokens";
 import tokenIdMapping from "~/constant/tokenIdMapping";
 import { useSorting } from "~/composables/useSorting";
+import useEventBus from "../useEventBus";
 
 const {
   times,
@@ -27,7 +28,7 @@ const {
 } = useBigNumber();
 const { getType } = usePosition();
 
-const position = ref<any>({
+export const position = ref<any>({
   totalSupplyInEth: new BigNumber(0),
   totalBorrowInEth: new BigNumber(0),
   totalBorrowStableInEth: new BigNumber(0),
@@ -62,6 +63,7 @@ export function useCompoundPosition(
 ) {
   overridePosition = overridePosition || (pos => pos);
 
+  const { onEvent } = useEventBus()
   const { web3, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { getTokenByKey } = useToken();
@@ -99,6 +101,8 @@ export function useCompoundPosition(
   const refreshPosition = async () => {
     position.value = await fetchPosition();
   };
+
+  onEvent("protocol::compound::refresh", refreshPosition);
 
   watch(
     web3,

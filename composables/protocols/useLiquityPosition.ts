@@ -9,8 +9,9 @@ BigNumber.config({ POW_PRECISION: 200 });
 import abis from "~/constant/abis";
 import addresses from "~/constant/addresses";
 import { useDSA } from "../useDSA";
+import useEventBus from "../useEventBus";
 
-const trove = ref<any>({
+export const trove = ref<any>({
   collateral: "0",
   debt: "0",
   stabilityAmount: "0",
@@ -26,7 +27,7 @@ const trove = ref<any>({
   liquidation: "0"
 });
 
-const troveTypes = ref([
+export const troveTypes = ref([
   {
     totalCollateral: "0",
     price: "0",
@@ -41,7 +42,7 @@ const troveTypes = ref([
   }
 ]);
 
-const troveOverallDetails = computed(() =>
+export const troveOverallDetails = computed(() =>
   troveTypes.value.find(t => t.tokenKey === trove.value.tokenKey)
 );
 
@@ -49,6 +50,7 @@ export function useLiquityPosition(
   collateralAmountRef: Ref = null,
   debtAmountRef: Ref = null
 ) {
+  const { onEvent } = useEventBus()
   const { web3 } = useWeb3();
   const { activeAccount } = useDSA();
 
@@ -177,6 +179,9 @@ export function useLiquityPosition(
       return Promise.reject(error);
     }
   }
+
+  onEvent("protocol::liquity::refresh", fetchPosition);
+
 
   watch(
     web3,

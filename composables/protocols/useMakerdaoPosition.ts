@@ -9,6 +9,7 @@ import { useDSA } from "~/composables/useDSA";
 import { useToken } from "~/composables/useToken";
 import { useWeb3 } from "~/composables/useWeb3";
 import { AbiItem } from "web3-utils";
+import useEventBus from "../useEventBus";
 
 const defaultVault = {
   id: null,
@@ -31,7 +32,7 @@ const isNewVault = ref(false);
 const vaultTypes = ref([]);
 const vaultType = ref("");
 
-const vault = computed(() => {
+export const vault = computed(() => {
   const vlt = vaults.value.find(v => v.id === vaultId.value);
   if (!isNewVault.value && !!vlt) {
     return vlt;
@@ -54,6 +55,7 @@ export function useMakerdaoPosition(
   collateralAmountRef: Ref = null,
   debtAmountRef: Ref = null
 ) {
+  const { onEvent } = useEventBus()
   const { web3, chainId, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { isZero, ensureValue, times, div, max, gt } = useBigNumber();
@@ -131,6 +133,8 @@ export function useMakerdaoPosition(
       vaultId.value = vaults.value[0].id;
     }
   };
+
+  onEvent("protocol::makerdao::refresh", fetchPosition);
 
   watch(
     web3,

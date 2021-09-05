@@ -137,7 +137,8 @@ export default defineComponent({
       }
     }, { immediate: true })
 
-    onErrorCaptured(() => {
+    onErrorCaptured((error) => {
+      console.error(error)
       return false
     })
 

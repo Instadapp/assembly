@@ -54,14 +54,16 @@ export function useTenderly() {
   const stopSimulation = async () => {
     loading.value = true;
     try {
-      await axios({
-        method: "delete",
-        url: `https://api.tenderly.co/api/v1/account/${$config.TENDERLY_FORK_PATH}/fork/${forkId.value}`,
-        headers: {
-          "X-Access-key": $config.TENDERLY_KEY,
-          "Content-Type": "application/json"
-        }
-      });
+      if (forkId.value) {
+        await axios({
+          method: "delete",
+          url: `https://api.tenderly.co/api/v1/account/${$config.TENDERLY_FORK_PATH}/fork/${forkId.value}`,
+          headers: {
+            "X-Access-key": $config.TENDERLY_KEY,
+            "Content-Type": "application/json"
+          }
+        });
+      }
     } catch (error) {}
 
     forkId.value = null;
@@ -106,6 +108,6 @@ export function useTenderly() {
     canSimulate,
     startSimulation,
     stopSimulation,
-    loading,
+    loading
   };
 }
