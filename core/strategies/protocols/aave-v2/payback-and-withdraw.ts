@@ -122,16 +122,17 @@ export default defineStrategy({
           toBN(components[0].value).isZero() &&
           toBN(components[1].value).isZero()
             ? initialStats
-            : newStats;
+            : newStats;            
 
-        const liquidationPrice = BigNumber.max(
-          toBN(stats.totalBorrowInEth)
-            .div(stats.totalMaxLiquidationLimitInEth)
-            .times(position.ethPriceInUsd),
-          "0"
-        ).toFixed();
-
-        console.log(liquidationPrice);
+        let liquidationPrice = "0";
+        if (!toBN(stats.ethSupplied).isZero()) {
+          liquidationPrice = BigNumber.max(
+            toBN(stats.totalBorrowInEth)
+              .div(stats.totalMaxLiquidationLimitInEth)
+              .times(position.ethPriceInUsd),
+            "0"
+          ).toFixed();
+        }
 
         component.value = `${formatting.formatUsdMax(
           liquidationPrice,
