@@ -67,6 +67,15 @@
                   @input="$event => component.onInput($event)"
                 />
 
+                <input-numeric
+                  v-else-if="component.type === 'input-numeric'"
+                  :key="index"
+                  :value="component.value"
+                  :error="component.error"
+                  :placeholder="component.placeholder()"
+                  @input="$event => component.onInput($event)"
+                />
+
                 <SidebarContextHeading
                   v-else-if="component.type === 'heading'"
                   :key="index"
@@ -120,8 +129,9 @@ import InputAmount from "~/components/common/input/InputAmount.vue";
 import { useToken } from "~/composables/useToken";
 import ButtonCTA from "~/components/common/input/ButtonCTA.vue";
 import ValueDisplay from "../components/ValueDisplay.vue";
+import InputNumeric from "~/components/common/input/InputNumeric.vue";
 export default defineComponent({
-  components: { InputAmount, ButtonCTA, ValueDisplay },
+  components: { InputAmount, ButtonCTA, ValueDisplay, InputNumeric },
   props: {
     protocol: {
       type: String,
