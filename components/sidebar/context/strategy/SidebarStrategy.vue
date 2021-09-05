@@ -24,7 +24,11 @@
         <div class="mx-auto h-full" style="max-width: 296px">
           <div class="space-y-4 py-9 h-full flex flex-col">
             <div class="flex-1">
-              <div v-for="(component, index) in components" :key="index" class="mb-6">
+              <div
+                v-for="(component, index) in components"
+                :key="index"
+                class="mb-6"
+              >
                 <input-amount
                   v-if="component.type === 'input-with-token'"
                   :key="index"
@@ -58,6 +62,13 @@
                     {{ component.value }}
                   </value-display>
                 </div>
+
+                <SidebarSectionStatus
+                  v-else-if="component.type === 'status'"
+                  :key="index"
+                  :liquidation="component.liquidation || '0'"
+                  :status="component.status || '0'"
+                />
               </div>
             </div>
 

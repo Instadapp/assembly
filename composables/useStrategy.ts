@@ -14,7 +14,11 @@ import {
 import { position as aaveV2Position } from "./protocols/useAaveV2Position";
 import { position as compoundPosition } from "./protocols/useCompoundPosition";
 import { vault as makerPosition } from "./protocols/useMakerdaoPosition";
-import { trove as liquityPosition, troveTypes, troveOverallDetails } from "./protocols/useLiquityPosition";
+import {
+  trove as liquityPosition,
+  troveTypes,
+  troveOverallDetails
+} from "./protocols/useLiquityPosition";
 import { useBalances } from "./useBalances";
 import { useDSA } from "./useDSA";
 import useEventBus from "./useEventBus";
@@ -71,33 +75,44 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     pending.value = false;
   };
 
-  watchEffect(() => {
-    let position = null;
-    let positionExtra = {}
+  watch(
+    () => [
+      aaveV2Position,
+      makerPosition,
+      compoundPosition,
+      liquityPosition,
+      troveTypes,
+      troveOverallDetails
+    ],
+    () => {
+      let position = null;
+      let positionExtra = {};
 
-    if (strategy.schema.protocol == StrategyProtocol.AAVE_V2) {
-      position = aaveV2Position.value;
-    } else if (strategy.schema.protocol == StrategyProtocol.MAKERDAO) {
-      position = makerPosition.value;
-    } else if (strategy.schema.protocol == StrategyProtocol.COMPOUND) {
-      position = compoundPosition.value;
-    } else if (strategy.schema.protocol == StrategyProtocol.LIQUITY) {
-      position = liquityPosition.value;
-      
-      positionExtra["troveTypes"] = troveTypes.value;
-      positionExtra["troveOverallDetails"] = troveOverallDetails.value;
-    }
+      if (strategy.schema.protocol == StrategyProtocol.AAVE_V2) {
+        position = aaveV2Position.value;
+      } else if (strategy.schema.protocol == StrategyProtocol.MAKERDAO) {
+        position = makerPosition.value;
+      } else if (strategy.schema.protocol == StrategyProtocol.COMPOUND) {
+        position = compoundPosition.value;
+      } else if (strategy.schema.protocol == StrategyProtocol.LIQUITY) {
+        position = liquityPosition.value;
 
-    strategy.setProps({
-      convertTokenAmountToWei: valInt,
-      getTokenByKey,
-      toBN,
-      position,
-      positionExtra,
-      tokenIdMapping,
-      formatting,
-    });
-  });
+        positionExtra["troveTypes"] = troveTypes.value;
+        positionExtra["troveOverallDetails"] = troveOverallDetails.value;
+      }
+
+      strategy.setProps({
+        convertTokenAmountToWei: valInt,
+        getTokenByKey,
+        toBN,
+        position,
+        positionExtra,
+        tokenIdMapping,
+        formatting
+      });
+    },
+    { immediate: true }
+  );
 
   watch(web3, () => strategy.setWeb3(web3.value), { immediate: true });
   watch(dsa, () => strategy.setDSA(dsa.value), { immediate: true });

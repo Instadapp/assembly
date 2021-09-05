@@ -40,7 +40,8 @@ export enum StrategyComponentType {
   INPUT_WITH_TOKEN = "input-with-token",
 
   HEADING = "heading",
-  VALUE = "value"
+  VALUE = "value",
+  STATUS = "status",
 }
 
 export type StrategyComponentParameterMap = {
@@ -52,6 +53,10 @@ export type StrategyComponentParameterMap = {
 
   [StrategyComponentType.HEADING]: {};
   [StrategyComponentType.VALUE]: {};
+  [StrategyComponentType.STATUS]: {
+    liquidation?: any,
+    status?: any,
+  };
 };
 
 export interface IStrategyComponent<ComponentType extends StrategyComponentType> {

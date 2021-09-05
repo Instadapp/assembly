@@ -58,7 +58,7 @@ export class Strategy {
       component.defaulted = true;
     }
 
-    this.notifyListeners();
+    this.notifyListeners("SET_PROPS");
   }
 
   generateComponents(components) {
@@ -86,7 +86,7 @@ export class Strategy {
             });
           }
 
-          this.notifyListeners();
+          this.notifyListeners("onInput");
         },
         onCustomInput: (values: object) => {
           this.components[idx] = Object.assign(this.components[idx], values);
@@ -95,7 +95,7 @@ export class Strategy {
             ...this.getContext(),
             component: this.components[idx]
           });
-          this.notifyListeners();
+          this.notifyListeners("onCustomInput");
         }
       };
 
@@ -164,16 +164,21 @@ export class Strategy {
   setWeb3(web3: Web3) {
     this.context.web3 = web3;
 
-    this.notifyListeners();
+    this.notifyListeners("WEB3");
   }
 
   setDSA(dsa: DSA) {
     this.context.dsa = dsa;
 
-    this.notifyListeners();
+    this.notifyListeners("DSA");
   }
 
-  async notifyListeners() {
+  async notifyListeners( from = "") {
+
+    if(from && process.env.NODE_ENV === "development") {
+      console.log(`${from} updated`);
+    }
+
     for (const listener of this.listeners) {
       await listener(this);
     }
