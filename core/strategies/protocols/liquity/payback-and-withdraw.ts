@@ -90,6 +90,87 @@ export default defineStrategy({
       defaults: ({ getTokenByKey }) => ({
         token: getTokenByKey?.("eth")
       })
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.HEADING,
+      name: "Projected Debt Position"
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.STATUS,
+      name: "Status",
+      update: ({ position, positionExtra, component, components, toBN }) => {
+        if (!position && !positionExtra) {
+          return;
+        }
+        const troveOverallDetails = positionExtra["troveOverallDetails"];
+        component.liquidation = troveOverallDetails.liquidation;
+
+        if (
+          toBN(components[1].value).isZero() ||
+          !components[1].value ||
+          toBN(components[0].value).isZero() ||
+          !components[0].value
+        ) {
+          component.status = position.ratio;
+        } else {
+          const changedDebt = BigNumber.max(toBN(position.debt).minus(components[0].value), '0')
+          const changedCollateral = toBN(position.collateral).minus(components[1].value);
+          
+          component.status = changedDebt
+            .div(toBN(changedCollateral).times(position.price))
+            .toFixed();
+        }
+      }
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.VALUE,
+      name: "LIQUIDATION PRICE (IN ETH)",
+      value: "-",
+      update: ({
+        position,
+        component,
+        components,
+        toBN,
+        formatting,
+        positionExtra
+      }) => {
+        if (!position && !positionExtra) {
+          return;
+        }
+
+        const troveOverallDetails = positionExtra["troveOverallDetails"];
+
+        let liquidationPrice = "0";
+        if (
+          toBN(components[1].value).isZero() ||
+          !components[1].value ||
+          toBN(components[0].value).isZero() ||
+          !components[0].value
+        ) {
+          liquidationPrice = BigNumber.max(
+            toBN(position.debt)
+              .div(position.collateral)
+              .div(troveOverallDetails.liquidation),
+            "0"
+          ).toFixed();
+        } else {
+
+          const changedDebt = BigNumber.max(toBN(position.debt).minus(components[0].value), '0')
+          const changedCollateral = toBN(position.collateral).minus(components[1].value);
+
+          liquidationPrice = BigNumber.max(
+            toBN(changedDebt)
+              .div(changedCollateral)
+              .div(troveOverallDetails.liquidation),
+            "0"
+          ).toFixed();
+        }
+
+        component.value = `${formatting.formatUsdMax(
+          isNaN(parseInt(liquidationPrice)) ? "0" : liquidationPrice,
+          position.price
+        )} / ${formatting.formatUsd(position.price)}`;
+      }
     })
   ],
 

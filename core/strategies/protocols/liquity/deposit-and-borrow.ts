@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import abis from "~/constant/abis";
 import addresses from "~/constant/addresses";
 import {
@@ -96,6 +97,74 @@ export default defineStrategy({
       defaults: ({ getTokenByKey, variables }) => ({
         token: getTokenByKey?.(variables.debtTokenKey)
       })
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.HEADING,
+      name: "Projected Debt Position"
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.STATUS,
+      name: "Status",
+      update: ({ position, positionExtra, component, components, toBN }) => {
+        if (
+          toBN(components[0].value).isZero() &&
+          toBN(components[1].value).isZero()
+        ) {
+          return;
+        }
+
+        if (!position && !positionExtra) {
+          return;
+        }
+
+        const troveOverallDetails = positionExtra["troveOverallDetails"];
+
+        component.liquidation = troveOverallDetails.liquidation;
+        component.status =
+          toBN(components[0].value).isZero() &&
+          !toBN(components[1].value).isZero()
+            ? "1.1"
+            : toBN(components[1].value)
+                .div(toBN(components[0].value).times(position.price))
+                .toFixed();
+      }
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.VALUE,
+      name: "LIQUIDATION PRICE (IN ETH)",
+      value: "-",
+      update: ({
+        position,
+        component,
+        components,
+        toBN,
+        formatting,
+        positionExtra
+      }) => {
+        if (!position && !positionExtra) {
+          return;
+        }
+
+        const troveOverallDetails = positionExtra["troveOverallDetails"];
+
+        let liquidationPrice =
+          toBN(components[0].value).isZero() &&
+          !toBN(components[1].value).isZero()
+            ? toBN(position.price)
+                .times("1.1")
+                .toFixed()
+            : BigNumber.max(
+                toBN(components[1].value)
+                  .div(components[0].value)
+                  .div(troveOverallDetails.liquidation),
+                "0"
+              ).toFixed();
+
+        component.value = `${formatting.formatUsdMax(
+          isNaN(parseInt(liquidationPrice)) ? "0" : liquidationPrice,
+          position.price
+        )} / ${formatting.formatUsd(position.price)}`;
+      }
     })
   ],
 
