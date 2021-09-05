@@ -12,6 +12,7 @@ import { useBigNumber } from "~/composables/useBigNumber";
 import { usePosition } from "~/composables/usePosition";
 import { useToken } from "~/composables/useToken";
 import { useSorting } from "~/composables/useSorting";
+import useEventBus from "../useEventBus";
 
 const {
   times,
@@ -25,7 +26,7 @@ const {
 } = useBigNumber();
 const { getType } = usePosition();
 
-const position = ref<any>({
+export const position = ref<any>({
   totalSupplyInEth: new BigNumber(0),
   totalBorrowInEth: new BigNumber(0),
   totalBorrowStableInEth: new BigNumber(0),
@@ -69,8 +70,9 @@ export function useAaveV2Position(
   const { activeNetworkId } = useNetwork();
   const { activeAccount } = useDSA();
   const { getTokenByKey, allATokensV2 } = useToken();
-  const { byMaxSupplyOrBorrowDesc } = useSorting();
-
+  const { byMaxSupplyOrBorrowDesc } = useSorting()
+  const { onEvent } = useEventBus()
+  
   const resolver = computed(() =>
     chainId.value === 1
       ? "0xFb3a1D56eD56F046721B9aCa749895100754578b"
@@ -107,6 +109,8 @@ export function useAaveV2Position(
   const refreshPosition = async () => {
     position.value = await fetchPosition();
   };
+
+  onEvent("protocol::aaveV2::refresh", refreshPosition);
 
   watch(
     library,

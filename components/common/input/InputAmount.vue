@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { defineComponent, watch, ref, toRef } from '@nuxtjs/composition-api'
+import { defineComponent, watch, ref, toRef, computed } from '@nuxtjs/composition-api'
 import { useInputListeners } from '@/composables/useInputListeners'
 import SVGSpinner from '@/assets/img/icons/spinner.svg'
 import { v4 as uuid } from 'uuid'
@@ -124,7 +124,9 @@ export default defineComponent({
 
   setup(props, context) {
     const id = uuid()
-    const { symbol, getTokenByKey } = useToken(null, toRef(props, 'tokenKey'))
+    const { getTokenByKey } = useToken()
+    const token = computed(() => getTokenByKey(props.tokenKey))
+    const symbol = computed(() => token.value?.symbol)
     const { formatDecimal } = useFormatting()
     const { amountPattern } = usePattern()
 

@@ -9,6 +9,7 @@ import { useDSA } from "~/composables/useDSA";
 import { useToken } from "~/composables/useToken";
 import { useWeb3 } from "@instadapp/vue-web3";
 import { AbiItem } from "web3-utils";
+import useEventBus from "../useEventBus";
 
 const defaultVault = {
   id: null,
@@ -31,7 +32,7 @@ const isNewVault = ref(false);
 const vaultTypes = ref([]);
 const vaultType = ref("");
 
-const vault = computed(() => {
+export const vault = computed(() => {
   const vlt = vaults.value.find(v => v.id === vaultId.value);
   if (!isNewVault.value && !!vlt) {
     return vlt;
@@ -55,6 +56,7 @@ export function useMakerdaoPosition(
   debtAmountRef: Ref = null
 ) {
   const { library } = useWeb3();
+  const { onEvent } = useEventBus()
   const { activeAccount } = useDSA();
   const { isZero, ensureValue, times, div, max, gt } = useBigNumber();
   const { getTokenByKey } = useToken();
@@ -131,6 +133,8 @@ export function useMakerdaoPosition(
       vaultId.value = vaults.value[0].id;
     }
   };
+
+  onEvent("protocol::makerdao::refresh", fetchPosition);
 
   watch(
     library,

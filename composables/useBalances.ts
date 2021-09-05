@@ -20,8 +20,14 @@ import { useBigNumber } from "./useBigNumber";
 import { useSorting } from "./useSorting";
 
 const balances = reactive({
-  user: null,
-  dsa: null
+  user: {
+    mainnet: {},
+    polygon: {}
+  },
+  dsa: {
+    mainnet: {},
+    polygon: {}
+  }
 });
 
 const prices = reactive({
@@ -207,6 +213,7 @@ async function getBalances(
       }
       const { name, symbol, decimals, type, isStableCoin, key } = tokenData;
       tokensBalObj[tokenAddress] = {
+        address: tokenAddress,
         name,
         symbol,
         decimals,
