@@ -37,6 +37,7 @@ export interface IStrategyToken {
 
 export enum StrategyComponentType {
   // INPUT = "input",
+  INPUT_AMOUNT = "input-amount",
   INPUT_WITH_TOKEN = "input-with-token",
 
   HEADING = "heading",
@@ -46,6 +47,10 @@ export enum StrategyComponentType {
 
 export type StrategyComponentParameterMap = {
   // [StrategyInputType.INPUT]: {};
+
+  [StrategyComponentType.INPUT_AMOUNT]: {
+    tokenKey: string;
+  };
 
   [StrategyComponentType.INPUT_WITH_TOKEN]: {
     token?: IStrategyToken;

@@ -50,6 +50,23 @@
                     }
                   "
                 />
+
+                <input-amount
+                  v-else-if="component.type === 'input-amount'"
+                  :key="index"
+                  :value="component.value"
+                  :token-key="
+                    component.tokenKey
+                      ? component.tokenKey
+                      : component.token
+                      ? component.token.key
+                      : 'eth'
+                  "
+                  :error="component.error"
+                  :placeholder="component.placeholder()"
+                  @input="$event => component.onInput($event)"
+                />
+
                 <SidebarContextHeading
                   v-else-if="component.type === 'heading'"
                   :key="index"
