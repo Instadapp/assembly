@@ -24,38 +24,38 @@
         <div class="mx-auto h-full" style="max-width: 296px">
           <div class="space-y-4 py-9 h-full flex flex-col">
             <div class="flex-1">
-              <div v-for="(input, index) in inputs" :key="index" class="mb-6">
+              <div v-for="(component, index) in components" :key="index" class="mb-6">
                 <input-amount
-                  v-if="input.type === 'input-with-token'"
+                  v-if="component.type === 'input-with-token'"
                   :key="index"
-                  :value="input.value"
-                  :token-key="input.token ? input.token.key : 'eth'"
+                  :value="component.value"
+                  :token-key="component.token ? component.token.key : 'eth'"
                   :token-keys="
-                    input.tokenKeys
-                      ? input.tokenKeys
+                    component.tokenKeys
+                      ? component.tokenKeys
                       : activeStrategy.getContext()['tokenKeys']
                   "
-                  :error="input.error"
-                  :placeholder="input.placeholder()"
-                  @input="$event => input.onInput($event)"
+                  :error="component.error"
+                  :placeholder="component.placeholder()"
+                  @input="$event => component.onInput($event)"
                   @tokenKeyChanged="
                     tokenKey => {
-                      input.onCustomInput({
+                      component.onCustomInput({
                         token: getTokenByKey(tokenKey)
                       });
                     }
                   "
                 />
                 <SidebarContextHeading
-                  v-else-if="input.type === 'heading'"
+                  v-else-if="component.type === 'heading'"
                   :key="index"
                 >
-                  {{ input.name }}
+                  {{ component.name }}
                 </SidebarContextHeading>
 
-                <div v-else-if="input.type === 'value'" :key="index">
-                  <value-display :label="input.name">
-                    {{ input.value }}
+                <div v-else-if="component.type === 'value'" :key="index">
+                  <value-display :label="component.name">
+                    {{ component.value }}
                   </value-display>
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default defineComponent({
       protocolStrategies[props.protocol] || [];
 
     const {
-      inputs,
+      components,
       submit,
       error,
       strategy: activeStrategy,
@@ -122,7 +122,7 @@ export default defineComponent({
     );
 
     return {
-      inputs,
+      components,
       error,
       submit,
       activeStrategy,

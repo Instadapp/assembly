@@ -8,7 +8,7 @@ import { useFormatting } from "~/composables/useFormatting";
 export interface IStrategyContext {
   dsa: DSA;
   web3: Web3;
-  inputs: IStrategyInput<StrategyInputType>[];
+  components: IStrategyComponent<StrategyComponentType>[];
 
   // TODO: add types in useStrategy.ts
   dsaBalances?: { [address: string]: IStrategyToken };
@@ -35,7 +35,7 @@ export interface IStrategyToken {
   // borrow: string;
 }
 
-export enum StrategyInputType {
+export enum StrategyComponentType {
   // INPUT = "input",
   INPUT_WITH_TOKEN = "input-with-token",
 
@@ -43,38 +43,38 @@ export enum StrategyInputType {
   VALUE = "value"
 }
 
-export type StrategyInputParameterMap = {
+export type StrategyComponentParameterMap = {
   // [StrategyInputType.INPUT]: {};
 
-  [StrategyInputType.INPUT_WITH_TOKEN]: {
+  [StrategyComponentType.INPUT_WITH_TOKEN]: {
     token?: IStrategyToken;
   };
 
-  [StrategyInputType.HEADING]: {};
-  [StrategyInputType.VALUE]: {};
+  [StrategyComponentType.HEADING]: {};
+  [StrategyComponentType.VALUE]: {};
 };
 
-export interface IStrategyInput<InputType extends StrategyInputType> {
-  type: InputType;
+export interface IStrategyComponent<ComponentType extends StrategyComponentType> {
+  type: ComponentType;
   name: string;
 
   variables?: { [key: string]: any };
 
   placeholder?: (
     context: IStrategyContext & {
-      input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
+      component: IStrategyComponent<ComponentType> & StrategyComponentParameterMap[ComponentType];
     }
   ) => string;
   validate?: (
     context: IStrategyContext & {
-      input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
+      component: IStrategyComponent<ComponentType> & StrategyComponentParameterMap[ComponentType];
     }
   ) => string | void;
 
-  defaults?: (context: Omit<IStrategyContext, "inputs">) => object;
+  defaults?: (context: Omit<IStrategyContext, "components">) => object;
   update?: (
     context: IStrategyContext & {
-      input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
+      component: IStrategyComponent<ComponentType> & StrategyComponentParameterMap[ComponentType];
     }
   ) => void;
 
@@ -97,7 +97,7 @@ export interface IStrategy {
   details?: string;
   author?: string;
 
-  inputs: IStrategyInput<StrategyInputType>[];
+  components: IStrategyComponent<StrategyComponentType>[];
 
   variables?: object;
 
@@ -109,10 +109,10 @@ export interface IStrategy {
   submitText?: string;
 }
 
-export function defineInput<InputType extends StrategyInputType>(
-  input: IStrategyInput<InputType>
+export function defineStrategyComponent<ComponentType extends StrategyComponentType>(
+  component: IStrategyComponent<ComponentType>
 ) {
-  return input as IStrategyInput<InputType>;
+  return component as IStrategyComponent<ComponentType>;
 }
 
 export function defineStrategy(strategy: IStrategy) {

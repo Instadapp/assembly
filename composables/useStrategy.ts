@@ -42,7 +42,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
   } = useNotification();
 
   const strategy = buildStrategy(defineStrategy);
-  const inputs = ref(strategy.inputs);
+  const components = ref(strategy.components);
   const error = ref("");
   const pending = ref(false);
 
@@ -134,7 +134,7 @@ export function useStrategy(defineStrategy: DefineStrategy) {
 
   return {
     strategy,
-    inputs,
+    components,
     submit,
     error,
     pending

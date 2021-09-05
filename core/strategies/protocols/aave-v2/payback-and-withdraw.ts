@@ -2,8 +2,8 @@ import BigNumber from "bignumber.js";
 import tokens from "~/constant/tokens";
 import {
   defineStrategy,
-  defineInput,
-  StrategyInputType,
+  defineStrategyComponent,
+  StrategyComponentType,
   StrategyProtocol
 } from "../../helpers";
 
@@ -21,13 +21,13 @@ export default defineStrategy({
     <li>Withdraw collateral</li>
   </ul>`,
 
-  inputs: [
-    defineInput({
-      type: StrategyInputType.INPUT_WITH_TOKEN,
+  components: [
+    defineStrategyComponent({
+      type: StrategyComponentType.INPUT_WITH_TOKEN,
       name: "Debt",
-      placeholder: ({ input }) =>
+      placeholder: ({ component: input }) =>
         input.token ? `${input.token.symbol} to Payback` : "",
-      validate: ({ input, toBN, dsaBalances }) => {
+      validate: ({ component: input, toBN, dsaBalances }) => {
         if (!input.token) {
           return "Debt token is required";
         }
@@ -42,12 +42,12 @@ export default defineStrategy({
         token: getTokenByKey?.("dai")
       })
     }),
-    defineInput({
-      type: StrategyInputType.INPUT_WITH_TOKEN,
+    defineStrategyComponent({
+      type: StrategyComponentType.INPUT_WITH_TOKEN,
       name: "Collateral",
-      placeholder: ({ input }) =>
+      placeholder: ({ component: input }) =>
         input.token ? `${input.token.symbol} to Withdraw` : "",
-      validate: ({ input, position, toBN }) => {
+      validate: ({ component: input, position, toBN }) => {
         if (!input.token) {
           return "Collateral token is required";
         }
@@ -75,7 +75,7 @@ export default defineStrategy({
     })
   ],
 
-  validate: async ({ position, inputs, toBN }) => {
+  validate: async ({ position, components: inputs, toBN }) => {
     if (toBN(inputs[0].value).isZero() && toBN(inputs[1].value).isZero()) {
       return;
     }
@@ -160,7 +160,7 @@ export default defineStrategy({
     }
   },
 
-  spells: async ({ inputs, convertTokenAmountToWei }) => {
+  spells: async ({ components: inputs, convertTokenAmountToWei }) => {
     return [
       {
         connector: "aave_v2",

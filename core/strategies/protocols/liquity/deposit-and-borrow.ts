@@ -2,8 +2,8 @@ import abis from "~/constant/abis";
 import addresses from "~/constant/addresses";
 import {
   defineStrategy,
-  defineInput,
-  StrategyInputType,
+  defineStrategyComponent,
+  StrategyComponentType,
   StrategyProtocol
 } from "../../helpers";
 
@@ -27,13 +27,13 @@ export default defineStrategy({
     debtTokenKey: "lusd"
   },
 
-  inputs: [
-    defineInput({
-      type: StrategyInputType.INPUT_WITH_TOKEN,
+  components: [
+    defineStrategyComponent({
+      type: StrategyComponentType.INPUT_WITH_TOKEN,
       name: "Collateral",
-      placeholder: ({ input }) =>
+      placeholder: ({ component: input }) =>
         input.token ? `${input.token.symbol} to Deposit` : "",
-      validate: ({ input, dsaBalances, toBN }) => {
+      validate: ({ component: input, dsaBalances, toBN }) => {
         if (!input.token) {
           return "Collateral token is required";
         }
@@ -56,12 +56,12 @@ export default defineStrategy({
       })
     }),
 
-    defineInput({
-      type: StrategyInputType.INPUT_WITH_TOKEN,
+    defineStrategyComponent({
+      type: StrategyComponentType.INPUT_WITH_TOKEN,
       name: "Debt",
-      placeholder: ({ input }) =>
+      placeholder: ({ component: input }) =>
         input.token ? `${input.token.symbol} to Borrow` : "",
-      validate: ({ input, toBN, position, positionExtra }) => {
+      validate: ({ component: input, toBN, position, positionExtra }) => {
         if (!input.token) {
           return "Debt token is required";
         }
@@ -99,7 +99,7 @@ export default defineStrategy({
     })
   ],
 
-  validate: async ({ position, positionExtra, inputs, toBN }) => {
+  validate: async ({ position, positionExtra, components: inputs, toBN }) => {
     if (toBN(inputs[0].value).isZero() && toBN(inputs[1].value).isZero()) {
       return;
     }
@@ -127,7 +127,7 @@ export default defineStrategy({
   },
 
   spells: async ({
-    inputs,
+    components: inputs,
     position,
     positionExtra,
     getTokenByKey,

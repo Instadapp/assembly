@@ -4,7 +4,7 @@ import { DefineStrategy, IStrategyContext } from ".";
 
 export class Strategy {
   schema: DefineStrategy;
-  inputs = [];
+  components = [];
   context = {
     web3: null as Web3,
     dsa: null as DSA
@@ -21,10 +21,10 @@ export class Strategy {
   constructor(schema: DefineStrategy) {
     this.schema = schema;
 
-    this.inputs = this.generateInputs(this.schema.inputs);
+    this.components = this.generateComponents(this.schema.components);
   }
 
-  getBaseContext(): Omit<IStrategyContext, "inputs"> {
+  getBaseContext(): Omit<IStrategyContext, "components"> {
     return {
       ...this.context,
       ...this.props,
@@ -35,65 +35,65 @@ export class Strategy {
   getContext(): IStrategyContext {
     return {
       ...this.getBaseContext(),
-      inputs: this.inputs
+      components: this.components
     };
   }
 
   setProps(props: object) {
     Object.assign(this.props, props);
 
-    const inputs = this.inputs;
+    const components = this.components;
 
-    for (const input of inputs) {
-      if (typeof input.defaults !== "function") {
+    for (const component of components) {
+      if (typeof component.defaults !== "function") {
         continue;
       }
 
-      if (input.defaulted) {
+      if (component.defaulted) {
         continue;
       }
 
-      Object.assign(input, input.defaults(this.getBaseContext()));
+      Object.assign(component, component.defaults(this.getBaseContext()));
 
-      input.defaulted = true;
+      component.defaulted = true;
     }
 
     this.notifyListeners();
   }
 
-  generateInputs(inputs) {
-    return inputs.map((input, idx) => {
-      const computedInput = {
-        ...input,
-        value: input.value || "",
-        error: input.error || "",
+  generateComponents(components) {
+    return components.map((component, idx) => {
+      const computedComponent = {
+        ...component,
+        value: component.value || "",
+        error: component.error || "",
         placeholder: () => {
-          return input.placeholder
-            ? input.placeholder({
+          return component.placeholder
+            ? component.placeholder({
                 ...this.getContext(),
-                input: this.inputs[idx]
+                component: this.components[idx]
               })
             : null;
         },
         onInput: (val: any) => {
-          this.inputs[idx].error = "";
-          this.inputs[idx].value = val;
+          this.components[idx].error = "";
+          this.components[idx].value = val;
 
           if (val) {
-            this.inputs[idx].error = this.inputs[idx].validate({
+            this.components[idx].error = this.components[idx].validate({
               ...this.getContext(),
-              input: this.inputs[idx]
+              component: this.components[idx]
             });
           }
 
           this.notifyListeners();
         },
         onCustomInput: (values: object) => {
-          this.inputs[idx] = Object.assign(this.inputs[idx], values);
+          this.components[idx] = Object.assign(this.components[idx], values);
 
-          this.inputs[idx].error = this.inputs[idx].validate({
+          this.components[idx].error = this.components[idx].validate({
             ...this.getContext(),
-            input: this.inputs[idx]
+            component: this.components[idx]
           });
           this.notifyListeners();
         }
@@ -101,12 +101,12 @@ export class Strategy {
 
       let defaults = {};
 
-      if (input.defaults) {
-        defaults = input.defaults(this.getBaseContext());
+      if (component.defaults) {
+        defaults = component.defaults(this.getBaseContext());
       }
 
       return {
-        ...computedInput,
+        ...computedComponent,
         ...defaults
       };
     });
@@ -135,16 +135,16 @@ export class Strategy {
   }
 
   async validate() {
-    const inputs = this.inputs;
+    const components = this.components;
 
-    for (const input of inputs) {
-      if (typeof input.validate !== "function") {
+    for (const component of components) {
+      if (typeof component.validate !== "function") {
         continue;
       }
 
-      const result = await input.validate({
+      const result = await component.validate({
         ...this.getContext(),
-        input
+        component
       });
 
       if (typeof result === "string") {
@@ -178,10 +178,12 @@ export class Strategy {
       await listener(this);
     }
 
-    this.inputs.forEach(input => input.update?.({
-      ...this.getContext(),
-      input
-    }));
+    this.components.forEach(component =>
+      component.update?.({
+        ...this.getContext(),
+        component
+      })
+    );
   }
 
   onUpdated(cb) {

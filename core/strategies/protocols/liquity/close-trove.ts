@@ -1,8 +1,8 @@
 import {
   defineStrategy,
   StrategyProtocol,
-  StrategyInputType,
-  defineInput
+  StrategyComponentType,
+  defineStrategyComponent
 } from "../../helpers";
 
 export default defineStrategy({
@@ -19,41 +19,41 @@ export default defineStrategy({
     <li>Close Trove</li>
   </ul>`,
 
-  inputs: [
-    defineInput({
-      type: StrategyInputType.HEADING,
+  components: [
+    defineStrategyComponent({
+      type: StrategyComponentType.HEADING,
       name: "Payback"
     }),
-    defineInput({
-      type: StrategyInputType.VALUE,
+    defineStrategyComponent({
+      type: StrategyComponentType.VALUE,
       name: "Net Debt",
-      update: ({ position, positionExtra, input, formatting, toBN }) => {
+      update: ({ position, positionExtra, component, formatting, toBN }) => {
         const troveOverallDetails = positionExtra["troveOverallDetails"];
 
         const netDebt = toBN(position.debt).minus(
           troveOverallDetails.liquidationReserve
         );
 
-        input.value = `${formatting.formatDecimal(netDebt, 2)} LUSD`;
+        component.value = `${formatting.formatDecimal(netDebt, 2)} LUSD`;
       }
     }),
-    defineInput({
-      type: StrategyInputType.HEADING,
+    defineStrategyComponent({
+      type: StrategyComponentType.HEADING,
       name: "Withdraw"
     }),
-    defineInput({
-      type: StrategyInputType.VALUE,
+    defineStrategyComponent({
+      type: StrategyComponentType.VALUE,
       name: "Collateral",
-      update: ({ position, input, formatting }) => {
-        input.value = `${formatting.formatDecimal(position.collateral, 2)} ETH`;
+      update: ({ position, component, formatting }) => {
+        component.value = `${formatting.formatDecimal(position.collateral, 2)} ETH`;
       }
     }),
-    defineInput({
-      type: StrategyInputType.VALUE,
+    defineStrategyComponent({
+      type: StrategyComponentType.VALUE,
       name: "Liquidation Reserve",
-      update: ({ positionExtra, input, formatting }) => {
+      update: ({ positionExtra, component, formatting }) => {
         const troveOverallDetails = positionExtra["troveOverallDetails"];
-        input.value = `${formatting.formatDecimal(
+        component.value = `${formatting.formatDecimal(
           troveOverallDetails.liquidationReserve,
           2
         )} LUSD`;
