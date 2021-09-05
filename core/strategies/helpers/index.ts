@@ -43,7 +43,7 @@ export enum StrategyComponentType {
 
   HEADING = "heading",
   VALUE = "value",
-  STATUS = "status",
+  STATUS = "status"
 }
 
 export type StrategyComponentParameterMap = {
@@ -62,12 +62,14 @@ export type StrategyComponentParameterMap = {
   [StrategyComponentType.HEADING]: {};
   [StrategyComponentType.VALUE]: {};
   [StrategyComponentType.STATUS]: {
-    liquidation?: any,
-    status?: any,
+    liquidation?: any;
+    status?: any;
   };
 };
 
-export interface IStrategyComponent<ComponentType extends StrategyComponentType> {
+export interface IStrategyComponent<
+  ComponentType extends StrategyComponentType
+> {
   type: ComponentType;
   name: string;
 
@@ -75,19 +77,22 @@ export interface IStrategyComponent<ComponentType extends StrategyComponentType>
 
   placeholder?: (
     context: IStrategyContext & {
-      component: IStrategyComponent<ComponentType> & StrategyComponentParameterMap[ComponentType];
+      component: IStrategyComponent<ComponentType> &
+        StrategyComponentParameterMap[ComponentType];
     }
   ) => string;
   validate?: (
     context: IStrategyContext & {
-      component: IStrategyComponent<ComponentType> & StrategyComponentParameterMap[ComponentType];
+      component: IStrategyComponent<ComponentType> &
+        StrategyComponentParameterMap[ComponentType];
     }
   ) => string | void;
 
   defaults?: (context: Omit<IStrategyContext, "components">) => object;
   update?: (
     context: IStrategyContext & {
-      component: IStrategyComponent<ComponentType> & StrategyComponentParameterMap[ComponentType];
+      component: IStrategyComponent<ComponentType> &
+        StrategyComponentParameterMap[ComponentType];
     }
   ) => void;
 
@@ -122,10 +127,14 @@ export interface IStrategy {
   submitText?: string;
 }
 
-export function defineStrategyComponent<ComponentType extends StrategyComponentType>(
-  component: IStrategyComponent<ComponentType>
+export function defineStrategyComponent<
+  ComponentType extends StrategyComponentType
+>(
+  component: IStrategyComponent<ComponentType> &
+    StrategyComponentParameterMap[ComponentType]
 ) {
-  return component as IStrategyComponent<ComponentType>;
+  return component as IStrategyComponent<ComponentType> &
+    StrategyComponentParameterMap[ComponentType];
 }
 
 export function defineStrategy(strategy: IStrategy) {
