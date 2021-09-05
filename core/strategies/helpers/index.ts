@@ -4,13 +4,11 @@ import slugify from "slugify";
 import { Strategy } from "./strategy";
 import BigNumber from "bignumber.js";
 import tokenIdMapping from "~/constant/tokenIdMapping";
-
+import { useFormatting } from "~/composables/useFormatting";
 export interface IStrategyContext {
   dsa: DSA;
   web3: Web3;
   inputs: IStrategyInput<StrategyInputType>[];
-
-
 
   // TODO: add types in useStrategy.ts
   dsaBalances?: { [address: string]: IStrategyToken };
@@ -23,7 +21,7 @@ export interface IStrategyContext {
   variables?: { [key: string]: any };
   toBN?: (value: any) => BigNumber;
   tokenIdMapping?: typeof tokenIdMapping;
-  
+  formatting?: ReturnType<typeof useFormatting>;
 }
 
 export interface IStrategyToken {
@@ -38,16 +36,22 @@ export interface IStrategyToken {
 }
 
 export enum StrategyInputType {
-  INPUT = "input",
-  INPUT_WITH_TOKEN = "input-with-token"
+  // INPUT = "input",
+  INPUT_WITH_TOKEN = "input-with-token",
+
+  HEADING = "heading",
+  VALUE = "value"
 }
 
 export type StrategyInputParameterMap = {
-  [StrategyInputType.INPUT]: {};
+  // [StrategyInputType.INPUT]: {};
 
   [StrategyInputType.INPUT_WITH_TOKEN]: {
     token?: IStrategyToken;
   };
+
+  [StrategyInputType.HEADING]: {};
+  [StrategyInputType.VALUE]: {};
 };
 
 export interface IStrategyInput<InputType extends StrategyInputType> {
@@ -68,6 +72,11 @@ export interface IStrategyInput<InputType extends StrategyInputType> {
   ) => string | void;
 
   defaults?: (context: Omit<IStrategyContext, "inputs">) => object;
+  update?: (
+    context: IStrategyContext & {
+      input: IStrategyInput<InputType> & StrategyInputParameterMap[InputType];
+    }
+  ) => void;
 
   value?: any;
 

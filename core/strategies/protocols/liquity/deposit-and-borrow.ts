@@ -1,4 +1,3 @@
-import BigNumber from "bignumber.js";
 import abis from "~/constant/abis";
 import addresses from "~/constant/addresses";
 import {

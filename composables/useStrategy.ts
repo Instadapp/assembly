@@ -24,6 +24,7 @@ import { useToken } from "./useToken";
 import { useWeb3 } from "./useWeb3";
 import { useBigNumber } from "./useBigNumber";
 import tokenIdMapping from "~/constant/tokenIdMapping";
+import { useFormatting } from "./useFormatting";
 
 export function useStrategy(defineStrategy: DefineStrategy) {
   const { web3, networkName, account } = useWeb3();
@@ -33,6 +34,8 @@ export function useStrategy(defineStrategy: DefineStrategy) {
   const { valInt, getTokenByKey } = useToken();
   const { emitEvent } = useEventBus();
   const { toBN } = useBigNumber();
+  const formatting = useFormatting();
+
   const {
     showPendingTransaction,
     showConfirmedTransaction
@@ -91,7 +94,8 @@ export function useStrategy(defineStrategy: DefineStrategy) {
       toBN,
       position,
       positionExtra,
-      tokenIdMapping
+      tokenIdMapping,
+      formatting,
     });
   });
 

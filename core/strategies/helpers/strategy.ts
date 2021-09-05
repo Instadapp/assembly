@@ -177,6 +177,11 @@ export class Strategy {
     for (const listener of this.listeners) {
       await listener(this);
     }
+
+    this.inputs.forEach(input => input.update?.({
+      ...this.getContext(),
+      input
+    }));
   }
 
   onUpdated(cb) {

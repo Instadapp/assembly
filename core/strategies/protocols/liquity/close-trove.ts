@@ -1,4 +1,9 @@
-import { defineStrategy, StrategyProtocol } from "../../helpers";
+import {
+  defineStrategy,
+  StrategyProtocol,
+  StrategyInputType,
+  defineInput
+} from "../../helpers";
 
 export default defineStrategy({
   protocol: StrategyProtocol.LIQUITY,
@@ -14,7 +19,47 @@ export default defineStrategy({
     <li>Close Trove</li>
   </ul>`,
 
-  inputs: [],
+  inputs: [
+    defineInput({
+      type: StrategyInputType.HEADING,
+      name: "Payback"
+    }),
+    defineInput({
+      type: StrategyInputType.VALUE,
+      name: "Net Debt",
+      update: ({ position, positionExtra, input, formatting, toBN }) => {
+        const troveOverallDetails = positionExtra["troveOverallDetails"];
+
+        const netDebt = toBN(position.debt).minus(
+          troveOverallDetails.liquidationReserve
+        );
+
+        input.value = `${formatting.formatDecimal(netDebt, 2)} LUSD`;
+      }
+    }),
+    defineInput({
+      type: StrategyInputType.HEADING,
+      name: "Withdraw"
+    }),
+    defineInput({
+      type: StrategyInputType.VALUE,
+      name: "Collateral",
+      update: ({ position, input, formatting }) => {
+        input.value = `${formatting.formatDecimal(position.collateral, 2)} ETH`;
+      }
+    }),
+    defineInput({
+      type: StrategyInputType.VALUE,
+      name: "Liquidation Reserve",
+      update: ({ positionExtra, input, formatting }) => {
+        const troveOverallDetails = positionExtra["troveOverallDetails"];
+        input.value = `${formatting.formatDecimal(
+          troveOverallDetails.liquidationReserve,
+          2
+        )} LUSD`;
+      }
+    })
+  ],
 
   validate: async ({
     position,

@@ -13,7 +13,7 @@
     </SidebarContextHeader>
 
     <div class="h-full overflow-y-scroll scrollbar-hover flex flex-col">
-      <div class="mx-auto mb-9" style="width: 296px">
+      <div class="mx-auto mb-6" style="width: 296px">
         <div
           class="flex-shrink-0 font-medium prose prose-sm text-primary-gray"
           v-if="activeStrategy.schema.details"
@@ -26,6 +26,7 @@
             <div class="flex-1">
               <div v-for="(input, index) in inputs" :key="index" class="mb-6">
                 <input-amount
+                  v-if="input.type === 'input-with-token'"
                   :key="index"
                   :value="input.value"
                   :token-key="input.token ? input.token.key : 'eth'"
@@ -45,6 +46,18 @@
                     }
                   "
                 />
+                <SidebarContextHeading
+                  v-else-if="input.type === 'heading'"
+                  :key="index"
+                >
+                  {{ input.name }}
+                </SidebarContextHeading>
+
+                <div v-else-if="input.type === 'value'" :key="index">
+                  <value-display :label="input.name">
+                    {{ input.value }}
+                  </value-display>
+                </div>
               </div>
             </div>
 
@@ -62,8 +75,6 @@
               >
                 {{ activeStrategy.schema.submitText || "Submit" }}
               </ButtonCTA>
-
-              <p class="text-xs text-[#9FB0C9] mt-2.5 text-center">Instadapp does not charge a fee for this operation</p>
             </div>
           </div>
         </div>
@@ -80,8 +91,9 @@ import { useStrategy } from "~/composables/useStrategy";
 import InputAmount from "~/components/common/input/InputAmount.vue";
 import { useToken } from "~/composables/useToken";
 import ButtonCTA from "~/components/common/input/ButtonCTA.vue";
+import ValueDisplay from "../components/ValueDisplay.vue";
 export default defineComponent({
-  components: { InputAmount, ButtonCTA },
+  components: { InputAmount, ButtonCTA, ValueDisplay },
   props: {
     protocol: {
       type: String,
