@@ -125,8 +125,6 @@ export default defineStrategy({
             ? initialStats
             : newStats;
 
-        console.log(stats);
-
         let liquidationPrice = "0";
         if (!toBN(stats.ethSupplied).isZero()) {
           liquidationPrice = BigNumber.max(

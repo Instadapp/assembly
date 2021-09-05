@@ -72,6 +72,84 @@ export default defineStrategy({
       defaults: ({ getTokenByKey, variables }) => ({
         token: getTokenByKey?.(variables.debtTokenKey)
       })
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.HEADING,
+      name: "Projected Debt Position"
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.STATUS,
+      name: "Status",
+      update: ({ position, component, components, toBN, tokenIdMapping }) => {
+        if (
+          toBN(components[0].value).isZero() &&
+          toBN(components[1].value).isZero()
+        ) {
+          return;
+        }
+
+        if (!position) {
+          return;
+        }
+
+        const newPositionData = changedPositionData(position, components, tokenIdMapping.tokenToId);
+        const stats = calculateStats(newPositionData);
+
+        component.liquidation = BigNumber.max(
+          toBN(stats.totalMaxBorrowLimitInEth).div(stats.totalSupplyInEth),
+          "0"
+        ).toFixed();
+        component.status = BigNumber.max(
+          toBN(stats.totalBorrowInEth).div(stats.totalSupplyInEth),
+          "0"
+        ).toFixed();
+      }
+    }),
+    defineStrategyComponent({
+      type: StrategyComponentType.VALUE,
+      name: "LIQUIDATION PRICE (IN ETH)",
+      value: "-",
+      update: ({
+        position,
+        component,
+        components,
+        toBN,
+        formatting,
+        tokenIdMapping
+      }) => {
+        if (!position) {
+          return;
+        }
+
+        const newPositionData = changedPositionData(
+          position,
+          components,
+          tokenIdMapping.tokenToId
+        );
+        const initialStats = calculateStats(position.data);
+        const newStats = calculateStats(newPositionData);
+
+        const stats =
+          toBN(components[0].value).isZero() &&
+          toBN(components[1].value).isZero()
+            ? initialStats
+            : newStats;
+
+        let liquidationPrice = "0";
+        if (!toBN(stats.ethSupplied).isZero()) {
+          liquidationPrice = BigNumber.max(
+            toBN(stats.totalBorrowInEth)
+              .div(stats.totalMaxBorrowLimitInEth)
+              .times(position.ethPriceInUsd),
+            "0"
+          ).toFixed();
+        }
+
+        component.value = `${formatting.formatUsdMax(
+          liquidationPrice,
+          position.ethPriceInUsd
+        )} / ${formatting.formatUsd(position.ethPriceInUsd)}`;
+      }
     })
   ],
 
@@ -105,7 +183,6 @@ export default defineStrategy({
         if (key === "eth") {
           stats.ethSupplied = supply;
         }
-
 
         stats.totalSupplyInEth = toBN(supply)
           .times(priceInEth)
@@ -150,7 +227,11 @@ export default defineStrategy({
     }
   },
 
-  spells: async ({ components: inputs, convertTokenAmountToWei, tokenIdMapping }) => {
+  spells: async ({
+    components: inputs,
+    convertTokenAmountToWei,
+    tokenIdMapping
+  }) => {
     const { tokenToId } = tokenIdMapping;
 
     const collateralTokenId = tokenToId.compound[inputs[0].token.key];
@@ -180,3 +261,57 @@ export default defineStrategy({
     ];
   }
 });
+
+const changedPositionData = (position, inputs, tokenToId) => {
+  return position.data.map(position => {
+    const changedPosition = { ...position };
+    if (tokenToId.compound[inputs[1].token.key] === position.cTokenId) {
+      changedPosition.borrow = BigNumber.max(
+        new BigNumber(position.borrow).plus(inputs[1].value),
+        "0"
+      ).toFixed();
+    }
+
+    if (tokenToId.compound[inputs[0].token.key] === position.cTokenId) {
+      changedPosition.supply = BigNumber.max(
+        new BigNumber(position.supply).plus(inputs[0].value),
+        "0"
+      ).toFixed();
+    }
+
+    return changedPosition;
+  });
+};
+
+const calculateStats = positionData => {
+  return positionData.reduce(
+    (stats, { key, supply, borrow, priceInEth, factor }) => {
+      if (key === "eth") {
+        stats.ethSupplied = supply;
+      }
+
+      stats.totalSupplyInEth = new BigNumber(supply)
+        .times(priceInEth)
+        .plus(stats.totalSupplyInEth)
+        .toFixed();
+      stats.totalBorrowInEth = new BigNumber(borrow)
+        .times(priceInEth)
+        .plus(stats.totalBorrowInEth)
+        .toFixed();
+
+      stats.totalMaxBorrowLimitInEth = new BigNumber(priceInEth)
+        .times(factor)
+        .times(supply)
+        .plus(stats.totalMaxBorrowLimitInEth)
+        .toFixed();
+
+      return stats;
+    },
+    {
+      totalSupplyInEth: "0",
+      totalBorrowInEth: "0",
+      totalMaxBorrowLimitInEth: "0",
+      ethSupplied: "0"
+    }
+  );
+};
