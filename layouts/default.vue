@@ -110,7 +110,7 @@ export default defineComponent({
     const { redirect } = useContext()
     const { showSidebarBalances } = useSidebar()
     const { showNetworksMismatchDialog } = useModal()
-    // useEagerConnect()
+    useEagerConnect()
     const route = useRoute()
 
     watch(isBackdropShown, () => {

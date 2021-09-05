@@ -41,7 +41,7 @@
         </button>
       </div>
 
-      <div class="mt-6 text-center text-sm">
+      <div class="mt-6 text-center text-sm hidden">
         Need help connecting a wallet?
         <nuxt-link to="/faqs" class="font-semibold text-ocean-blue-pure"
           >Read our FAQ</nuxt-link
