@@ -25,8 +25,6 @@ export function useDSA() {
 
 
   watch(active, () => {
-    console.log("here");
-    
     if (library.value) {
       dsa.value = new DSA(library.value, chainId.value);
     }
@@ -52,8 +50,6 @@ export function useDSA() {
     if (dsa.value) {
       refreshAccounts()
     }
-    //@ts-ignore
-    window.dsa = dsa.value;
   });
 
   watch(
