@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { defineComponent, nextTick, ref } from '@nuxtjs/composition-api'
+import { defineComponent, nextTick, ref, computed } from '@nuxtjs/composition-api'
 import { useNetwork } from '~/composables/useNetwork'
 import { useTenderly } from '~/composables/useTenderly'
 import { useWeb3 } from '@instadapp/vue-web3'
