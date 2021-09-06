@@ -2,18 +2,23 @@ import { useWeb3 } from "@instadapp/vue-web3";
 import { injected } from "../connectors";
 import { onMounted, ref, watch } from "@nuxtjs/composition-api";
 import { SafeAppConnector } from "@gnosis.pm/safe-apps-web3-react";
+import { useNetwork } from "./useNetwork";
 
 export function useSafeAppConnection(connector?: SafeAppConnector) {
   const { activate, active } = useWeb3();
+  const { activeNetworkId} = useNetwork();
 
   const tried = ref(false);
 
   onMounted(() => {
-    connector?.isSafeApp().then((loadedInSafe: boolean) => {
+    connector?.isSafeApp().then(async (loadedInSafe: boolean) => {
       if (loadedInSafe) {
-        activate(connector, undefined, true).catch(() => {
+        await activate(connector, undefined, true).catch(() => {
           tried.value = true;
         });
+
+        //@ts-ignore
+        activeNetworkId.value = await connector.getChainId()
       } else {
         tried.value = true;
       }
