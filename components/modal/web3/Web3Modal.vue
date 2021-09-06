@@ -93,7 +93,7 @@ export default defineComponent({
 
       close()
     }
-    const isMetamask = computed(() => window.ethereum && window.ethereum.isMetaMask)
+    const isMetamask = computed(() => process.server ? false : window.ethereum && window.ethereum.isMetaMask)
 
     const wallets = computed(() => Object.keys(SUPPORTED_WALLETS).map((key) => {
       const wallet = SUPPORTED_WALLETS[key]

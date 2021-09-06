@@ -143,12 +143,6 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     { immediate: true }
   );
 
-  // testing
-  onMounted(() => {
-    //@ts-ignore
-    window.strategy = strategy;
-  });
-
   return {
     strategy,
     components,

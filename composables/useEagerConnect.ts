@@ -9,7 +9,7 @@ export function useEagerConnect() {
   const tried = ref(false);
 
   watchEffect(() => {
-    if (triedToConnectToSafe.value && !active.value) {
+    if (triedToConnectToSafe.value && !active.value && !tried.value) {
       injected.isAuthorized().then((isAuthorized: boolean) => {
         if (isAuthorized) {
           activate(injected, undefined, true).catch(() => {

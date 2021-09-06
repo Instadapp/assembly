@@ -1,11 +1,11 @@
-import { computed, onMounted, ref, watch } from "@nuxtjs/composition-api";
-import { useLocalStorage } from "vue-composable";
+import { computed, watchEffect, ref, watch } from "@nuxtjs/composition-api";
 
 import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
 import { useModal } from "./useModal";
 import { useNotification } from "./useNotification";
 import { useWeb3 } from "@instadapp/vue-web3";
+import { useCookies } from "./useCookies";
 
 export enum Network {
   Mainnet = "mainnet",
@@ -26,6 +26,7 @@ export function useNetwork() {
   const { showWarning } = useNotification();
   const { account, chainId } = useWeb3();
   const { showNetworksMismatchDialog } = useModal();
+  const { get: getCookie, set: setCookie } = useCookies();
 
   const networkMismatch = computed(
     () => chainId.value != activeNetwork.value?.chainId
@@ -107,16 +108,21 @@ export function useNetwork() {
   }
 
   watch(activeNetworkId, () => {
-    localStorage.setItem("network", activeNetworkId.value);
+    setCookie("network", activeNetworkId.value);
   });
 
-  onMounted(() => {
+  watchEffect(() => {
     if (activeNetworkId.value) {
       return;
     }
-    //@ts-ignore
-    activeNetworkId.value = localStorage.getItem("network") || "mainnet";
 
+    const savedNetwork = getCookie("network");
+
+    if ((Object.values(Network) as any[]).includes(savedNetwork)) {
+      activeNetworkId.value = savedNetwork as Network;
+    } else {
+      activeNetworkId.value = Network.Mainnet;
+    }
     // refreshWeb3()
   });
 

@@ -1,7 +1,5 @@
 export default {
-  // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
-
+  ssr: !process.env.VERCEL,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Assembly',
