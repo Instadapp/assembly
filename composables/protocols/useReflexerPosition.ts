@@ -7,7 +7,7 @@ import reflexerSafes from "~/constant/tokens/safes";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { useDSA } from "~/composables/useDSA";
 import { useToken } from "~/composables/useToken";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import { AbiItem } from "web3-utils";
 import { useBalances } from "../useBalances";
 
@@ -57,7 +57,7 @@ export function useReflexerPosition(
   collateralAmountRef: Ref = null,
   debtAmountRef: Ref = null
 ) {
-  const { web3, chainId, networkName } = useWeb3();
+  const { library } = useWeb3();
   const { activeAccount } = useDSA();
   const { isZero, ensureValue, times, div, max, gt, toBN } = useBigNumber();
   const { getTokenByKey } = useToken();
@@ -132,23 +132,23 @@ export function useReflexerPosition(
   );
 
   const fetchPosition = async () => {
-    if (!web3.value) {
+    if (!library.value) {
       return;
     }
 
-    safeTypes.value = await getSafeTypes(web3.value);
+    safeTypes.value = await getSafeTypes(library.value);
 
     if (!activeAccount.value) {
       return;
     }
-    safes.value = await getSafes(activeAccount.value.address, web3.value);
+    safes.value = await getSafes(activeAccount.value.address, library.value);
     if (safes.value.length > 0 && !safeId.value) {
       safeId.value = safes.value[0].id;
     }
   };
 
   watch(
-    web3,
+    library,
     async val => {
       if (val) {
         fetchPosition();
