@@ -3,10 +3,10 @@ import { AbiItem } from "web3-utils";
 import compoundABI from "~/abis/read/compound.json";
 import { computed, ref, watch } from "@nuxtjs/composition-api";
 import { useDSA } from "~/composables/useDSA";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import BigNumber from "bignumber.js";
 import tokens from "~/constant/tokens";
-import { Network } from "~/composables/useNetwork";
+import { Network, useNetwork } from "~/composables/useNetwork";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { usePosition } from "~/composables/usePosition";
 import { useToken } from "~/composables/useToken";
@@ -14,6 +14,7 @@ import addresses from "~/constant/addresses";
 import ctokens from "~/constant/ctokens";
 import tokenIdMapping from "~/constant/tokenIdMapping";
 import { useSorting } from "~/composables/useSorting";
+import useEventBus from "../useEventBus";
 
 const {
   times,
@@ -27,7 +28,7 @@ const {
 } = useBigNumber();
 const { getType } = usePosition();
 
-const position = ref<any>({
+export const position = ref<any>({
   totalSupplyInEth: new BigNumber(0),
   totalBorrowInEth: new BigNumber(0),
   totalBorrowStableInEth: new BigNumber(0),
@@ -62,14 +63,16 @@ export function useCompoundPosition(
 ) {
   overridePosition = overridePosition || (pos => pos);
 
-  const { web3, networkName } = useWeb3();
+  const { library } = useWeb3();
+  const { activeNetworkId } = useNetwork()
+  const { onEvent } = useEventBus()
   const { activeAccount } = useDSA();
   const { getTokenByKey } = useToken();
   const { byMaxSupplyOrBorrowDesc } = useSorting()
   const resolver = computed(() => addresses.mainnet.resolver.compound);
 
   const fetchPosition = async () => {
-    if (!web3.value) {
+    if (!library.value) {
       return;
     }
 
@@ -77,12 +80,12 @@ export function useCompoundPosition(
       return;
     }
 
-    const resolverInstance = new web3.value.eth.Contract(
+    const resolverInstance = new library.value.eth.Contract(
       compoundABI as AbiItem[],
       resolver.value
     );
 
-    const tokensArr = ctokens[networkName.value].allTokens.map(a => a.address);
+    const tokensArr = ctokens[activeNetworkId.value].allTokens.map(a => a.address);
 
     const compoundRawData = await resolverInstance.methods
       .getPosition(activeAccount.value.address, tokensArr)
@@ -90,7 +93,7 @@ export function useCompoundPosition(
 
     const newPos = calculateCompoundPosition(
       compoundRawData,
-      networkName.value
+      activeNetworkId.value
     );
 
     return newPos;
@@ -100,8 +103,10 @@ export function useCompoundPosition(
     position.value = await fetchPosition();
   };
 
+  onEvent("protocol::compound::refresh", refreshPosition);
+
   watch(
-    web3,
+    library,
     async val => {
       if (val) {
         refreshPosition();
@@ -162,7 +167,7 @@ export function useCompoundPosition(
       return [];
     }
 
-    return ctokens[networkName.value].allTokens
+    return ctokens[activeNetworkId.value].allTokens
       .flatMap(ctoken => {
         const token = getTokenByKey(ctoken.root);
         if (!token) {

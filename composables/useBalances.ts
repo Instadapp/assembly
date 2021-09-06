@@ -11,8 +11,8 @@ import addresses from "~/constant/addresses";
 import tokens from "~/constant/tokens";
 import uniPoolTokens from "~/constant/uniPoolTokens";
 import { useDSA } from "./useDSA";
-import { Network } from "./useNetwork";
-import { useWeb3 } from "./useWeb3";
+import { Network, useNetwork } from "./useNetwork";
+import { useWeb3 } from "@instadapp/vue-web3";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { useToken } from "./useToken";
@@ -20,8 +20,14 @@ import { useBigNumber } from "./useBigNumber";
 import { useSorting } from "./useSorting";
 
 const balances = reactive({
-  user: null,
-  dsa: null
+  user: {
+    mainnet: {},
+    polygon: {}
+  },
+  dsa: {
+    mainnet: {},
+    polygon: {}
+  }
 });
 
 const prices = reactive({
@@ -32,7 +38,8 @@ const prices = reactive({
 export function useBalances() {
   const { $axios } = useContext();
   const { times, plus, ensureValue } = useBigNumber();
-  const { account, networkName, web3 } = useWeb3();
+  const { account, library } = useWeb3();
+  const { activeNetworkId } = useNetwork()
   const { activeAccount } = useDSA();
   const { getTokenByKey } = useToken();
   const { by } = useSorting();
@@ -48,12 +55,12 @@ export function useBalances() {
       if (!account.value) return;
       balances.user = {
         mainnet:
-          networkName.value === Network.Mainnet
-            ? await getBalances(account.value, Network.Mainnet, web3.value)
+          activeNetworkId.value === Network.Mainnet
+            ? await getBalances(account.value, Network.Mainnet, library.value)
             : {},
         polygon:
-          networkName.value === Network.Polygon
-            ? await getBalances(account.value, Network.Polygon, web3.value)
+          activeNetworkId.value === Network.Polygon
+            ? await getBalances(account.value, Network.Polygon, library.value)
             : {}
       };
     }
@@ -63,19 +70,19 @@ export function useBalances() {
 
       balances.dsa = {
         mainnet:
-          networkName.value === Network.Mainnet
+          activeNetworkId.value === Network.Mainnet
             ? await getBalances(
                 activeAccount.value.address,
                 Network.Mainnet,
-                web3.value
+                library.value
               )
             : {},
         polygon:
-          networkName.value === Network.Polygon
+          activeNetworkId.value === Network.Polygon
             ? await getBalances(
                 activeAccount.value.address,
                 Network.Polygon,
-                web3.value
+                library.value
               )
             : {}
       };
@@ -88,27 +95,27 @@ export function useBalances() {
 
   const getBalanceByAddress = (address, network = null, type = "dsa") => {
     return (
-      balances[type]?.[network || networkName.value][address]?.balance || "0"
+      balances[type]?.[network || activeNetworkId.value][address]?.balance || "0"
     );
   };
 
   const getBalanceRawByKey = (tokenKey, network = null, type = "dsa") => {
     return (
-      balances[type]?.[network || networkName.value][
+      balances[type]?.[network || activeNetworkId.value][
         getTokenByKey(tokenKey)?.address
       ]?.raw || "0"
     );
   };
 
   const netWorth = (address, type = "dsa") => {
-    const balance = getBalanceByAddress(address, networkName.value, type);
-    const price = ensureValue(prices[networkName.value][address]).toFixed();
+    const balance = getBalanceByAddress(address, activeNetworkId.value, type);
+    const price = ensureValue(prices[activeNetworkId.value][address]).toFixed();
 
     return times(balance, price).toFixed();
   };
 
   const balanceTotal = computed(() =>
-    tokens[networkName.value].allTokens.reduce(
+    tokens[activeNetworkId.value].allTokens.reduce(
       (totalNetWorth, token) =>
         plus(totalNetWorth, netWorth(token.address)).toFixed(),
       "0"
@@ -116,16 +123,16 @@ export function useBalances() {
   );
 
   const getAssets = (type = "dsa") => {
-    return tokens[networkName.value].allTokens
+    return tokens[activeNetworkId.value].allTokens
       .map(token => ({
         ...token,
-        balance: getBalanceByAddress(token.address, networkName.value, type),
+        balance: getBalanceByAddress(token.address, activeNetworkId.value, type),
         netWorth: netWorth(token.address, type)
       }))
       .sort(by("-netWorth"));
   };
 
-  watch(web3, () => {
+  watch(library, () => {
     fetchBalances(true);
   });
   return {
@@ -206,6 +213,7 @@ async function getBalances(
       }
       const { name, symbol, decimals, type, isStableCoin, key } = tokenData;
       tokensBalObj[tokenAddress] = {
+        address: tokenAddress,
         name,
         symbol,
         decimals,

@@ -40,7 +40,7 @@
     </div>
 
     <div
-      class="mt-8 md:mt-0 ml-auto flex items-center justify-center space-x-2.5"
+      class="mt-8 md:mt-0 md:ml-auto flex-wrap flex items-center md:justify-center md:space-x-2.5"
     >
       <AccountSwitcher v-if="active" />
 
@@ -53,7 +53,7 @@
 <script lang="ts">
 import { defineComponent } from "@nuxtjs/composition-api";
 import { useTenderly } from "~/composables/useTenderly";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import ToggleButton from "./common/input/ToggleButton.vue";
 
 export default defineComponent({

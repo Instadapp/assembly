@@ -1,14 +1,14 @@
 import { useContext, ref, onMounted, computed } from "@nuxtjs/composition-api";
 import axios from "axios";
 import { activeNetwork, useNetwork } from "./useNetwork";
-import { useWeb3 } from "./useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import Web3 from "web3";
 import { useDSA } from "./useDSA";
 
 const forkId = ref(null);
 export function useTenderly() {
   const { $config } = useContext();
-  const { setWeb3, refreshWeb3 } = useWeb3();
+  const { activate, deactivate, connector, library } = useWeb3();
   const { accounts, refreshAccounts } = useDSA();
   const canSimulate = computed(
     () => $config.TENDERLY_FORK_PATH && $config.TENDERLY_KEY
@@ -21,7 +21,7 @@ export function useTenderly() {
     }
 
     setTimeout(() => {
-      setForkId(window.localStorage.getItem("forkId"));
+      setForkId(window.localStorage.getItem("forkId"), true);
     }, 1000);
   });
 
@@ -51,39 +51,47 @@ export function useTenderly() {
     loading.value = false;
   };
 
-  const stopSimulation = async () => {
+  const stopSimulation = async (silent = false) => {
     loading.value = true;
+
     try {
-      await axios({
-        method: "delete",
-        url: `https://api.tenderly.co/api/v1/account/${$config.TENDERLY_FORK_PATH}/fork/${forkId.value}`,
-        headers: {
-          "X-Access-key": $config.TENDERLY_KEY,
-          "Content-Type": "application/json"
-        }
-      });
+      if (forkId.value) {
+        await axios({
+          method: "delete",
+          url: `https://api.tenderly.co/api/v1/account/${$config.TENDERLY_FORK_PATH}/fork/${forkId.value}`,
+          headers: {
+            "X-Access-key": $config.TENDERLY_KEY,
+            "Content-Type": "application/json"
+          }
+        });
+      }
     } catch (error) {}
 
     forkId.value = null;
     window.localStorage.removeItem("forkId");
-    await refreshWeb3();
+
+    if (!silent && connector.value) {
+      deactivate();
+      activate(connector.value);
+    }
+
     loading.value = false;
   };
 
-  const setForkId = fork => {
+  const setForkId = async (fork, silent = false) => {
     if (!fork) {
-      stopSimulation();
+      stopSimulation(silent);
       return;
     }
 
     forkId.value = fork;
-    setWeb3(
-      new Web3(
-        new Web3.providers.HttpProvider(
-          `https://rpc.tenderly.co/fork/${forkId.value}`
-        )
+
+    library.value = new Web3(
+      new Web3.providers.HttpProvider(
+        `https://rpc.tenderly.co/fork/${forkId.value}`
       )
     );
+
     window.localStorage.setItem("forkId", forkId.value);
   };
 
@@ -106,6 +114,6 @@ export function useTenderly() {
     canSimulate,
     startSimulation,
     stopSimulation,
-    loading,
+    loading
   };
 }

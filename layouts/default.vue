@@ -5,8 +5,13 @@
     <div class="min-h-screen flex flex-col">
       <Navbar />
       <div v-if="activeNetworkId" class="flex-1 overflow-x-hidden ">
-        <div class="px-8 md:px-4 max-w-6xl mx-auto py-12">
-          <Nuxt />
+        <div
+          class="px-8 md:px-4 max-w-6xl mx-auto"
+          :class="{ 'text-center': !active, 'py-12': active }"
+        >
+          <Nuxt v-if="active" />
+
+          <web-3-modal slim v-else />
         </div>
       </div>
       <div class="flex-1 flex items-center justify-center" v-else>
@@ -43,7 +48,10 @@
 
     <NotificationBar />
 
-    <div class="fixed bottom-0 right-0 mr-10 mb-28">
+    <div
+      v-if="active"
+      class="fixed bottom-0 right-0 mr-5 md:mr-10 mb-5 md:mb-28"
+    >
       <button
         @click="showSidebarBalances"
         class="px-9 h-[56px] bg-primary-blue-dark hover:bg-primary-blue-hover text-white rounded-[28px] text-lg font-semibold shadow flex items-center"
@@ -80,18 +88,20 @@ import { defineComponent, nextTick, onErrorCaptured, onMounted, useContext, useR
 import MakerDAOIcon from '~/assets/icons/makerdao.svg?inline'
 import CompoundIcon from '~/assets/icons/compound.svg?inline'
 import AaveIcon from '~/assets/icons/aave.svg?inline'
-import { useWeb3 } from '~/composables/useWeb3'
+import { useWeb3 } from '@instadapp/vue-web3'
 import { init as initSidebars, useSidebar } from '~/composables/useSidebar'
 import { useBackdrop } from '@/composables/useBackdrop'
 import { useNetwork } from "~/composables/useNetwork";
-import { useTenderly } from "~/composables/useTenderly";
 import { useModal } from "~/composables/useModal";
+import { useEagerConnect } from "~/composables/useEagerConnect";
+import Web3Modal from "~/components/modal/web3/Web3Modal.vue";
 
 export default defineComponent({
   components: {
     MakerDAOIcon,
     CompoundIcon,
     AaveIcon,
+    Web3Modal,
   },
   setup() {
     const { active, activate, deactivate, chainId } = useWeb3();
@@ -100,6 +110,7 @@ export default defineComponent({
     const { redirect } = useContext()
     const { showSidebarBalances } = useSidebar()
     const { showNetworksMismatchDialog } = useModal()
+    useEagerConnect()
     const route = useRoute()
 
     watch(isBackdropShown, () => {
@@ -137,7 +148,8 @@ export default defineComponent({
       }
     }, { immediate: true })
 
-    onErrorCaptured(() => {
+    onErrorCaptured((error) => {
+      console.error(error)
       return false
     })
 

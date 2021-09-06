@@ -8,7 +8,7 @@ import {
 } from "@nuxtjs/composition-api";
 
 import { useDSA } from "./useDSA";
-import { useWeb3 } from "./useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import SidebarAaveV2Supply from "~/components/sidebar/context/aaveV2/SidebarAaveV2Supply.vue";
 import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAaveV2Withdraw.vue'
 import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAaveV2Borrow.vue'
@@ -41,11 +41,16 @@ import SidebarReflexerWithdraw from '~/components/sidebar/context/reflexer/Sideb
 import SidebarReflexerBorrow from '~/components/sidebar/context/reflexer/SidebarReflexerBorrow.vue'
 import SidebarReflexerPayback from '~/components/sidebar/context/reflexer/SidebarReflexerPayback.vue'
 
+import SidebarStrategySelection from '~/components/sidebar/context/strategy/SidebarStrategySelection.vue'
+import SidebarStrategy from '~/components/sidebar/context/strategy/SidebarStrategy.vue'
 
 const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
   "#deposit-overview": {component: SidebarDepositOverview, back: { hash: 'overview' }  },
   '#withdraw-token': { component: SidebarWithdraw, back: { hash: 'overview' } },
+  '#strategies': { component: SidebarStrategySelection },
+  '#strategy': { component: SidebarStrategy },
+
   "/aave-v2": { component: null },
   "/aave-v2#supply": { component: SidebarAaveV2Supply },
   "/aave-v2#borrow": { component: SidebarAaveV2Borrow },

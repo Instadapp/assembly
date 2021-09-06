@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="active && activeAccount" class="relative w-[193px]" v-click-outside="hide">
+  <div class="mt-3 w-full md:w-auto md:mt-0">
+    <div v-if="active && activeAccount" class="relative w-full md:w-[193px]" v-click-outside="hide">
       <button
         type="button"
         class=" relative w-full border border-primary-blue-border rounded pl-3 pr-10 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0846E4] focus:border-[#0846E4] sm:text-sm"
@@ -10,7 +10,7 @@
         @click="show = !show"
       >
         <span
-          class="flex items-center capitalize text-center text-sm font-bold"
+          class="flex items-center capitalize text-center text-sm font-bold truncate"
         >
           <div class="mr-2">
             <svg
@@ -143,7 +143,7 @@
     </div>
     <button
       v-else-if="!active"
-      @click="activate"
+      @click="open"
       class="hidden md:flex bg-primary-blue-dark hover:bg-primary-blue-hover shadow text-white p-3 rounded h-9  items-center justify-center w-40"
     >
       Connect
@@ -155,12 +155,14 @@
 import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { useDSA } from "~/composables/useDSA";
 import { useFormatting } from '~/composables/useFormatting';
-import { useWeb3 } from '~/composables/useWeb3';
+import { useWeb3Modal } from '~/composables/useWeb3Modal';
+import { useWeb3 } from '@instadapp/vue-web3';
 
 export default defineComponent({
   setup() {
     const { activeAccount } = useDSA()
     const { active, deactivate, activate } = useWeb3()
+    const { open } = useWeb3Modal()
     const { shortenHash } = useFormatting()
 
     const show = ref(false)
@@ -172,6 +174,7 @@ export default defineComponent({
     return {
       hide,
       show,
+      open,
       activeAccount,
       active,
       activate,
