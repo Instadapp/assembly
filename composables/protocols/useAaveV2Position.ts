@@ -3,11 +3,11 @@ import { AbiItem } from "web3-utils";
 import aaveV2ABI from "~/abis/read/aaveV2.json";
 import { computed, ref, watch } from "@nuxtjs/composition-api";
 import { useDSA } from "~/composables/useDSA";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import BigNumber from "bignumber.js";
 import atokensV2 from "~/constant/atokensV2";
 import tokens from "~/constant/tokens";
-import { Network } from "~/composables/useNetwork";
+import { Network, useNetwork } from "~/composables/useNetwork";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { usePosition } from "~/composables/usePosition";
 import { useToken } from "~/composables/useToken";
@@ -66,7 +66,8 @@ export function useAaveV2Position(
 ) {
   overridePosition = overridePosition || (pos => pos);
 
-  const { web3, chainId, networkName } = useWeb3();
+  const { library, chainId } = useWeb3();
+  const { activeNetworkId } = useNetwork();
   const { activeAccount } = useDSA();
   const { getTokenByKey, allATokensV2 } = useToken();
   const { byMaxSupplyOrBorrowDesc } = useSorting()
@@ -79,7 +80,7 @@ export function useAaveV2Position(
   );
 
   const fetchPosition = async () => {
-    if (!web3.value) {
+    if (!library.value) {
       return;
     }
 
@@ -87,20 +88,20 @@ export function useAaveV2Position(
       return;
     }
 
-    const aaveResolverInstance = new web3.value.eth.Contract(
+    const aaveResolverInstance = new library.value.eth.Contract(
       aaveV2ABI as AbiItem[],
       resolver.value
     );
 
-    const aaveTokensArr = atokensV2[networkName.value].allTokens.map(
-      a => tokens[networkName.value].getTokenByKey(a.root).address
+    const aaveTokensArr = atokensV2[activeNetworkId.value].allTokens.map(
+      a => tokens[activeNetworkId.value].getTokenByKey(a.root).address
     );
 
     const aaveRawData = await aaveResolverInstance.methods
       .getPosition(activeAccount.value.address, aaveTokensArr)
       .call();
 
-    const newPos = calculateAavePosition(aaveRawData, networkName.value);
+    const newPos = calculateAavePosition(aaveRawData, activeNetworkId.value);
 
     return newPos;
   };
@@ -112,7 +113,7 @@ export function useAaveV2Position(
   onEvent("protocol::aaveV2::refresh", refreshPosition);
 
   watch(
-    web3,
+    library,
     async val => {
       if (val) {
         refreshPosition();
@@ -168,7 +169,7 @@ export function useAaveV2Position(
   );
 
   const rewardTokenPriceInUsd = computed(() => {
-    if (networkName.value === Network.Polygon) {
+    if (activeNetworkId.value === Network.Polygon) {
       return ensureValue(
         position.value.data.find(position => position.key === "matic")
           ?.priceInUsd

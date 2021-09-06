@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-1/2 md:w-[178px]" v-click-outside="hide">
+  <div v-if="!isGnosisSafe" class="relative w-1/2 md:w-[178px]" v-click-outside="hide">
     <button
       type="button"
       class="bg-primary-blue-dark hover:bg-primary-blue-hover relative w-full border border-primary-blue-border rounded pl-2.5 pr-10 py-1.5 text-left focus:outline-none focus:ring-1 focus:ring-[#0846E4] focus:border-[#0846E4] sm:text-sm"
@@ -99,16 +99,21 @@
 </template>
 
 <script>
-import { defineComponent, nextTick, ref } from '@nuxtjs/composition-api'
+import { defineComponent, nextTick, ref, computed } from '@nuxtjs/composition-api'
 import { useNetwork } from '~/composables/useNetwork'
 import { useTenderly } from '~/composables/useTenderly'
+import { useWeb3 } from '@instadapp/vue-web3'
+import { gnosisSafe } from '~/connectors'
 
 export default defineComponent({
   setup() {
     const show = ref(false)
 
+    const { connector } = useWeb3()
     const { networks, activeNetworkId, activeNetwork, checkForNetworkMismatch } = useNetwork()
     const { stopSimulation } = useTenderly()
+    
+    const isGnosisSafe = computed(() => connector.value === gnosisSafe)
 
     const setActiveNetwork = async networkId => {
       await stopSimulation()
@@ -129,6 +134,7 @@ export default defineComponent({
       activeNetwork,
       setActiveNetwork,
       activeNetworkId,
+      isGnosisSafe,
     }
 
   },

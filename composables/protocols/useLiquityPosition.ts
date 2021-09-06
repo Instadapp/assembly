@@ -2,7 +2,7 @@ import { computed, Ref, ref, watch } from "@nuxtjs/composition-api";
 import { useBalances } from "../useBalances";
 import { useBigNumber } from "../useBigNumber";
 import { useToken } from "../useToken";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import { AbiItem } from "web3-utils";
 import BigNumber from "bignumber.js";
 BigNumber.config({ POW_PRECISION: 200 });
@@ -50,8 +50,8 @@ export function useLiquityPosition(
   collateralAmountRef: Ref = null,
   debtAmountRef: Ref = null
 ) {
+  const { library } = useWeb3();
   const { onEvent } = useEventBus()
-  const { web3 } = useWeb3();
   const { activeAccount } = useDSA();
 
   const { isZero, times, div, max, minus, plus } = useBigNumber();
@@ -139,22 +139,22 @@ export function useLiquityPosition(
   );
 
   const fetchPosition = async () => {
-    if (!web3.value) {
+    if (!library.value) {
       return;
     }
 
-    troveTypes.value = await getTroveTypes(web3.value);
+    troveTypes.value = await getTroveTypes(library.value);
 
     if (!activeAccount.value) {
       return;
     }
 
-    trove.value = await getTrove(activeAccount.value.address, web3.value);
+    trove.value = await getTrove(activeAccount.value.address, library.value);
   };
 
   async function getTrovePositionHints(collateralInWei, debtInWei) {
     try {
-      const liquityInstance = new web3.value.eth.Contract(
+      const liquityInstance = new library.value.eth.Contract(
         abis.resolver.liquity as AbiItem[],
         addresses.mainnet.resolver.liquity
       );
@@ -184,7 +184,7 @@ export function useLiquityPosition(
 
 
   watch(
-    web3,
+    library,
     async val => {
       if (val) {
         fetchPosition();

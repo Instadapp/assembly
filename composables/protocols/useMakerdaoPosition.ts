@@ -7,7 +7,7 @@ import makerVaults from "~/constant/tokens/vaults";
 import { useBigNumber } from "~/composables/useBigNumber";
 import { useDSA } from "~/composables/useDSA";
 import { useToken } from "~/composables/useToken";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import { AbiItem } from "web3-utils";
 import useEventBus from "../useEventBus";
 
@@ -55,8 +55,8 @@ export function useMakerdaoPosition(
   collateralAmountRef: Ref = null,
   debtAmountRef: Ref = null
 ) {
+  const { library } = useWeb3();
   const { onEvent } = useEventBus()
-  const { web3, chainId, networkName } = useWeb3();
   const { activeAccount } = useDSA();
   const { isZero, ensureValue, times, div, max, gt } = useBigNumber();
   const { getTokenByKey } = useToken();
@@ -119,16 +119,16 @@ export function useMakerdaoPosition(
   );
 
   const fetchPosition = async () => {
-    if (!web3.value) {
+    if (!library.value) {
       return;
     }
 
-    vaultTypes.value = await getVaultTypes(web3.value);
+    vaultTypes.value = await getVaultTypes(library.value);
 
     if (!activeAccount.value) {
       return;
     }
-    vaults.value = await getVaults(activeAccount.value.address, web3.value);
+    vaults.value = await getVaults(activeAccount.value.address, library.value);
     if (vaults.value.length > 0 && !vaultId.value) {
       vaultId.value = vaults.value[0].id;
     }
@@ -137,7 +137,7 @@ export function useMakerdaoPosition(
   onEvent("protocol::makerdao::refresh", fetchPosition);
 
   watch(
-    web3,
+    library,
     async val => {
       if (val) {
         fetchPosition();

@@ -5,7 +5,7 @@ import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
 import { useModal } from "./useModal";
 import { useNotification } from "./useNotification";
-import { useWeb3 } from "./useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 
 export enum Network {
   Mainnet = "mainnet",
@@ -24,11 +24,11 @@ export const activeNetwork = computed(
 
 export function useNetwork() {
   const { showWarning } = useNotification();
-  const { account, networkName, refreshWeb3 } = useWeb3();
+  const { account, chainId } = useWeb3();
   const { showNetworksMismatchDialog } = useModal();
 
   const networkMismatch = computed(
-    () => networkName.value != activeNetworkId.value
+    () => chainId.value != activeNetwork.value?.chainId
   );
 
   const checkForNetworkMismatch = () => {
@@ -117,7 +117,7 @@ export function useNetwork() {
     //@ts-ignore
     activeNetworkId.value = localStorage.getItem("network") || "mainnet";
 
-    refreshWeb3();
+    // refreshWeb3()
   });
 
   return {

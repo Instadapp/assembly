@@ -25,13 +25,15 @@ import useEventBus from "./useEventBus";
 import { useNotification } from "./useNotification";
 import { useSidebar } from "./useSidebar";
 import { useToken } from "./useToken";
-import { useWeb3 } from "./useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import { useBigNumber } from "./useBigNumber";
 import tokenIdMapping from "~/constant/tokenIdMapping";
 import { useFormatting } from "./useFormatting";
+import { useNetwork } from "./useNetwork";
 
 export function useStrategy(defineStrategy: DefineStrategy) {
-  const { web3, networkName, account } = useWeb3();
+  const { library, account } = useWeb3();
+  const { activeNetworkId } = useNetwork()
   const { dsa } = useDSA();
   const { prices, balances, fetchBalances } = useBalances();
   const { close } = useSidebar();
@@ -114,29 +116,29 @@ export function useStrategy(defineStrategy: DefineStrategy) {
     { immediate: true }
   );
 
-  watch(web3, () => strategy.setWeb3(web3.value), { immediate: true });
+  watch(library, () => strategy.setWeb3(library.value), { immediate: true });
   watch(dsa, () => strategy.setDSA(dsa.value), { immediate: true });
   watch(
     prices,
-    () => strategy.setProps({ prices: prices[networkName.value] }),
+    () => strategy.setProps({ prices: prices[activeNetworkId.value] }),
     { immediate: true }
   );
   watch(
     balances,
     () => {
       strategy.setProps({
-        dsaBalances: balances.dsa[networkName.value],
-        userBalances: balances.user[networkName.value]
+        dsaBalances: balances.dsa[activeNetworkId.value],
+        userBalances: balances.user[activeNetworkId.value]
       });
     },
     { immediate: true }
   );
   watch(
-    networkName,
+    activeNetworkId,
     () =>
       strategy.setProps({
-        tokens: tokens[networkName.value].allTokens,
-        tokenKeys: tokens[networkName.value].tokenKeys
+        tokens: tokens[activeNetworkId.value].allTokens,
+        tokenKeys: tokens[activeNetworkId.value].tokenKeys
       }),
     { immediate: true }
   );

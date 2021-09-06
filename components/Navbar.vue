@@ -53,7 +53,7 @@
 <script lang="ts">
 import { defineComponent } from "@nuxtjs/composition-api";
 import { useTenderly } from "~/composables/useTenderly";
-import { useWeb3 } from "~/composables/useWeb3";
+import { useWeb3 } from "@instadapp/vue-web3";
 import ToggleButton from "./common/input/ToggleButton.vue";
 
 export default defineComponent({
