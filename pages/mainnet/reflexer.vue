@@ -135,7 +135,7 @@
 
         <CardReflexer
           :amount="debt"
-          :amount-usd="debt"
+          :amount-usd="debtUsd"
           position-type="borrow"
           token-key="rai"
           :safe-token-type="safeTokenType"
@@ -206,6 +206,7 @@ export default defineComponent({
       liquidationPrice,
       liquidationMaxPrice,
       debt,
+      debtUsd,
       minDebt,
       debtCeilingReached,
       raiInUsd,
@@ -276,6 +277,7 @@ export default defineComponent({
       showBorrow,
       showSupply,
       debt,
+      debtUsd,
       minDebt,
       debtCeilingReached,
       raiInUsd,

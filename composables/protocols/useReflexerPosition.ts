@@ -122,6 +122,10 @@ export function useReflexerPosition(
   });
 
   const debt = computed(() => ensureValue(safe.value.debt).toFixed());
+  const debtUsd = computed(() =>
+    times(debt.value, raiInUsd.value).toFixed()
+  );
+
   const minDebt = computed(
     () => safeTypes.value[0]?.totalDebt?.toString() || "699"
   );
@@ -197,6 +201,7 @@ export function useReflexerPosition(
     liquidationPrice,
     liquidationMaxPrice: price,
     debt,
+    debtUsd,
     minDebt,
     debtCeilingReached
   };
