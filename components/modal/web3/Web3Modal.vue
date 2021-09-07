@@ -71,10 +71,11 @@ import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import Input from '~/components/common/input/Input.vue'
 import { useModal } from '~/composables/useModal'
 import { useWeb3 } from '@instadapp/vue-web3'
-import { injected } from '~/connectors'
+import { injected, ledger } from '~/connectors'
 import { SUPPORTED_WALLETS } from '~/constant/wallet'
 import ButtonCTA from '../../common/input/ButtonCTA.vue'
 import ButtonCTAOutlined from '../../common/input/ButtonCTAOutlined.vue'
+import { Network, useNetwork } from '~/composables/useNetwork'
 
 export default defineComponent({
   props: {
@@ -87,6 +88,7 @@ export default defineComponent({
   setup() {
     const { close } = useModal()
     const { activate } = useWeb3()
+    const { activeNetworkId } = useNetwork()
 
     const connect = async (connector) => {
       await activate(connector, console.log)
@@ -99,6 +101,10 @@ export default defineComponent({
       const wallet = SUPPORTED_WALLETS[key]
 
       if (wallet.connector === injected && !isMetamask.value) {
+        return null
+      }
+
+      if(wallet.connector === ledger && activeNetworkId.value !== Network.Mainnet) {
         return null
       }
 
