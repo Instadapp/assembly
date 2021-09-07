@@ -23,6 +23,7 @@
         <button
           class="w-full px-6 py-3 text-left flex items-center h-[80px] border border-[#DBE5F4] rounded-[4px] text-lg text-[#374253] font-semibold hover:bg-background-light"
           v-for="(wallet, key) in wallets"
+          :disabled="connecting"
           :key="key"
           @click="connect(wallet.connector)"
         >
@@ -91,18 +92,24 @@ export default defineComponent({
     const { activate } = useWeb3()
     const { activeNetworkId } = useNetwork()
     const { showError, showAwaiting, closeAll } = useNotification()
+    const connecting = ref(false)
 
     const connect = async (connector) => {
+      connecting.value = true
+
       showAwaiting("Connecting...")
 
       try {
         await activate(connector, undefined, true)
+        connecting.value = false
         close()
         closeAll()
       } catch (error) {
         closeAll()
         showError("", error.message)
       }
+
+      connecting.value = false
 
     }
     const isMetamask = computed(() => process.server ? false : window.ethereum && window.ethereum.isMetaMask)
@@ -127,6 +134,7 @@ export default defineComponent({
       wallets,
       isMetamask,
       injected,
+      connecting,
     }
   },
 })
