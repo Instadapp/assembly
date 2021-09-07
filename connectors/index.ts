@@ -57,7 +57,7 @@ export enum LedgerDerivationPath {
 export const ledger = new LedgerConnector({
   chainId: 1,
   url: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
-  requestTimeoutMs: 60,
+  requestTimeoutMs: 60000,
   pollingInterval: POLLING_INTERVAL,
   baseDerivationPath: "44'/60'/x'/0/0",
   accountsOffset: 0,
