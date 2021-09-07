@@ -23,6 +23,7 @@
         <button
           class="w-full px-6 py-3 text-left flex items-center h-[80px] border border-[#DBE5F4] rounded-[4px] text-lg text-[#374253] font-semibold hover:bg-background-light"
           v-for="(wallet, key) in wallets"
+          :disabled="connecting"
           :key="key"
           @click="connect(wallet.connector)"
         >
@@ -71,10 +72,12 @@ import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import Input from '~/components/common/input/Input.vue'
 import { useModal } from '~/composables/useModal'
 import { useWeb3 } from '@instadapp/vue-web3'
-import { injected } from '~/connectors'
+import { injected, ledger } from '~/connectors'
 import { SUPPORTED_WALLETS } from '~/constant/wallet'
 import ButtonCTA from '../../common/input/ButtonCTA.vue'
 import ButtonCTAOutlined from '../../common/input/ButtonCTAOutlined.vue'
+import { Network, useNetwork } from '~/composables/useNetwork'
+import { useNotification } from '~/composables/useNotification'
 
 export default defineComponent({
   props: {
@@ -87,11 +90,27 @@ export default defineComponent({
   setup() {
     const { close } = useModal()
     const { activate } = useWeb3()
+    const { activeNetworkId } = useNetwork()
+    const { showError, showAwaiting, closeAll } = useNotification()
+    const connecting = ref(false)
 
     const connect = async (connector) => {
-      await activate(connector, console.log)
+      connecting.value = true
 
-      close()
+      showAwaiting("Connecting...")
+
+      try {
+        await activate(connector, undefined, true)
+        connecting.value = false
+        close()
+        closeAll()
+      } catch (error) {
+        closeAll()
+        showError("", error.message)
+      }
+
+      connecting.value = false
+
     }
     const isMetamask = computed(() => process.server ? false : window.ethereum && window.ethereum.isMetaMask)
 
@@ -99,6 +118,10 @@ export default defineComponent({
       const wallet = SUPPORTED_WALLETS[key]
 
       if (wallet.connector === injected && !isMetamask.value) {
+        return null
+      }
+
+      if (wallet.connector === ledger && activeNetworkId.value !== Network.Mainnet) {
         return null
       }
 
@@ -111,6 +134,7 @@ export default defineComponent({
       wallets,
       isMetamask,
       injected,
+      connecting,
     }
   },
 })

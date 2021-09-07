@@ -1,10 +1,11 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { injected, walletconnect, portis, walletlink } from '~/connectors'
+import { injected, walletconnect, portis, walletlink, ledger } from '~/connectors'
 
 import METAMASK_ICON_URL from '~/assets/icons/metamask.svg?inline'
 import WALLETCONNECT_ICON_URL from '~/assets/icons/wallet-connect-icon.svg?inline'
 import PORTIS_ICON_URL from '~/assets/icons/portis.svg?inline'
 import COINBASE_ICON_URL from '~/assets/icons/coinbase.svg?inline'
+import LEDGER_ICON_URL from '~/assets/icons/ledger.svg?inline'
 
 interface WalletInfo {
   connector?: AbstractConnector;
@@ -33,6 +34,11 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
       connector: walletlink,
       name: 'Coinbase Wallet',
       iconURL: COINBASE_ICON_URL,
+    },
+    LEDGER: {
+      connector: ledger,
+      name: 'Ledger',
+      iconURL: LEDGER_ICON_URL,
     },
   }
   
