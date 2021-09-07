@@ -76,6 +76,7 @@ import { SUPPORTED_WALLETS } from '~/constant/wallet'
 import ButtonCTA from '../../common/input/ButtonCTA.vue'
 import ButtonCTAOutlined from '../../common/input/ButtonCTAOutlined.vue'
 import { Network, useNetwork } from '~/composables/useNetwork'
+import { useNotification } from '~/composables/useNotification'
 
 export default defineComponent({
   props: {
@@ -89,11 +90,20 @@ export default defineComponent({
     const { close } = useModal()
     const { activate } = useWeb3()
     const { activeNetworkId } = useNetwork()
+    const { showError, showAwaiting, closeAll } = useNotification()
 
     const connect = async (connector) => {
-      await activate(connector, console.log)
+      showAwaiting("Connecting...")
 
-      close()
+      try {
+        await activate(connector, undefined, true)
+        close()
+        closeAll()
+      } catch (error) {
+        closeAll()
+        showError("", error.message)
+      }
+
     }
     const isMetamask = computed(() => process.server ? false : window.ethereum && window.ethereum.isMetaMask)
 
@@ -104,7 +114,7 @@ export default defineComponent({
         return null
       }
 
-      if(wallet.connector === ledger && activeNetworkId.value !== Network.Mainnet) {
+      if (wallet.connector === ledger && activeNetworkId.value !== Network.Mainnet) {
         return null
       }
 
