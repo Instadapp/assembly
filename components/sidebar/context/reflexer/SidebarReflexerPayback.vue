@@ -136,7 +136,7 @@ export default defineComponent({
     const maxBalance = computed(() => min(balance.value, debt.value).toFixed())
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, maxBalance)
 
-    const { validateAmount, validateLiquidation, validateIsLoggedIn, validateReflexerDebt } = useValidators()
+    const { validateAmount, validateLiquidation, validateIsLoggedIn, validateReflexerPaybackDebt } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
 
@@ -145,7 +145,7 @@ export default defineComponent({
         amount: { message: validateAmount(amountParsed.value, maxBalance.value), show: hasAmountValue },
         liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
-        minDebt: { message: validateReflexerDebt(changedDebt.value), show: hasAmountValue },
+        minDebt: { message: validateReflexerPaybackDebt(changedDebt.value), show: hasAmountValue },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)

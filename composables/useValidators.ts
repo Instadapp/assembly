@@ -114,7 +114,7 @@ export function useValidators() {
   function validateReflexerDebt(
     debtParsed,
     minDebt = reflexerMinDebt.value,
-    vaultId
+    vaultId,
   ) {
     if (lt(debtParsed, minDebt) && gt(debtParsed, "0")) {
       const vaultText = vaultId
@@ -122,7 +122,28 @@ export function useValidators() {
           ? `on vault #${vaultId}`
           : `on new vault`
         : "";
-      return `Minimum debt requirement is ${minDebt} RAI ${vaultText}`;
+
+      return `Minimum debt requirement is ${minDebt} RAI ${vaultText}` ;
+    }
+
+    return null;
+  }
+
+  function validateReflexerPaybackDebt(
+    debtParsed,
+    minDebt = reflexerMinDebt.value,
+    vaultId,
+  ) {
+    console.log(debtParsed, minDebt);
+    
+    if (lt(debtParsed, minDebt) && gt(debtParsed, "0")) {
+      const vaultText = vaultId
+        ? vaultId !== "0"
+          ? `on vault #${vaultId}`
+          : `on new vault`
+        : "";
+
+      return `Minimum debt requirement is ${minDebt} RAI ${vaultText} + accumulated interest, supply additional ${debtParsed} RAI` ;
     }
 
     return null;
@@ -164,5 +185,6 @@ export function useValidators() {
     validateLiquityTroveExists,
     validateReflexerDebtCeiling,
     validateReflexerDebt,
+    validateReflexerPaybackDebt,
   };
 }
