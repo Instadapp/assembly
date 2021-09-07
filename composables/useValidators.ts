@@ -134,7 +134,6 @@ export function useValidators() {
     minDebt = reflexerMinDebt.value,
     vaultId,
   ) {
-    console.log(debtParsed, minDebt);
     
     if (lt(debtParsed, minDebt) && gt(debtParsed, "0")) {
       const vaultText = vaultId
