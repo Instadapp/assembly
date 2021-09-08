@@ -9,11 +9,41 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'The Open Source Dashboard for the Instadapp Protocol' },
       { name: 'format-detection', content: 'telephone=no' },
       { name: "msapplication-TileColor", content: "#ffffff" },
       { name: "msapplication-TileImage", content: "/ms-icon-144x144.png" },
       { name: "theme-color", content: "#ffffff" },
+
+      // FB
+      { hid: 'og_type', property: 'og:type', content: 'website' },
+      { hid: 'og_url', property: 'og:url', content: 'https://assembly.instadapp.io/' },
+      { hid: 'og_title', property: 'og:title', content: 'Assembly' },
+      {
+        hid: 'og_image',
+        property: 'og:image',
+        content: `https://assembly.instadapp.io/social.jpg`,
+      },
+      {
+        hid: 'og_description',
+        property: 'og:description',
+        content: 'The Open Source Dashboard for the Instadapp Protocol',
+      },
+
+      // Twitter
+      { hid: 'twitter_type', property: 'twitter:card', content: 'summary_large_image' },
+      { hid: 'twitter_url', property: 'twitter:url', content: 'https://assembly.instadapp.io/' },
+      { hid: 'twitter_title', property: 'twitter:title', content: 'Assembly' },
+      {
+        hid: 'twitter_image',
+        property: 'twitter:image',
+        content: `https://assembly.instadapp.io/social.jpg`,
+      },
+      {
+        hid: 'twitter_description',
+        property: 'twitter:description',
+        content: 'The Open Source Dashboard for the Instadapp Protocol',
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
