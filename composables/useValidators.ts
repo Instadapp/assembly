@@ -136,13 +136,7 @@ export function useValidators() {
   ) {
     
     if (lt(debtParsed, minDebt) && gt(debtParsed, "0")) {
-      const vaultText = vaultId
-        ? vaultId !== "0"
-          ? `on vault #${vaultId}`
-          : `on new vault`
-        : "";
-
-      return `Minimum debt requirement is ${minDebt} RAI ${vaultText} + accumulated interest, supply additional ${debtParsed} RAI` ;
+      return `Min debt requirement is ${minDebt} RAI. Payback additional ${debtParsed} RAI`;
     }
 
     return null;
