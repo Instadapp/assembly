@@ -136,7 +136,7 @@ export function useValidators() {
   ) {
     
     if (lt(debtParsed, minDebt) && gt(debtParsed, "0")) {
-      return `Min debt requirement is ${minDebt} RAI. Payback additional ${debtParsed} RAI`;
+      return `Minimum debt requirement is ${minDebt} RAI. Payback additional ${debtParsed} RAI`;
     }
 
     return null;
