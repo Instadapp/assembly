@@ -23,7 +23,9 @@
 
     <template #menu="{ close }">
       <dropdown-menu style="width: 240px; max-height: 440px">
-        <div class="flex flex-col overflow-x-hidden overflow-y-auto scrollbar-hover scrollbar">
+        <div
+          class="flex flex-col overflow-x-hidden overflow-y-auto scrollbar-hover scrollbar"
+        >
           <button
             v-for="safe in safes"
             :key="safe.id"
@@ -70,12 +72,18 @@ export default defineComponent({
   },
 
   setup() {
-    const router  = useRouter()
-    const { safeId, safes, selectSafe, isNewSafe } = useReflexerPosition()
+    const router = useRouter()
+    const { safeId, safes, selectSafe, isNewSafe, safeType, safeTypes } = useReflexerPosition()
     const { back } = useSidebar()
 
     function openNewSafe(cb) {
-      router.push({ hash: 'collateral' })
+      if (safeTypes.value.length === 1) {
+        safeType.value = safeTypes.value[0].type;
+        isNewSafe.value = true;
+        router.push({ hash: "supply" });
+      } else {
+        router.push({ hash: "collateral" });
+      }
 
       cb();
     }
