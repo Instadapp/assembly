@@ -85,7 +85,7 @@ import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
-import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
+import { useReflexerPosition } from '~/composables/protocols/useReflexerPosition'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
@@ -104,14 +104,14 @@ export default defineComponent({
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewVault, vaultId, vaultType, fetchPosition } = useMakerdaoPosition()
+    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewSafe, safeId, safeType, fetchPosition } = useReflexerPosition()
 
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
     const balance = computed(() => getBalanceByKey(tokenKey.value))
 
     const changedCollateral = computed(() => plus(collateral.value, amountParsed.value).toFixed())
-    const { liquidationPrice, status } = useMakerdaoPosition(changedCollateral, debt)
+    const { liquidationPrice, status } = useReflexerPosition(changedCollateral, debt)
 
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
 
@@ -136,24 +136,24 @@ export default defineComponent({
 
       const spells = dsa.value.Spell()
 
-      if (isNewVault.value) {
+      if (isNewSafe.value) {
         spells.add({
-          connector: 'maker',
+          connector: 'REFLEXER-A',
           method: 'open',
-          args: [vaultType.value],
+          args: [safeType.value],
         })
 
         spells.add({
-          connector: 'maker',
+          connector: 'REFLEXER-A',
           method: 'deposit',
           args: [0, amount, 0, 0],
         })
       } else {
 
         spells.add({
-          connector: 'maker',
+          connector: 'REFLEXER-A',
           method: 'deposit',
-          args: [vaultId.value, amount, 0, 0],
+          args: [safeId.value, amount, 0, 0],
         })
       }
 
@@ -163,9 +163,7 @@ export default defineComponent({
           from: account.value,
           onReceipt: async receipt => {
             showConfirmedTransaction(receipt.transactionHash);
-            
-            isNewVault.value = false;
-
+            isNewSafe.value = false
             await fetchBalances(true);
             await fetchPosition();
           }

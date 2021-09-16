@@ -1,35 +1,24 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Supply {{ symbol }}</template>
+    <template #title>Borrow {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon label="Token Balance" center>
+    <SidebarSectionValueWithIcon class="mt-6" label="Borrowed" center>
       <template #icon
-        ><IconCurrency :currency="tokenKey" class="w-20 h-20" noHeight
+        ><IconCurrency :currency="raiTokenKey" class="w-20 h-20" noHeight
       /></template>
-      <template #value>{{ formatDecimal(balance) }} {{ symbol }}</template>
+      <template #value>{{ formatNumber(debt) }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
-        Amount to supply
+        Amount to borrow
       </h3>
 
       <input-numeric
         v-model="amount"
-        placeholder="Amount to supply"
+        placeholder="Amount to borrow"
         :error="errors.amount.message"
       >
-        <template v-if="!isMaxAmount" #suffix>
-          <div class="absolute mt-2 top-0 right-0 mr-4">
-            <button
-              type="button"
-              class="text-primary-blue-dark font-semibold text-sm hover:text-primary-blue-hover"
-              @click="toggle"
-            >
-              Max
-            </button>
-          </div>
-        </template>
       </input-numeric>
 
       <SidebarContextHeading class="mt-5">
@@ -42,7 +31,10 @@
         :status="status"
       />
 
-      <SidebarSectionValueWithIcon class="mt-8" label="Liquidation Price (ETH)">
+      <SidebarSectionValueWithIcon
+        class="mt-8"
+        :label="`Liquidation Price (${tokenSymbol})`"
+      >
         <template #value>
           {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }}
           <span class="text-primary-gray"
@@ -58,7 +50,7 @@
           :loading="pending"
           @click="cast"
         >
-          Supply
+          Borrow
         </ButtonCTA>
       </div>
 
@@ -70,8 +62,6 @@
 <script>
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
-import { useBalances } from '~/composables/useBalances'
-import { useNotification } from '~/composables/useNotification'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
 import { useValidators } from '~/composables/useValidators'
@@ -83,46 +73,64 @@ import { useWeb3 } from '@instadapp/vue-web3'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
+import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
-import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
+import ctokens from '~/constant/ctokens'
+import { useReflexerPosition } from '~/composables/protocols/useReflexerPosition'
+import { useBalances } from '~/composables/useBalances'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
+  props: {
+    tokenKey: { type: String, required: true },
+  },
   setup(props) {
     const { close } = useSidebar()
     const { account } = useWeb3()
     const { dsa } = useDSA()
-    const { valInt } = useToken()
-    const { getBalanceByKey, fetchBalances } = useBalances()
-    const { formatUsdMax, formatUsd, formatDecimal } = useFormatting()
-    const { plus, isZero } = useBigNumber()
+    const { getTokenByKey, valInt } = useToken()
+    const { fetchBalances } = useBalances()
+    const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
+    const { isZero, gt, div, plus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
-    const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
-
+    const { showPendingTransaction, showConfirmedTransaction , showWarning } = useNotification()
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewVault, vaultId, vaultType, fetchPosition } = useMakerdaoPosition()
 
-    const symbol = computed(() => token.value?.symbol)
-    const decimals = computed(() => token.value?.decimals)
-    const balance = computed(() => getBalanceByKey(tokenKey.value))
+    const { debt, collateral, liquidation, liquidationMaxPrice, safe, safeId, symbol: tokenSymbol, fetchPosition } = useReflexerPosition({
+      overridePosition: (position) => {
+        return position;
+      },
+    })
 
-    const changedCollateral = computed(() => plus(collateral.value, amountParsed.value).toFixed())
-    const { liquidationPrice, status } = useMakerdaoPosition(changedCollateral, debt)
+    const changedDebt = computed(() => plus(debt.value, amountParsed.value).toFixed())
+    const { liquidationPrice, status } = useReflexerPosition(collateral, changedDebt)
 
-    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
+    const raiTokenKey = ref('rai')
+    const raiToken = computed(() => getTokenByKey(raiTokenKey.value))
+    const symbol = computed(() => raiToken.value?.symbol)
+    const decimals = computed(() => raiToken.value?.decimals)
 
-    const { validateAmount, validateLiquidation, validateIsLoggedIn } = useValidators()
+    const {
+      validateAmount,
+      validateLiquidation,
+      validateIsLoggedIn,
+      validateReflexerDebt,
+      validateReflexerDebtCeiling,
+    } = useValidators()
+
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
 
       return {
-        amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
+        amount: { message: validateAmount(amountParsed.value), show: hasAmountValue },
         liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
+        minDebt: { message: validateReflexerDebt(changedDebt.value), show: hasAmountValue },
+        debtCeiling: { message: validateReflexerDebtCeiling(safe.value.type, amountParsed.value), show: true },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -132,30 +140,15 @@ export default defineComponent({
     async function cast() {
       pending.value = true
 
-      const amount = isMaxAmount.value ? dsa.value.maxValue : valInt(amountParsed.value, decimals.value)
+      const amount = valInt(amountParsed.value, decimals.value)
 
       const spells = dsa.value.Spell()
 
-      if (isNewVault.value) {
-        spells.add({
-          connector: 'maker',
-          method: 'open',
-          args: [vaultType.value],
-        })
-
-        spells.add({
-          connector: 'maker',
-          method: 'deposit',
-          args: [0, amount, 0, 0],
-        })
-      } else {
-
-        spells.add({
-          connector: 'maker',
-          method: 'deposit',
-          args: [vaultId.value, amount, 0, 0],
-        })
-      }
+      spells.add({
+        connector: 'REFLEXER-A',
+        method: 'borrow',
+        args: [safeId.value, amount, 0, 0],
+      })
 
       try {
         const txHash = await dsa.value.cast({
@@ -163,8 +156,6 @@ export default defineComponent({
           from: account.value,
           onReceipt: async receipt => {
             showConfirmedTransaction(receipt.transactionHash);
-            
-            isNewVault.value = false;
 
             await fetchBalances(true);
             await fetchPosition();
@@ -182,9 +173,9 @@ export default defineComponent({
     }
 
     return {
-      tokenKey,
+      raiTokenKey,
       symbol,
-      balance,
+      debt,
       amount,
       status,
       liquidation,
@@ -192,14 +183,13 @@ export default defineComponent({
       liquidationMaxPrice,
       formatUsd,
       formatUsdMax,
-      formatDecimal,
+      formatNumber,
       errors,
       errorMessages,
-      isMaxAmount,
       isValid,
       cast,
       pending,
-      toggle,
+      tokenSymbol,
     }
   },
 })

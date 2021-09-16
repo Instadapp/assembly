@@ -1,13 +1,23 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Supply {{ symbol }}</template>
+    <template #title>Payback {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon label="Token Balance" center>
-      <template #icon
-        ><IconCurrency :currency="tokenKey" class="w-20 h-20" noHeight
-      /></template>
-      <template #value>{{ formatDecimal(balance) }} {{ symbol }}</template>
-    </SidebarSectionValueWithIcon>
+    <div class="mt-6 flex justify-around items-center  w-full">
+      <SidebarSectionValueWithIcon class="" label="Borrowed" center>
+        <template #icon
+          ><IconCurrency :currency="raiTokenKey" class="w-20 h-20" noHeight
+        /></template>
+        <template #value>{{ formatNumber(debt) }} {{ symbol }}</template>
+      </SidebarSectionValueWithIcon>
+
+      <SidebarSectionValueWithIcon class="" label="Token Balance" center>
+        <template #icon
+          ><IconCurrency :currency="raiTokenKey" class="w-20 h-20" noHeight
+        /></template>
+
+        <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
+      </SidebarSectionValueWithIcon>
+    </div>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
@@ -42,7 +52,10 @@
         :status="status"
       />
 
-      <SidebarSectionValueWithIcon class="mt-8" label="Liquidation Price (ETH)">
+      <SidebarSectionValueWithIcon
+        class="mt-8"
+        :label="`Liquidation Price (${tokenSymbol})`"
+      >
         <template #value>
           {{ formatUsdMax(liquidationPrice, liquidationMaxPrice) }}
           <span class="text-primary-gray"
@@ -58,7 +71,7 @@
           :loading="pending"
           @click="cast"
         >
-          Supply
+          Payback
         </ButtonCTA>
       </div>
 
@@ -71,7 +84,6 @@
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
 import { useBalances } from '~/composables/useBalances'
-import { useNotification } from '~/composables/useNotification'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
 import { useValidators } from '~/composables/useValidators'
@@ -83,46 +95,57 @@ import { useWeb3 } from '@instadapp/vue-web3'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
+import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
-import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
+import { useReflexerPosition } from '~/composables/protocols/useReflexerPosition'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
+  props: {
+    tokenKey: { type: String, required: true },
+  },
   setup(props) {
     const { close } = useSidebar()
     const { account } = useWeb3()
     const { dsa } = useDSA()
-    const { valInt } = useToken()
-    const { getBalanceByKey, fetchBalances } = useBalances()
-    const { formatUsdMax, formatUsd, formatDecimal } = useFormatting()
-    const { plus, isZero } = useBigNumber()
+    const { getTokenByKey, valInt } = useToken()
+    const { getBalanceByKey, getBalanceRawByKey, fetchBalances } = useBalances()
+    const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
+    const { isZero, gte, plus, max, minus, min } = useBigNumber()
     const { parseSafeFloat } = useParsing()
     const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
 
+    const { debt, collateral, liquidation, liquidationMaxPrice, safeId, symbol: tokenSymbol, fetchPosition, minDebt } = useReflexerPosition()
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewVault, vaultId, vaultType, fetchPosition } = useMakerdaoPosition()
-
+    const raiTokenKey = ref('rai')
+    const tokenKey = computed(() => props.tokenKey)
+    const token = computed(() => getTokenByKey(tokenKey.value))
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
+
     const balance = computed(() => getBalanceByKey(tokenKey.value))
+    const balanceRaw = computed(() => getBalanceRawByKey(tokenKey.value))
 
-    const changedCollateral = computed(() => plus(collateral.value, amountParsed.value).toFixed())
-    const { liquidationPrice, status } = useMakerdaoPosition(changedCollateral, debt)
+    const changedDebt = computed(() => max(minus(debt.value, amountParsed.value), '0').toFixed())
+    const { liquidationPrice, status } = useReflexerPosition(collateral, changedDebt)
 
-    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
+    const maxBalance = computed(() => min(balance.value, debt.value).toFixed(6))
+    const { toggle, isMaxAmount } = useMaxAmountActive(amount, maxBalance)
 
-    const { validateAmount, validateLiquidation, validateIsLoggedIn } = useValidators()
+    const { validateAmount, validateLiquidation, validateIsLoggedIn, validateReflexerPaybackDebt } = useValidators()
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
 
       return {
-        amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
+
+        amount: { message: validateAmount(amountParsed.value, maxBalance.value), show: hasAmountValue },
         liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
+        minDebt: { message: validateReflexerPaybackDebt(changedDebt.value), show: hasAmountValue },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
@@ -132,30 +155,19 @@ export default defineComponent({
     async function cast() {
       pending.value = true
 
-      const amount = isMaxAmount.value ? dsa.value.maxValue : valInt(amountParsed.value, decimals.value)
+      const amount = isMaxAmount.value
+        ? gte(balance.value, debt.value)
+          ? dsa.value.maxValue
+          : balanceRaw.value
+        : valInt(amountParsed.value, decimals.value)
 
       const spells = dsa.value.Spell()
 
-      if (isNewVault.value) {
-        spells.add({
-          connector: 'maker',
-          method: 'open',
-          args: [vaultType.value],
-        })
-
-        spells.add({
-          connector: 'maker',
-          method: 'deposit',
-          args: [0, amount, 0, 0],
-        })
-      } else {
-
-        spells.add({
-          connector: 'maker',
-          method: 'deposit',
-          args: [vaultId.value, amount, 0, 0],
-        })
-      }
+      spells.add({
+        connector: 'REFLEXER-A',
+        method: 'payback',
+        args: [safeId.value, amount, 0, 0],
+      })
 
       try {
         const txHash = await dsa.value.cast({
@@ -163,8 +175,6 @@ export default defineComponent({
           from: account.value,
           onReceipt: async receipt => {
             showConfirmedTransaction(receipt.transactionHash);
-            
-            isNewVault.value = false;
 
             await fetchBalances(true);
             await fetchPosition();
@@ -173,6 +183,7 @@ export default defineComponent({
 
         showPendingTransaction(txHash)
       } catch (error) {
+        console.log(error);
         showWarning(error.message)
       }
 
@@ -182,8 +193,9 @@ export default defineComponent({
     }
 
     return {
-      tokenKey,
+      raiTokenKey,
       symbol,
+      debt,
       balance,
       amount,
       status,
@@ -192,7 +204,7 @@ export default defineComponent({
       liquidationMaxPrice,
       formatUsd,
       formatUsdMax,
-      formatDecimal,
+      formatNumber,
       errors,
       errorMessages,
       isMaxAmount,
@@ -200,6 +212,8 @@ export default defineComponent({
       cast,
       pending,
       toggle,
+      tokenSymbol,
+      minDebt,
     }
   },
 })

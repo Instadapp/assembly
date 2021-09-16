@@ -1,22 +1,22 @@
 <template>
   <SidebarContextRootContainer>
-    <template #title>Supply {{ symbol }}</template>
+    <template #title>Withdraw {{ symbol }}</template>
 
-    <SidebarSectionValueWithIcon label="Token Balance" center>
+    <SidebarSectionValueWithIcon label="Supplied" center>
       <template #icon
         ><IconCurrency :currency="tokenKey" class="w-20 h-20" noHeight
       /></template>
-      <template #value>{{ formatDecimal(balance) }} {{ symbol }}</template>
+      <template #value>{{ formatNumber(collateral) }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
 
     <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
-        Amount to supply
+        Amount to withdraw
       </h3>
 
       <input-numeric
         v-model="amount"
-        placeholder="Amount to supply"
+        placeholder="Amount to withdraw"
         :error="errors.amount.message"
       >
         <template v-if="!isMaxAmount" #suffix>
@@ -58,7 +58,7 @@
           :loading="pending"
           @click="cast"
         >
-          Supply
+          Withdraw
         </ButtonCTA>
       </div>
 
@@ -70,8 +70,6 @@
 <script>
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import InputNumeric from '~/components/common/input/InputNumeric.vue'
-import { useBalances } from '~/composables/useBalances'
-import { useNotification } from '~/composables/useNotification'
 import { useBigNumber } from '~/composables/useBigNumber'
 import { useFormatting } from '~/composables/useFormatting'
 import { useValidators } from '~/composables/useValidators'
@@ -83,9 +81,11 @@ import { useWeb3 } from '@instadapp/vue-web3'
 import ToggleButton from '~/components/common/input/ToggleButton.vue'
 import { useDSA } from '~/composables/useDSA'
 import ButtonCTA from '~/components/common/input/ButtonCTA.vue'
+import { useNotification } from '~/composables/useNotification'
 import Button from '~/components/Button.vue'
 import { useSidebar } from '~/composables/useSidebar'
-import { useMakerdaoPosition } from '~/composables/protocols/useMakerdaoPosition'
+import { useReflexerPosition } from '~/composables/protocols/useReflexerPosition'
+import { useBalances } from '~/composables/useBalances'
 
 export default defineComponent({
   components: { InputNumeric, ToggleButton, ButtonCTA, Button },
@@ -94,34 +94,36 @@ export default defineComponent({
     const { account } = useWeb3()
     const { dsa } = useDSA()
     const { valInt } = useToken()
-    const { getBalanceByKey, fetchBalances } = useBalances()
-    const { formatUsdMax, formatUsd, formatDecimal } = useFormatting()
-    const { plus, isZero } = useBigNumber()
+    const { fetchBalances } = useBalances()
+    const { formatNumber, formatUsdMax, formatUsd } = useFormatting()
+    const { isZero, gt, plus, max, minus } = useBigNumber()
     const { parseSafeFloat } = useParsing()
     const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
-
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
 
-    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, isNewVault, vaultId, vaultType, fetchPosition } = useMakerdaoPosition()
+    const { tokenKey, token, debt, collateral, liquidation, liquidationMaxPrice, safeId, fetchPosition } = useReflexerPosition()
 
     const symbol = computed(() => token.value?.symbol)
     const decimals = computed(() => token.value?.decimals)
-    const balance = computed(() => getBalanceByKey(tokenKey.value))
 
-    const changedCollateral = computed(() => plus(collateral.value, amountParsed.value).toFixed())
-    const { liquidationPrice, status } = useMakerdaoPosition(changedCollateral, debt)
+    const changedCollateral = computed(() => max(minus(collateral.value, amountParsed.value), '0').toFixed())
+    const { liquidationPrice, status } = useReflexerPosition(changedCollateral, debt)
 
-    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
+    const { toggle, isMaxAmount } = useMaxAmountActive(amount, collateral)
 
     const { validateAmount, validateLiquidation, validateIsLoggedIn } = useValidators()
+
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
 
       return {
-        amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
-        liquidation: { message: validateLiquidation(status.value, liquidation.value), show: hasAmountValue },
+        amount: { message: validateAmount(amountParsed.value, collateral.value), show: hasAmountValue },
+        liquidation: {
+          message: validateLiquidation(status.value, liquidation.value, isZero(debt.value)),
+          show: hasAmountValue,
+        },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
       }
     })
@@ -136,26 +138,11 @@ export default defineComponent({
 
       const spells = dsa.value.Spell()
 
-      if (isNewVault.value) {
-        spells.add({
-          connector: 'maker',
-          method: 'open',
-          args: [vaultType.value],
-        })
-
-        spells.add({
-          connector: 'maker',
-          method: 'deposit',
-          args: [0, amount, 0, 0],
-        })
-      } else {
-
-        spells.add({
-          connector: 'maker',
-          method: 'deposit',
-          args: [vaultId.value, amount, 0, 0],
-        })
-      }
+      spells.add({
+        connector: 'REFLEXER-A',
+        method: 'withdraw',
+        args: [safeId.value, amount, 0, 0],
+      })
 
       try {
         const txHash = await dsa.value.cast({
@@ -163,8 +150,6 @@ export default defineComponent({
           from: account.value,
           onReceipt: async receipt => {
             showConfirmedTransaction(receipt.transactionHash);
-            
-            isNewVault.value = false;
 
             await fetchBalances(true);
             await fetchPosition();
@@ -184,7 +169,8 @@ export default defineComponent({
     return {
       tokenKey,
       symbol,
-      balance,
+      collateral,
+      debt,
       amount,
       status,
       liquidation,
@@ -192,7 +178,7 @@ export default defineComponent({
       liquidationMaxPrice,
       formatUsd,
       formatUsdMax,
-      formatDecimal,
+      formatNumber,
       errors,
       errorMessages,
       isMaxAmount,
