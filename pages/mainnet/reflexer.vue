@@ -175,7 +175,7 @@ export default defineComponent({
     SVGArrowRight,
     SVGPercent,
     DropdownReflexer,
-    ReflexerIcon,
+    ReflexerIcon
   },
   setup() {
     const router = useRouter();
@@ -210,6 +210,9 @@ export default defineComponent({
       minDebt,
       debtCeilingReached,
       raiInUsd,
+      isNewSafe,
+      safeType,
+      safeTypes
     } = useReflexerPosition();
 
     const statusLiquidationRatio = computed(() =>
@@ -222,7 +225,14 @@ export default defineComponent({
       if (gt(debt.value, "0") && lt(debt.value, minDebt.value)) {
         // select("depositAndBorrow");
       } else if (safes.value.length === 0) {
-        router.push({ hash: "collateral" });
+        if (safeTypes.value.length === 0) {
+        } else if (safeTypes.value.length === 1) {
+          safeType.value = safeTypes.value[0].type;
+          isNewSafe.value = true;
+          router.push({ hash: "supply" });
+        } else {
+          router.push({ hash: "collateral" });
+        }
       } else {
         router.push({ hash: "supply" });
       }
@@ -280,7 +290,7 @@ export default defineComponent({
       debtUsd,
       minDebt,
       debtCeilingReached,
-      raiInUsd,
+      raiInUsd
     };
   }
 });
