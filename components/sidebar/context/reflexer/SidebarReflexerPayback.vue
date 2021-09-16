@@ -133,7 +133,7 @@ export default defineComponent({
     const changedDebt = computed(() => max(minus(debt.value, amountParsed.value), '0').toFixed())
     const { liquidationPrice, status } = useReflexerPosition(collateral, changedDebt)
 
-    const maxBalance = computed(() => min(balance.value, debt.value).toFixed())
+    const maxBalance = computed(() => min(balance.value, debt.value).toFixed(6))
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, maxBalance)
 
     const { validateAmount, validateLiquidation, validateIsLoggedIn, validateReflexerPaybackDebt } = useValidators()
