@@ -10,10 +10,7 @@ import { useBigNumber } from "../useBigNumber";
 
 const resolver = addresses.mainnet.resolver.yearnV2;
 
-const wantAddresses = [
-  tokens.mainnet.getTokenByKey("weth").address,
-  tokens.mainnet.getTokenByKey("dai").address
-];
+const wantAddresses = tokens.mainnet.allTokens.map((token) => token.address);
 
 const vaults = ref([]);
 
