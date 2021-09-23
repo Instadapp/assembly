@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex-shrink-0 bg-white rounded-lg relative flex flex-col flex-1 px-4 pt-4 pb-6 dark:bg-dark-500"
+    class="flex-shrink-0 bg-white rounded-lg relative flex flex-col flex-1 px-6 pt-4 pb-6 dark:bg-dark-500"
     style="box-shadow: -1px -3px 10px rgba(12, 25, 91, 0.03), 2px 4px 12px rgba(12, 25, 91, 0.05)"
   >
     <div class="flex items-center h-14">
@@ -23,10 +23,11 @@
           />
         </div>
       </div>
-    </div>
 
-    <div class="grid w-full grid-cols-3 gap-4 mt-4">
-      {{ formatPercent(netAPY) }} net APY
+      <div class="ml-auto text-right">
+        <p class="text-lg font-medium">{{ formatPercent(netAPY) }}</p> 
+        <p class="text-sm font-medium text-[#9FB0C9]">net APY</p>
+      </div>
     </div>
 
     <hr class="mt-4" />

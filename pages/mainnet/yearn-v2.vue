@@ -19,7 +19,7 @@
           <div
             class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
           >
-            <CompoundIcon class="w-8 h-8 text-white" />
+            <YearnIcon class="w-8 h-8 text-white" />
           </div>
         </div>
         <h1 class="ml-4 text-primary-black text-2xl font-semibold">Yearn</h1>
@@ -68,14 +68,14 @@ import { useYearnV2Position } from "~/composables/protocols/useYearnV2Position";
 import { useFormatting } from "~/composables/useFormatting";
 import { useSearchFilter } from "~/composables/useSearchFilter";
 import CardYearn from "~/components/protocols/yearn-v2/CardYearn.vue";
-import CompoundIcon from "~/assets/icons/compound.svg?inline";
+import YearnIcon from "~/assets/icons/yearn.svg?inline";
 import ButtonCTAOutlined from "~/components/common/input/ButtonCTAOutlined.vue";
 
 export default defineComponent({
   components: {
     BackIcon,
     CardYearn,
-    CompoundIcon,
+    YearnIcon,
     ButtonCTAOutlined,
   },
   setup() {
@@ -86,7 +86,7 @@ export default defineComponent({
     const { filtered: filteredVaults, search } = useSearchFilter(
       vaults,
       "key",
-      "type"
+      "display_name"
     );
 
     return {
