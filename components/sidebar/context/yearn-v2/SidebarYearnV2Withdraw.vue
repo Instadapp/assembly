@@ -9,7 +9,7 @@
       <template #value>{{ formatNumber(balance) }} {{ symbol }}</template>
     </SidebarSectionValueWithIcon>
 
-    <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8">
+    <div class="bg-[#C5CCE1] bg-opacity-[0.15] mt-10 p-8  h-full">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
         Amount to withdraw
       </h3>

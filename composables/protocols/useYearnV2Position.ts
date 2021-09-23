@@ -22,7 +22,6 @@ export function useYearnV2Position() {
   const { onEvent } = useEventBus();
 
   const fetchPosition = async () => {
-    vaults.value = [];
     const availableVaults = await $axios
       .$get("https://api.yearn.finance/v1/chains/1/vaults/all")
       .then(vs => vs.filter(v => v.type === "v2"));
