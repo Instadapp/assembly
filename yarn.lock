@@ -5919,10 +5919,10 @@ drbg.js@^1.0.1:
     create-hash "^1.1.2"
     create-hmac "^1.1.4"
 
-dsa-connect@^0.4.7-beta.0:
-  version "0.4.7-beta.0"
-  resolved "https://registry.yarnpkg.com/dsa-connect/-/dsa-connect-0.4.7-beta.0.tgz#40b73e2fdec353c175d2bb3f813a426865940ebb"
-  integrity sha512-pODE4W5KxIx07wmGoV/w1S4hNw6g3GnoNcrDG3ExDRKogIISpqvVfxK+HWkcospmKf9eYoAW1QY0/x32tOxJww==
+dsa-connect@^0.4.8-beta.1:
+  version "0.4.8-beta.1"
+  resolved "https://registry.yarnpkg.com/dsa-connect/-/dsa-connect-0.4.8-beta.1.tgz#6dc36eb2b2d5ee16050277b32947b416e401f6fd"
+  integrity sha512-q39XBUfYXvXlf/WygLCVQVxaIv3o+2mYiMnPuFhwkxkEL5v5YiTB1QYucTOn+CVrjr5yjTfA1zrlx2XGsP2F8Q==
 
 duplexer3@^0.1.4:
   version "0.1.4"
