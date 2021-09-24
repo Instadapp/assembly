@@ -48,6 +48,7 @@
           <card-yearn
             :vault="item.address"
             :token-key="item.token.display_name.toLowerCase()"
+            :token-icon="item.token.icon"
             :supply="item.position.supply"
             :supply-usd="item.position.supplyUsd"
             :type="item.type"

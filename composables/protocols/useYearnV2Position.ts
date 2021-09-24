@@ -10,7 +10,9 @@ import { useBigNumber } from "../useBigNumber";
 
 const resolver = addresses.mainnet.resolver.yearnV2;
 
-const wantAddresses = tokens.mainnet.allTokens.map((token) => token.address);
+const allTokens = tokens.mainnet.allTokens.map(token => token.address);
+
+const wantAddresses = allTokens;
 
 const vaults = ref([]);
 
@@ -39,7 +41,16 @@ export function useYearnV2Position() {
       resolver
     );
 
-    const tokensArr = wantAddresses; // tokens.mainnet.allTokens.map(a => a.address);
+    // const tokensArr = wantAddresses;
+    
+    // allow user to add custom tokens
+    const tokensArr = [
+      ...new Set(
+        availableVaults.filter(v => v.type === "v2").map(v => v.token.address)
+        .filter(a => allTokens.includes(a))
+      )
+    ];
+    
 
     const rawData = await resolverInstance.methods
       .getPositionsForLatest(activeAccount.value.address, tokensArr)
@@ -65,8 +76,8 @@ export function useYearnV2Position() {
         const v = availableVaults.find(v => v.address === vault);
         if (v) {
           const supply = new BigNumber(balanceOf)
-          .dividedBy(10 ** decimals)
-          .toFixed();
+            .dividedBy(10 ** decimals)
+            .toFixed();
 
           newVaults.push({
             ...v,
@@ -85,7 +96,7 @@ export function useYearnV2Position() {
               isDeprecated,
               emergencyShutdown,
               supply,
-              supplyUsd: times(supply, v.tvl.price).toFixed(),
+              supplyUsd: times(supply, v.tvl.price).toFixed()
             }
           });
         }

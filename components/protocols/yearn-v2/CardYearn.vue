@@ -5,7 +5,13 @@
   >
     <div class="flex items-center h-14">
       <div class="flex mr-4 -space-x-3 overflow-hidden">
-        <IconCurrency :currency="tokenKey" class="w-12 h-12" no-height />
+        <div
+          v-if="tokenIcon"
+          class="inline-flex items-center justify-center dark:opacity-90 w-12 h-12"
+        >
+          <img class="w-full h-full object-cover" :src="tokenIcon" />
+        </div>
+        <IconCurrency v-else :currency="tokenKey" class="w-12 h-12" no-height />
       </div>
 
       <div class="flex flex-col flex-grow">
@@ -25,7 +31,7 @@
       </div>
 
       <div class="ml-auto text-right">
-        <p class="text-lg font-medium">{{ formatPercent(netAPY) }}</p> 
+        <p class="text-lg font-medium">{{ formatPercent(netAPY) }}</p>
         <p class="text-sm font-medium text-[#9FB0C9]">net APY</p>
       </div>
     </div>
@@ -57,6 +63,7 @@ import { useToken } from "~/composables/useToken";
 export default defineComponent({
   props: {
     tokenKey: { type: String, required: true },
+    tokenIcon: { type: String, required: false },
     vault: { type: String, default: null },
     supply: { type: String, required: true },
     supplyUsd: { type: String, required: true },
