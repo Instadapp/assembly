@@ -60,6 +60,7 @@ export function useLiquityPosition(
 
   const collateralToken = computed(() => getTokenByKey("eth"));
   const debtToken = computed(() => getTokenByKey("lusd"));
+  const poolToken = computed(() => getTokenByKey('lusd'))
   const stakingToken = computed(() => getTokenByKey("lqty"));
 
   const collateral = computed(() => trove.value.collateral);
@@ -74,6 +75,9 @@ export function useLiquityPosition(
     times(collateral.value, priceInUsd.value).toFixed()
   );
   const stabilityAmount = computed(() => trove.value.stabilityAmount);
+  const stabilityEthGain = computed(() => trove.value.stabilityEthGain)
+  const stabilityLqtyGain = computed(() => trove.value.stabilityLqtyGain)
+  
   const debtUsd = computed(() => times(debt.value, "1").toFixed());
   const stabilityAmountUsd = computed(() =>
     times(stabilityAmount.value, "1").toFixed()
@@ -224,6 +228,10 @@ export function useLiquityPosition(
     priceInUsd,
     debt,
     debtInWei,
+    poolToken,
+    stabilityAmount,
+    stabilityEthGain,
+    stabilityLqtyGain,
   };
 }
 

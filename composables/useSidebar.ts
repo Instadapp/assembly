@@ -34,6 +34,8 @@ import SidebarLiquityTroveSupply from '~/components/sidebar/context/liquity/Side
 import SidebarLiquityTroveWithdraw from '~/components/sidebar/context/liquity/SidebarLiquityTroveWithdraw.vue'
 import SidebarLiquityTroveBorrow from '~/components/sidebar/context/liquity/SidebarLiquityTroveBorrow.vue'
 import SidebarLiquityTrovePayback from '~/components/sidebar/context/liquity/SidebarLiquityTrovePayback.vue'
+import SidebarLiquityPoolSupply from '~/components/sidebar/context/liquity/SidebarLiquityPoolSupply.vue'
+import SidebarLiquityPoolWithdraw from '~/components/sidebar/context/liquity/SidebarLiquityPoolWithdraw.vue'
 
 import SidebarReflexerCollateral from '~/components/sidebar/context/reflexer/SidebarReflexerCollateral.vue'
 import SidebarReflexerSupply from '~/components/sidebar/context/reflexer/SidebarReflexerSupply.vue'
@@ -75,6 +77,8 @@ const sidebars = {
   '/mainnet/liquity#trove-withdraw': { component: SidebarLiquityTroveWithdraw },
   '/mainnet/liquity#trove-borrow': { component: SidebarLiquityTroveBorrow },
   '/mainnet/liquity#trove-payback': { component: SidebarLiquityTrovePayback },
+  '/mainnet/liquity#pool-supply': { component: SidebarLiquityPoolSupply },
+  '/mainnet/liquity#pool-withdraw': { component: SidebarLiquityPoolWithdraw },
 
   "/mainnet/reflexer": { component: null },
   '/mainnet/reflexer#collateral': { component: SidebarReflexerCollateral },
