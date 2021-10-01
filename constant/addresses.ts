@@ -10,7 +10,8 @@ const addresses = {
       maker: "0x84addce4fac0b6ee4b0cd132120d6d4b700e35c0",
       unipool: "0x22bddA39D14eD0aafeee36B6e784602fdDE64723",
       liquity: "0xDAf2A39503463B0F41f899EDD82213b3c96b6Cf8",
-      reflexer: "0x016ca8d0993d1a7073b01802a2e22fd0df7e633a"
+      reflexer: "0x016ca8d0993d1a7073b01802a2e22fd0df7e633a",
+      yearnV2: "0x3f6DCA8a0b7d04737BC3B2aEAbeB1C09431581f0"
     }
   },
 
