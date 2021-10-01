@@ -1,15 +1,25 @@
 import { useWeb3 } from "@instadapp/vue-web3";
-import { injected, gnosisSafe } from "../connectors";
+import { injected, gnosisSafe, instadapp } from "../connectors";
 import { onMounted, ref, watch, watchEffect } from "@nuxtjs/composition-api";
 import { useSafeAppConnection } from "./useSafeAppConnection";
+import { useInstadappConnection } from "./useInstadappConnection";
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3();
   const { tried: triedToConnectToSafe } = useSafeAppConnection(gnosisSafe);
+  const { tried: triedToConnectToInstadapp } = useInstadappConnection(
+    instadapp
+  );
+
   const tried = ref(false);
 
   watchEffect(() => {
-    if (triedToConnectToSafe.value && !active.value && !tried.value) {
+    if (
+      triedToConnectToSafe.value &&
+      triedToConnectToInstadapp.value &&
+      !active.value &&
+      !tried.value
+    ) {
       injected.isAuthorized().then((isAuthorized: boolean) => {
         if (isAuthorized) {
           activate(injected, undefined, true).catch(() => {

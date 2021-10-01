@@ -10,6 +10,7 @@ import INSTADAPP_LOGO_URL from "~/assets/logo/instadapp-logo-icon.svg?inline";
 
 import Web3 from "web3";
 import { SafeAppConnector } from "@gnosis.pm/safe-apps-web3-react/dist/connector";
+import { InstadappConnector } from "./instadapp";
 
 setWeb3LibraryCallback(provider => new Web3(provider));
 
@@ -46,6 +47,15 @@ if (process.client) {
 }
 
 export { gnosisSafe };
+
+let instadapp = null;
+
+if (process.client) {
+  instadapp = new InstadappConnector();
+}
+
+export { instadapp };
+
 
 const POLLING_INTERVAL = 12000;
 
