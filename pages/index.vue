@@ -89,7 +89,7 @@ const appsPerNetwork = {
       icon: YearnIcon,
       name: "Yearn",
       url: "/mainnet/yearn-v2",
-      description: ""
+      description: "Automated Yield Strategies"
     }
   ],
   polygon: [
