@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative overflow-hidden font-sans antialiased text-primary-black"
+    class="relative overflow-hidden font-sans antialiased text-primary-black bg-white"
   >
     <div class="min-h-screen flex flex-col">
       <Navbar />
