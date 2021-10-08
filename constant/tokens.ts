@@ -59,6 +59,15 @@ export default {
     { key: 'wmatic', type: 'token', symbol: 'WMATIC', name: 'Wrapped MATIC', address: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', decimals: 18, isStableCoin: false},
     { key: 'wbtc', type: 'token', symbol: 'WBTC', name: 'Wrapped BTC', address: '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6', decimals: 8, isStableCoin: false},
     { key: 'aave', type: 'token', symbol: 'AAVE', name: 'Aave Token', address: '0xD6DF932A45C0f255f85145f286eA0b292B21C90B', decimals: 18, isStableCoin: false },
-  ])
+  ]),
 
+  arbitrum: createTokenUtils([
+    { key: 'eth', type: 'token', symbol: 'ETH', name: 'Ethereum', address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', decimals: 18, isStableCoin: false },
+    { key: 'weth', type: 'token', symbol: 'WETH', name: 'Wrapped Ethereum', address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', decimals: 18, isStableCoin: false },
+    { key: 'usdc', type: 'token', symbol: 'USDC', name: 'USD Coin', address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', decimals: 6, isStableCoin: true },
+    { key: 'usdt', type: 'token', symbol: 'USDT', name: 'Tether USD Coin', address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', decimals: 6, isStableCoin: true },
+    { key: 'link', type: 'token', symbol: 'LINK', name: 'ChainLink Token', address: '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4', decimals: 18, isStableCoin: false },
+    { key: 'uni', type: 'token', symbol: 'UNI', name: 'Uniswap Token', address: '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0', decimals: 18, isStableCoin: false },
+    { key: 'wbtc', type: 'token', symbol: 'WBTC', name: 'Wrapped BTC', address: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f', decimals: 8, isStableCoin: false },
+  ])
 }

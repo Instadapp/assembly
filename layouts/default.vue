@@ -145,14 +145,14 @@ export default defineComponent({
           return;
         }
 
-        if (route.value.path.includes(['mainnet', 'polygon']) && route.value.path.includes(activeNetwork.value.id)) {
+        if (route.value.path.includes(['mainnet', 'polygon', "arbitrum"]) && route.value.path.includes(activeNetwork.value.id)) {
           redirect('/')
         }
       }, { immediate: true })
 
     watch(chainId, (val) => {
       if (val) {
-        if ([1, 137].includes(val)) {
+        if ([1, 137, 42161].includes(val)) {
           checkForNetworkMismatch()
         } else {
           showNetworksMismatchDialog();
