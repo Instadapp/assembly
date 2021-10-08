@@ -107,6 +107,15 @@ const appsPerNetwork = {
       url: "/1inch",
       description: "DEX Aggregator"
     }
+  ],
+  arbitrum: [
+    {
+      id: "1inch",
+      icon: OneInchIcon,
+      name: "1inch",
+      url: "/1inch",
+      description: "DEX Aggregator"
+    }
   ]
 };
 

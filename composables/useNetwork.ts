@@ -2,6 +2,8 @@ import { computed, watchEffect, ref, watch } from "@nuxtjs/composition-api";
 
 import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
+import ArbitrumSVG from "~/assets/icons/arbitrum.svg?inline";
+
 import { useModal } from "./useModal";
 import { useNotification } from "./useNotification";
 import { useWeb3 } from "@instadapp/vue-web3";
@@ -9,12 +11,14 @@ import { useCookies } from "./useCookies";
 
 export enum Network {
   Mainnet = "mainnet",
-  Polygon = "polygon"
+  Polygon = "polygon",
+  Arbitrum = "arbitrum"
 }
 
 export const networks = [
   { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
-  { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG }
+  { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG },
+  { id: "arbitrum", chainId: 42161, name: "Arbitrum", icon: ArbitrumSVG }
 ];
 
 export const activeNetworkId = ref<Network>();
@@ -93,10 +97,50 @@ export function useNetwork() {
     }
   }
 
+  async function switchToArbitrum() {
+    if (window.ethereum) {
+      const chainId = "0xa4b1";
+
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId }]
+        });
+      } catch (switchError) {
+        // 4902 error code indicates that the chain has not been added to MetaMask.
+        if (switchError.code === 4902) {
+          try {
+            const chainData = {
+              chainId,
+              chainName: 'Arbitrum One',
+              nativeCurrency: {
+                name: 'Ethereum',
+                symbol: 'ETH',
+                decimals: 18,
+              },
+              rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+              blockExplorerUrls: ['https://arbiscan.io'],
+            };
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [chainData, account.value]
+            });
+          } catch (addError) {
+            return Promise.reject(addError);
+          }
+        } else {
+          return Promise.reject(switchError);
+        }
+      }
+    }
+  }
+
   async function switchNetwork() {
     try {
       if (activeNetworkId.value === "mainnet") {
         await switchToMainnet();
+      } else if (activeNetworkId.value === "arbitrum") {
+        await switchToArbitrum();
       } else {
         await switchToPolygon();
       }

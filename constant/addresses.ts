@@ -29,7 +29,21 @@ const addresses = {
       },
       weth: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
     }
-  }
+  },
+  arbitrum: {
+    core: {
+      instaIndex: '0x1eE00C305C51Ff3bE60162456A9B533C07cD9288',
+      instaConnectorsV2: '0x67fCE99Dd6d8d659eea2a1ac1b8881c57eb6592B'
+    },
+    resolver: {
+      accounts: '0xdF19Da523DA64bBE82eE0E4DFf00d676A8386474',
+      balance: '0x29572b16D306acd7ca0CBCA0F08C3EFF131fFDA5',
+      uniswap_v3: '0x04F8a41be023f839E709eeEaA0725FD766139A4d',
+      // uniswap_v3_staker: '0x1a96af80ED8753a77E23074De78480675049A3c9',
+      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
+    },
+    uniswapV3Staker: '0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d',
+  },
 };
 
 export default addresses;

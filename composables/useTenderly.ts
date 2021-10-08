@@ -9,9 +9,10 @@ const forkId = ref(null);
 export function useTenderly() {
   const { $config } = useContext();
   const { activate, deactivate, connector, library } = useWeb3();
+  const { activeNetworkId } = useNetwork();
   const { accounts, refreshAccounts } = useDSA();
   const canSimulate = computed(
-    () => $config.TENDERLY_FORK_PATH && $config.TENDERLY_KEY
+    () => activeNetworkId.value !== "arbitrum" && $config.TENDERLY_FORK_PATH && $config.TENDERLY_KEY
   );
   const loading = ref(false);
 
