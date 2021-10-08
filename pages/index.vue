@@ -38,6 +38,7 @@ import MakerIcon from "~/assets/icons/makerdao.svg?inline";
 import OneInchIcon from "~/assets/icons/1inch.svg?inline";
 import LiquityIcon from "~/assets/icons/liquity.svg?inline";
 import ReflexerIcon from "~/assets/icons/reflexer.svg?inline";
+import YearnIcon from "~/assets/icons/yearn.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [
@@ -82,6 +83,13 @@ const appsPerNetwork = {
       name: "Reflexer Finance",
       url: "/mainnet/reflexer",
       description: "Collateralized RAI Debt"
+    },
+    {
+      id: "yearn-v2",
+      icon: YearnIcon,
+      name: "Yearn",
+      url: "/mainnet/yearn-v2",
+      description: "Automated Yield Strategies"
     }
   ],
   polygon: [

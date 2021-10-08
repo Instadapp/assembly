@@ -35,7 +35,7 @@
 
       <SidebarSectionStatus
         class="mt-8"
-        :liquidation="maxLiquidation"
+        :liquidation="liquidation"
         :status="status"
       />
 
@@ -212,6 +212,7 @@ export default defineComponent({
       formatUsdMax,
       formatUsd,
       maxLiquidation,
+      liquidation,
       liquidationPrice,
       liquidationMaxPrice,
       errorMessages,

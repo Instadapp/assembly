@@ -43,6 +43,9 @@ import SidebarReflexerWithdraw from '~/components/sidebar/context/reflexer/Sideb
 import SidebarReflexerBorrow from '~/components/sidebar/context/reflexer/SidebarReflexerBorrow.vue'
 import SidebarReflexerPayback from '~/components/sidebar/context/reflexer/SidebarReflexerPayback.vue'
 
+import SidebarYearnV2Supply from "~/components/sidebar/context/yearn-v2/SidebarYearnV2Supply.vue";
+import SidebarYearnV2Withdraw from '~/components/sidebar/context/yearn-v2/SidebarYearnV2Withdraw.vue'
+
 import SidebarStrategySelection from '~/components/sidebar/context/strategy/SidebarStrategySelection.vue'
 import SidebarStrategy from '~/components/sidebar/context/strategy/SidebarStrategy.vue'
 
@@ -86,6 +89,11 @@ const sidebars = {
   "/mainnet/reflexer#withdraw": { component: SidebarReflexerWithdraw },
   "/mainnet/reflexer#borrow": { component: SidebarReflexerBorrow },
   "/mainnet/reflexer#payback": { component: SidebarReflexerPayback },
+
+
+  "/mainnet/yearn-v2": { component: null },
+  "/mainnet/yearn-v2#supply": { component: SidebarYearnV2Supply },
+  "/mainnet/yearn-v2#withdraw": { component: SidebarYearnV2Withdraw },
 };
 
 const sidebar = ref(null);
