@@ -3,7 +3,7 @@
     <template #title>Supply to Stability Pool</template>
 
     <div class="flex justify-around items-center w-full">
-      <SidebarSectionValueWithIcon class="" label="Debt" center>
+      <SidebarSectionValueWithIcon class="" label="Stability Pool Balance" center>
         <template #icon
           ><IconCurrency :currency="poolToken.key" class="w-16 h-16" noHeight
         /></template>
