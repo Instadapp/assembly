@@ -66,7 +66,7 @@ export function useBprotocolPosition (){
     }
     const userEthInUsd = new BigNumber(ethUserBalance.value).multipliedBy(ethPrice.value)
     const ethInSp = userEthInUsd.dividedBy(userBammInUsd.value)
-    return ethInSp.isGreaterThan(0.0001)
+    return ethInSp.isGreaterThan(0.001)
   })
 
   function lusdWithdrawAmountToBamm (lusd) {
