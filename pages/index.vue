@@ -39,6 +39,7 @@ import OneInchIcon from "~/assets/icons/1inch.svg?inline";
 import LiquityIcon from "~/assets/icons/liquity.svg?inline";
 import BprotocolIcon from "~/assets/icons/b-protocol.svg?inline";
 import ReflexerIcon from "~/assets/icons/reflexer.svg?inline";
+import YearnIcon from "~/assets/icons/yearn.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [
@@ -90,6 +91,13 @@ const appsPerNetwork = {
       name: "Reflexer Finance",
       url: "/mainnet/reflexer",
       description: "Collateralized RAI Debt"
+    },
+    {
+      id: "yearn-v2",
+      icon: YearnIcon,
+      name: "Yearn",
+      url: "/mainnet/yearn-v2",
+      description: "Automated Yield Strategies"
     }
   ],
   polygon: [
@@ -100,6 +108,15 @@ const appsPerNetwork = {
       url: "/aave-v2",
       description: "Lend and borrow straight from your Gnosis Safe"
     },
+    {
+      id: "1inch",
+      icon: OneInchIcon,
+      name: "1inch",
+      url: "/1inch",
+      description: "DEX Aggregator"
+    }
+  ],
+  arbitrum: [
     {
       id: "1inch",
       icon: OneInchIcon,

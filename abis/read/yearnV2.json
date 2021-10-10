@@ -1,0 +1,400 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "contract YearnV2Interface",
+                "name": "vault",
+                "type": "address"
+            }
+        ],
+        "name": "getAvailableDepositLimit",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "contract YearnV2Interface",
+                "name": "vault",
+                "type": "address"
+            }
+        ],
+        "name": "getBalance",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "contract YearnV2Interface",
+                "name": "vault",
+                "type": "address"
+            }
+        ],
+        "name": "getExpectedShareValue",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "address[]",
+                "name": "wantAddresses",
+                "type": "address[]"
+            }
+        ],
+        "name": "getPositions",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "vaultLatestVersion",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "vault",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "want",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "pricePerShare",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "availableDepositLimit",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "totalAssets",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "balanceOf",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "wantBalanceOf",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "expectedShareValue",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "decimals",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isDeprecated",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "emergencyShutdown",
+                        "type": "bool"
+                    }
+                ],
+                "internalType": "struct Helpers.VaultData[]",
+                "name": "",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "address[]",
+                "name": "wantAddresses",
+                "type": "address[]"
+            }
+        ],
+        "name": "getPositionsForLatest",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "vaultLatestVersion",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "vault",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "want",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "pricePerShare",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "availableDepositLimit",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "totalAssets",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "balanceOf",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "wantBalanceOf",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "expectedShareValue",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "decimals",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isDeprecated",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "emergencyShutdown",
+                        "type": "bool"
+                    }
+                ],
+                "internalType": "struct Helpers.VaultData[]",
+                "name": "",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract YearnV2Interface",
+                "name": "vault",
+                "type": "address"
+            }
+        ],
+        "name": "getPricePerShare",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getRegistry",
+        "outputs": [
+            {
+                "internalType": "contract YearnRegistryInterface",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract YearnV2Interface",
+                "name": "vault",
+                "type": "address"
+            }
+        ],
+        "name": "getTotalAssets",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract YearnV2Interface",
+                "name": "vault",
+                "type": "address"
+            }
+        ],
+        "name": "isEmergencyShutdown",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "want",
+                "type": "address"
+            }
+        ],
+        "name": "isWantSupported",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "want",
+                "type": "address"
+            }
+        ],
+        "name": "latestForWant",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "want",
+                "type": "address"
+            }
+        ],
+        "name": "listVaultsForWant",
+        "outputs": [
+            {
+                "internalType": "address[]",
+                "name": "vaultAddresses",
+                "type": "address[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "name",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "want",
+                "type": "address"
+            }
+        ],
+        "name": "numVaultsForWant",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "numVaults",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

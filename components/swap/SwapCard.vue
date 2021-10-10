@@ -347,7 +347,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, reactive, ref, watch } from '@nuxtjs/composition-api'
+import { computed, defineComponent, onMounted, reactive, ref, watch } from '@nuxtjs/composition-api'
 import { useNetwork } from '~/composables/useNetwork'
 import tokens from '~/constant/tokens'
 import Button from '../Button.vue'
@@ -402,6 +402,10 @@ export default defineComponent({
       amountUSD: computed(() => (prices[activeNetworkId.value][token1.address] * token1.amount) || '0'),
       balance: computed(() => getBalanceByKey(token1.symbol)),
       decimals: 18,
+    })
+
+    onMounted(() => {
+      selectToken1(allTokens.value[1])
     })
 
     const slippagePerc = computed(() => {

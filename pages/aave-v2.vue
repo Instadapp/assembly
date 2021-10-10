@@ -131,7 +131,7 @@
 
                 <div class="ml-2"><Info text="Debt/Collateral ratio" /></div>
               </div>
-              <span>Max - {{ formatPercent(position.maxLiquidation) }}</span>
+              <span>Max - {{ formatPercent(maxLiquidation) }}</span>
             </div>
           </div>
         </div>
@@ -207,7 +207,8 @@ export default defineComponent({
       totalSupply,
       totalBorrow,
       status,
-      liquidation
+      liquidation,
+      maxLiquidation,
     } = useAaveV2Position();
 
     const { div } = useBigNumber();
@@ -236,7 +237,8 @@ export default defineComponent({
       formatUsd,
       formatPercent,
       color,
-      text
+      text,
+      maxLiquidation,
     };
   }
 });
