@@ -3,12 +3,22 @@
     <template #title>Supply to Stability Pool</template>
 
     <div class="flex justify-around items-center w-full">
-      <SidebarSectionValueWithIcon class="" label="USD balance" center>
+      <SidebarSectionValueWithIcon class="" label="Stability Pool Balance" center>
         <template #icon
           ><IconCurrency :currency="poolToken.key" class="w-16 h-16" noHeight
         /></template>
         <template #value
           >{{ formatDecimal(changedBammDeposit, 2) }} USD</template
+        >
+      </SidebarSectionValueWithIcon>
+
+      <SidebarSectionValueWithIcon class="" label="Wallet Balance" center>
+        <template #icon
+          ><IconCurrency :currency="poolToken.key" class="w-16 h-16" noHeight
+        /></template>
+
+        <template #value
+          >{{ formatDecimal(changedBalance) }} {{ poolToken.symbol }}</template
         >
       </SidebarSectionValueWithIcon>
     </div>
@@ -43,7 +53,7 @@
             <div
               class="flex items-center font-medium leading-none whitespace-no-wrap text-14"
             >
-              <span>Balance</span>
+              <span>Stability Pool Balance</span>
             </div>
           </div>
         </div>
@@ -122,6 +132,7 @@ export default defineComponent({
     const { valInt } = useToken()
     const { close } = useSidebar()
     const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
+    const changedBalance = computed(() => max(minus(balance.value, amountParsed.value), '0').toFixed())
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
@@ -209,7 +220,8 @@ export default defineComponent({
       toggle,
       newEthBalance,
       newLusdBalance,
-      ethUserBalance
+      ethUserBalance,
+      changedBalance
     }
   },
 })

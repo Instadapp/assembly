@@ -45,6 +45,7 @@
           price-in-usd="1"
           :token="bammToken"
           :lusdUserBalance="lusdUserBalance"
+          :ethIsGreaterThanOnePerMile="ethIsGreaterThanOnePerMile"
         />
 
       </div>
@@ -91,7 +92,8 @@ export default defineComponent({
       userBammInLusd,
       bammToken,
       userBammInUsd,
-      totalBammSupplyInUsd
+      totalBammSupplyInUsd,
+      ethIsGreaterThanOnePerMile
     } = useBprotocolPosition()
 
     return {
@@ -106,7 +108,8 @@ export default defineComponent({
       userBammInLusd,
       bammToken,
       userBammInUsd,
-      totalBammSupplyInUsd
+      totalBammSupplyInUsd,
+      ethIsGreaterThanOnePerMile
     };
   }
 });

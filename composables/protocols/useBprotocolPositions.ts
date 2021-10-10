@@ -60,6 +60,15 @@ export function useBprotocolPosition (){
     }
     return fromWei((new BigNumber(userData.value.bammUserBalance).dividedBy(userData.value.bammTotalSupply)).multipliedBy(userData.value.lusdTotal))
   });
+  const ethIsGreaterThanOnePerMile = computed(()=> {
+    if(userBammInUsd.value === "0"){
+      return false;
+    }
+    const userEthInUsd = new BigNumber(ethUserBalance.value).multipliedBy(ethPrice.value)
+    const ethInSp = userEthInUsd.dividedBy(userBammInUsd.value)
+    debugger
+    return ethInSp.isGreaterThan(0.0001)
+  })
 
   function lusdWithdrawAmountToBamm (lusd) {
     const bammWithdrawRatio = new BigNumber(lusd).dividedBy(userBammInUsd.value)
@@ -129,7 +138,8 @@ export function useBprotocolPosition (){
     absolutlWithdrawAmountInEth,
     absolutlWithdrawAmountInLusd,
     userBammInUsd,
-    totalBammSupplyInUsd
+    totalBammSupplyInUsd,
+    ethIsGreaterThanOnePerMile
   }
 }
 
@@ -150,6 +160,4 @@ async function getUserInfo (user, web3){
     console.error(e);
     return {};
   }
-
-
 }

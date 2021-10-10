@@ -21,8 +21,8 @@
         </div>
 
         <h2 class="mt-4 font-semibold text-19">{{ app.name }}</h2>
-        <p class="mt-2 text-14 font-regular text-grey-dark opacity-90">
-          {{ app.description }}
+        <p class="mt-2 text-14 font-regular text-grey-dark opacity-90"
+        v-html="app.description">
         </p>
       </nuxt-link>
     </div>
@@ -83,7 +83,7 @@ const appsPerNetwork = {
       icon: BprotocolIcon,
       name: "B.Protocol",
       url: "/mainnet/bprotocol",
-      description: "Stake LUSD"
+      description: "Automated Rebalancing <br/>for Liquity Stability Pool"
     },
     {
       id: "reflexer",

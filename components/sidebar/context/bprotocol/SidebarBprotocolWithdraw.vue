@@ -3,12 +3,23 @@
     <template #title>Withdraw from Stability Pool</template>
 
     <div class="flex justify-around items-center w-full">
-      <SidebarSectionValueWithIcon class="" label="USD balance" center>
+      <SidebarSectionValueWithIcon class="" label="Stability Pool Balance" center>
         <template #icon
           ><IconCurrency :currency="poolToken.key" class="w-16 h-16" noHeight
         /></template>
         <template #value
           >{{ formatDecimal(changedPoolDeposit, 2) }} USD</template
+        >
+      
+      </SidebarSectionValueWithIcon>
+
+            <SidebarSectionValueWithIcon class="" label="Wallet Balance" center>
+        <template #icon
+          ><IconCurrency :currency="poolToken.key" class="w-16 h-16" noHeight
+        /></template>
+
+        <template #value
+          >{{ formatDecimal(changedBalance) }} {{ poolToken.symbol }}</template
         >
       </SidebarSectionValueWithIcon>
     </div>
@@ -124,8 +135,6 @@ export default defineComponent({
     const { valInt } = useToken()
     const { close } = useSidebar()
     const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
-    
-
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
@@ -136,6 +145,7 @@ export default defineComponent({
     const changedPoolDeposit = computed(() => max(minus(userBammInUsd.value, amountParsed.value), '0').toFixed())
     const ethWithdrawAmount = computed(() => absolutlWithdrawAmountInEth(amountParsed.value))
     const lusdWithdrawAmount = computed(() => absolutlWithdrawAmountInLusd(amountParsed.value))
+    const changedBalance = computed(() => plus(balance.value, amountParsed.value).toFixed())
 
     const { toggle, isMaxAmount } = useMaxAmountActive(amount, userBammInUsd)
 
@@ -212,7 +222,8 @@ export default defineComponent({
       isZero,
       ethWithdrawAmount,
       lusdWithdrawAmount,
-      ethUserBalance
+      ethUserBalance,
+      changedBalance
     }
   },
 })
