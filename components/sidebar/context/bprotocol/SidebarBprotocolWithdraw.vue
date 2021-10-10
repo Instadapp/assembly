@@ -48,7 +48,7 @@
         </template>
       </input-numeric>
 
-      <div v-if="parseFloat(ethUserBalance) > 0.0001">
+      <div v-if="ethIsGreaterThanOnePromille">
 
         <div class="flex items-center w-full px-4 mb-2 mt-4">
           <div class="flex items-center justify-between w-full">
@@ -125,7 +125,7 @@ import { useBprotocolPosition } from '~/composables/protocols/useBprotocolPositi
 export default defineComponent({
   components: { ButtonCTA, InputNumeric },
   setup() {
-    const { userBammInUsd, fetchUserData, userBamm, lusdWithdrawAmountToBamm, absolutlWithdrawAmountInLusd, absolutlWithdrawAmountInEth, ethUserBalance } = useBprotocolPosition()
+    const { userBammInUsd, fetchUserData, userBamm, lusdWithdrawAmountToBamm, absolutlWithdrawAmountInLusd, absolutlWithdrawAmountInEth, ethUserBalance, ethIsGreaterThanOnePromille } = useBprotocolPosition()
     const { account } = useWeb3()
     const { dsa } = useDSA()
     const { formatUsd, formatUsdMax, formatDecimal } = useFormatting()
@@ -222,7 +222,8 @@ export default defineComponent({
       ethWithdrawAmount,
       lusdWithdrawAmount,
       ethUserBalance,
-      changedBalance
+      changedBalance,
+      ethIsGreaterThanOnePromille
     }
   },
 })
