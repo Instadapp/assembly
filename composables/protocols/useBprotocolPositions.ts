@@ -66,7 +66,6 @@ export function useBprotocolPosition (){
     }
     const userEthInUsd = new BigNumber(ethUserBalance.value).multipliedBy(ethPrice.value)
     const ethInSp = userEthInUsd.dividedBy(userBammInUsd.value)
-    debugger
     return ethInSp.isGreaterThan(0.0001)
   })
 
@@ -153,7 +152,6 @@ async function getUserInfo (user, web3){
       resolveAddr
     );
     const userInfo = await bprotocolInstance.methods.getUserInfo(user, bammAddr, '0x6DEA81C8171D0bA574754EF6F8b412F2Ed88c54D').call()
-    debugger
     return userInfo
 
   }catch (e) {

@@ -27,6 +27,57 @@
 
     </div>
 
+    <div class="mt-10">
+      <h2 class="text-primary-gray text-lg font-semibold">Overview</h2>
+
+      <div
+        class="px-1 mt-6 grid w-full grid-cols-1 gap-4 sm:grid-cols-3 xl:gap-[18px]"
+      >
+        <div class="shadow rounded-lg py-8 px-6 flex">
+          <div class="flex-1">
+            <h3 class="text-2xl text-primary-black font-medium">
+              Stabilize
+              Liquity Protocol
+            </h3>
+            <p class="mt-4 text-primary font-medium">
+              <a target="_blank" href="https://docs.liquity.org/faq/stability-pool-and-liquidations">Learn More</a></p>
+          </div>
+          <div class="flex items-center">
+            <SVGStableize />
+          </div>
+        </div>
+
+        <div class="shadow rounded-lg py-8 px-6 flex">
+          <div class="flex-1">
+            <h3 class="text-2xl text-primary-black font-medium">
+              Get Passive
+              Yield on Your LUSD
+            </h3>
+            <p class="mt-4 text-primary font-medium">
+              <a target="_blank" href="https://medium.com/b-protocol/b-protocol-liquity-integration-is-live-1342605e7cfb">Learn More</a></p>
+          </div>
+          <div class="flex items-center">
+            <SVGEarn />
+          </div>
+        </div>
+
+        <div class="shadow rounded-lg py-8 px-6 flex">
+          <div class="flex-1">
+            <h3 class="text-2xl text-primary-black font-medium">
+              Using <br/>
+              B.Protocl V2  
+            </h3>
+            <p class="mt-4 text-primary font-medium">
+              <a target="_blank" href="https://medium.com/b-protocol/b-amm-efficient-automated-market-maker-for-defi-liquidations-fea7b0fdc0c5">Learn More</a></p>
+          </div>
+          <div class="flex items-center">
+            <SVGUse />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <div class="mt-[60px]">
       <div
         class="w-full flex flex-col mt-6 sm:flex-row sm:items-center sm:justify-between xl:mt-4"
@@ -57,6 +108,9 @@
 import { defineComponent, computed, useRouter } from "@nuxtjs/composition-api";
 import BackIcon from "~/assets/icons/back.svg?inline";
 import SVGBalance from "@/assets/img/icons/balance.svg?inline";
+import SVGStableize from "@/assets/img/icons/bprotocol/stableize.svg?inline";
+import SVGUse from "@/assets/img/icons/bprotocol/use-v2.svg?inline";
+import SVGEarn from "@/assets/img/icons/bprotocol/earn.svg?inline";
 import SVGPercent from "@/assets/img/icons/percent.svg?inline";
 import SVGAdd from "~/assets/img/icons/add.svg?inline";
 import BprotocolIcon from "~/assets/icons/b-protocol.svg?inline";
@@ -75,6 +129,9 @@ export default defineComponent({
     BprotocolIcon,
     ButtonCTAOutlined,
     SVGBalance,
+    SVGStableize,
+    SVGEarn,
+    SVGUse,
     SVGPercent,
     CardBprotocolBamm
   },

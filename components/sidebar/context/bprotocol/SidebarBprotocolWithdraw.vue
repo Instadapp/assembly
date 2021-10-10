@@ -166,7 +166,6 @@ export default defineComponent({
       pending.value = true
       try {
         const supplyAmountInWei = valInt(lusdWithdrawAmountToBamm(amountParsed.value), 18)
-        debugger
         const getDepositId = 0
         const setDepositId = 0
         const setEthGainId = 0

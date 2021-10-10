@@ -81,7 +81,7 @@ const appsPerNetwork = {
     {
       id: "bprotocol",
       icon: BprotocolIcon,
-      name: "B.Protocol",
+      name: "B.Protocol v2",
       url: "/mainnet/bprotocol",
       description: "Automated Rebalancing <br/>for Liquity Stability Pool"
     },

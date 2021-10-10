@@ -22,7 +22,7 @@ export function useBprotocolLqtyClaim() {
   const pendingLqtyClaim = ref(false);
 
   async function claimLqty() {
-    debugger
+    
     pendingLqtyClaim.value = true;
 
     try {
