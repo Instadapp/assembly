@@ -64,11 +64,10 @@
         <div class="shadow rounded-lg py-8 px-6 flex">
           <div class="flex-1">
             <h3 class="text-2xl text-primary-black font-medium">
-              Using <br/>
-              B.Protocl V2  
+              Improved Liquidity Mining Program  
             </h3>
             <p class="mt-4 text-primary font-medium">
-              <a target="_blank" href="https://medium.com/b-protocol/b-amm-efficient-automated-market-maker-for-defi-liquidations-fea7b0fdc0c5">Learn More</a></p>
+              <a target="_blank" href="https://docs.bprotocol.org/info/liquidity-mining">Learn More</a></p>
           </div>
           <div class="flex items-center">
             <SVGUse />
@@ -96,7 +95,7 @@
           price-in-usd="1"
           :token="bammToken"
           :lusdUserBalance="lusdUserBalance"
-          :ethIsGreaterThanOnePerMile="ethIsGreaterThanOnePerMile"
+          :ethIsGreaterThanOnePromille="ethIsGreaterThanOnePromille"
         />
 
       </div>
@@ -150,7 +149,7 @@ export default defineComponent({
       bammToken,
       userBammInUsd,
       totalBammSupplyInUsd,
-      ethIsGreaterThanOnePerMile
+      ethIsGreaterThanOnePromille
     } = useBprotocolPosition()
 
     return {
@@ -166,7 +165,7 @@ export default defineComponent({
       bammToken,
       userBammInUsd,
       totalBammSupplyInUsd,
-      ethIsGreaterThanOnePerMile
+      ethIsGreaterThanOnePromille
     };
   }
 });

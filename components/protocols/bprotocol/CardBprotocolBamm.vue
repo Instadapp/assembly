@@ -49,7 +49,7 @@
 
     <hr class="my-4" />
 
-    <div v-if="ethIsGreaterThanOnePerMile" class="flex items-center w-full px-4 mb-2">
+    <div v-if="ethIsGreaterThanOnePromille" class="flex items-center w-full px-4 mb-2">
       <div class="flex items-start justify-between w-full">
         <div
           class="flex font-medium leading-none whitespace-no-wrap text-14"
@@ -111,7 +111,7 @@ export default defineComponent({
     ethUserBalance: { type: String, default: '0' },
     stabilityLqtyGain: { type: String, default: '0' },
     lusdUserBalance: { type: String, default: '0' },
-    ethIsGreaterThanOnePerMile: { type: Boolean, default: false }
+    ethIsGreaterThanOnePromille: { type: Boolean, default: false }
   },
 
   setup(props) {

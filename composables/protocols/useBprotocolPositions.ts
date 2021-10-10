@@ -60,7 +60,7 @@ export function useBprotocolPosition (){
     }
     return fromWei((new BigNumber(userData.value.bammUserBalance).dividedBy(userData.value.bammTotalSupply)).multipliedBy(userData.value.lusdTotal))
   });
-  const ethIsGreaterThanOnePerMile = computed(()=> {
+  const ethIsGreaterThanOnePromille = computed(()=> {
     if(userBammInUsd.value === "0"){
       return false;
     }
@@ -138,7 +138,7 @@ export function useBprotocolPosition (){
     absolutlWithdrawAmountInLusd,
     userBammInUsd,
     totalBammSupplyInUsd,
-    ethIsGreaterThanOnePerMile
+    ethIsGreaterThanOnePromille
   }
 }
 
