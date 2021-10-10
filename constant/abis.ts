@@ -7,7 +7,9 @@ import makerABI from "./abi/read/maker.json";
 import makerProxyRegistryABI from "./abi/makerProxyRegistry.json";
 import unipoolABI from "./abi/read/unipool.json";
 import liquityABI from "./abi/read/liquity.json";
-import reflexerABI from './abi/read/reflexer.json'
+import reflexerABI from './abi/read/reflexer.json';
+import bprotocolABI from './abi/read/bprotocol.json';
+
 const abis = {
   makerProxyRegistry: makerProxyRegistryABI,
   resolver: {
@@ -19,7 +21,8 @@ const abis = {
     maker: makerABI,
     unipool: unipoolABI,
     liquity: liquityABI,
-    reflexer: reflexerABI
+    reflexer: reflexerABI,
+    bprotocol: bprotocolABI,
   }
 };
 

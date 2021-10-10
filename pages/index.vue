@@ -37,6 +37,7 @@ import CompoundIcon from "~/assets/icons/compound.svg?inline";
 import MakerIcon from "~/assets/icons/makerdao.svg?inline";
 import OneInchIcon from "~/assets/icons/1inch.svg?inline";
 import LiquityIcon from "~/assets/icons/liquity.svg?inline";
+import BprotocolIcon from "~/assets/icons/b-protocol.svg?inline";
 import ReflexerIcon from "~/assets/icons/reflexer.svg?inline";
 
 const appsPerNetwork = {
@@ -77,6 +78,13 @@ const appsPerNetwork = {
       description: "Collateralized LUSD Debt"
     },
     {
+      id: "bprotocol",
+      icon: BprotocolIcon,
+      name: "B.Protocol",
+      url: "/mainnet/bprotocol",
+      description: "Stake LUSD"
+    },
+    {
       id: "reflexer",
       icon: ReflexerIcon,
       name: "Reflexer Finance",
@@ -107,7 +115,6 @@ export default defineComponent({
     const { activeNetworkId } = useNetwork();
 
     const apps = computed(() => appsPerNetwork[activeNetworkId.value]);
-
     return {
       apps
     };
