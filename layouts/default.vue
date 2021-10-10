@@ -9,7 +9,17 @@
           class="px-8 md:px-4 max-w-6xl mx-auto"
           :class="{ 'text-center': !active, 'py-12': active }"
         >
-          <Nuxt v-if="active" />
+          <div v-if="active && activeAccount && activeAccount.version === '1'" class="text-center w-full my-16">
+            <h3 class="font-semibold text-2xl">
+              Assembly doesn't support DSA v1
+            </h3>
+            <p
+              class="mt-4 font-medium leading-normal text-grey-pure text-base"
+            >
+              Please create or switch to DSA v2.
+            </p>
+          </div>
+          <Nuxt v-else-if="active" />
 
           <web-3-modal slim v-else />
         </div>
@@ -95,6 +105,7 @@ import { useNetwork } from "~/composables/useNetwork";
 import { useModal } from "~/composables/useModal";
 import { useEagerConnect } from "~/composables/useEagerConnect";
 import Web3Modal from "~/components/modal/web3/Web3Modal.vue";
+import { useDSA } from "~/composables/useDSA";
 
 export default defineComponent({
   components: {
@@ -105,6 +116,7 @@ export default defineComponent({
   },
   setup() {
     const { active, activate, deactivate, chainId } = useWeb3();
+    const { activeAccount } = useDSA();
     const { activeNetworkId, activeNetwork, checkForNetworkMismatch } = useNetwork();
     const { isShown: isBackdropShown, close: closeBackdrop } = useBackdrop()
     const { redirect } = useContext()
@@ -133,14 +145,14 @@ export default defineComponent({
           return;
         }
 
-        if (route.value.path.includes(['mainnet', 'polygon']) && route.value.path.includes(activeNetwork.value.id)) {
+        if (route.value.path.includes(['mainnet', 'polygon', "arbitrum"]) && route.value.path.includes(activeNetwork.value.id)) {
           redirect('/')
         }
       }, { immediate: true })
 
     watch(chainId, (val) => {
       if (val) {
-        if ([1, 137].includes(val)) {
+        if ([1, 137, 42161].includes(val)) {
           checkForNetworkMismatch()
         } else {
           showNetworksMismatchDialog();
@@ -154,6 +166,7 @@ export default defineComponent({
     })
 
     return {
+      activeAccount,
       active,
       activate,
       deactivate,
