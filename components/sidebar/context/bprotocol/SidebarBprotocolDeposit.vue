@@ -1,6 +1,6 @@
 <template>
   <SidebarContextRootContainer class="bg-[#C5CCE1] bg-opacity-[0.15]">
-    <template #title>Withdraw from Stability Pool</template>
+    <template #title>Supply to Stability Pool</template>
 
     <div class="flex justify-around items-center w-full">
       <SidebarSectionValueWithIcon class="" label="Stability Pool Balance" center>
@@ -8,12 +8,11 @@
           ><IconCurrency :currency="poolToken.key" class="w-16 h-16" noHeight
         /></template>
         <template #value
-          >{{ formatDecimal(changedPoolDeposit) }}
-          {{ poolToken.symbol }}</template
+          >{{ formatDecimal(changedBammDeposit, 2) }} USD</template
         >
       </SidebarSectionValueWithIcon>
 
-      <SidebarSectionValueWithIcon class="" label="Token Balance" center>
+      <SidebarSectionValueWithIcon class="" label="Wallet Balance" center>
         <template #icon
           ><IconCurrency :currency="poolToken.key" class="w-16 h-16" noHeight
         /></template>
@@ -26,7 +25,7 @@
 
     <div class="mt-10 p-8">
       <h3 class="text-primary-gray text-xs font-semibold mb-2.5">
-        Amount to withdraw
+        Amount to supply
       </h3>
 
       <input-numeric
@@ -47,6 +46,44 @@
         </template>
       </input-numeric>
 
+            <div v-if="parseFloat(ethUserBalance) > 0.0001">
+
+        <div class="flex items-center w-full px-4 mb-2 mt-4">
+          <div class="flex items-center justify-between w-full">
+            <div
+              class="flex items-center font-medium leading-none whitespace-no-wrap text-14"
+            >
+              <span>Stability Pool Balance</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center w-full px-4 mb-2 mt-4">
+          <div class="flex items-center justify-between w-full">
+            <div class="flex items-center font-medium leading-none text-14">
+              <div class="flex items-center mr-1">
+                <IconCurrency currency="lusd" no-height class="w-5 h-5" />
+              </div>
+              <div class="mr-1">{{ formatDecimal(newLusdBalance) }}</div>
+              <div>LUSD</div>
+            </div>
+          </div>
+        </div>
+
+        <div  class="flex items-center w-full px-4">
+          <div class="flex items-center justify-between w-full">
+            <div class="flex items-center font-medium leading-none text-14">
+              <div class="flex items-center mr-1">
+                <IconCurrency currency="eth" no-height class="w-5 h-5" />
+              </div>
+              <div class="mr-1">{{ formatDecimal(newEthBalance) }}</div>
+              <div>ETH</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
       <div class="flex flex-shrink-0 mt-10">
         <ButtonCTA
           class="w-full"
@@ -54,7 +91,7 @@
           :loading="pending"
           @click="cast"
         >
-          Withdraw
+          Supply
         </ButtonCTA>
       </div>
 
@@ -62,7 +99,6 @@
     </div>
   </SidebarContextRootContainer>
 </template>
-
 
 <script>
 import { computed, ref, defineComponent } from '@nuxtjs/composition-api'
@@ -81,20 +117,22 @@ import InputNumeric from '~/components/common/input/InputNumeric.vue'
 import { useToken } from '~/composables/useToken'
 import { useDSA } from '~/composables/useDSA'
 import { useSidebar } from '~/composables/useSidebar'
+import { useBprotocolPosition } from '~/composables/protocols/useBprotocolPositions'
 
 export default defineComponent({
   components: { ButtonCTA, InputNumeric },
   setup() {
+    const { fetchUserData, userBammInUsd, ethUserBalance, lusdUserBalance, absolutlWithdrawAmountInLusd, absolutlWithdrawAmountInEth } = useBprotocolPosition()
     const { account } = useWeb3()
     const { dsa } = useDSA()
-    const { formatUsd, formatUsdMax, formatDecimal } = useFormatting()
+    const { formatDecimal } = useFormatting()
     const { parseSafeFloat } = useParsing()
-    const { isZero, minus, max, plus } = useBigNumber()
+    const { plus, isZero, max, minus } = useBigNumber()
     const { getBalanceByKey, fetchBalances } = useBalances()
     const { valInt } = useToken()
     const { close } = useSidebar()
     const { showPendingTransaction, showConfirmedTransaction, showWarning } = useNotification()
-
+    const changedBalance = computed(() => max(minus(balance.value, amountParsed.value), '0').toFixed())
 
     const amount = ref('')
     const amountParsed = computed(() => parseSafeFloat(amount.value))
@@ -102,40 +140,44 @@ export default defineComponent({
     const { poolToken, stabilityAmount, fetchPosition } = useLiquityPosition()
     const balance = computed(() => getBalanceByKey(poolToken.value.key))
 
-    const changedPoolDeposit = computed(() => max(minus(stabilityAmount.value, amountParsed.value), '0').toFixed())
-    const changedBalance = computed(() => plus(balance.value, amountParsed.value).toFixed())
+    const newEthBalance = computed(() => plus(absolutlWithdrawAmountInEth(amountParsed.value), ethUserBalance.value))
+    const newLusdBalance = computed(() => plus(absolutlWithdrawAmountInLusd(amountParsed.value), lusdUserBalance.value))
 
-    const { toggle, isMaxAmount } = useMaxAmountActive(amount, stabilityAmount)
+    const changedBammDeposit = computed(() => plus(userBammInUsd.value, amountParsed.value).toFixed())
+
+    const { toggle, isMaxAmount } = useMaxAmountActive(amount, balance)
 
     const { validateAmount, validateIsLoggedIn } = useValidators()
-
     const errors = computed(() => {
       const hasAmountValue = !isZero(amount.value)
 
       return {
-        amount: { message: validateAmount(amountParsed.value, stabilityAmount.value), show: hasAmountValue },
+        amount: { message: validateAmount(amountParsed.value, balance.value), show: hasAmountValue },
         auth: { message: validateIsLoggedIn(!!account.value), show: true },
       }
     })
     const { errorMessages, isValid } = useValidation(errors)
 
     const pending = ref(false)
+
     async function cast() {
       pending.value = true
       try {
 
         const supplyAmountInWei = valInt(amountParsed.value, poolToken.value.decimals)
-
         const getDepositId = 0
         const setDepositId = 0
         const setEthGainId = 0
         const setLqtyGainId = 0
 
+        const frontendTag = '0x0000000000000000000000000000000000000000'
+
         const spells = dsa.value.Spell()
+
         spells.add({
-          connector: 'LIQUITY-A',
-          method: 'stabilityWithdraw',
-          args: [supplyAmountInWei, getDepositId, setDepositId, setEthGainId, setLqtyGainId],
+          connector: 'B-LIQUITY-A',
+          method: 'deposit',
+          args: [supplyAmountInWei, 0, getDepositId, setDepositId],
         })
 
 
@@ -146,7 +188,7 @@ export default defineComponent({
             showConfirmedTransaction(receipt.transactionHash);
 
             await fetchBalances(true);
-            await fetchPosition();
+            await fetchUserData();
           }
         })
 
@@ -163,10 +205,11 @@ export default defineComponent({
 
     return {
       symbol: computed(() => poolToken.value.symbol),
+      balance,
       amount,
-      status,
-      formatUsd,
-      formatUsdMax,
+      changedBammDeposit,
+      poolToken,
+      amountParsed,
       formatDecimal,
       errors,
       errorMessages,
@@ -175,12 +218,10 @@ export default defineComponent({
       cast,
       pending,
       toggle,
-      poolToken,
-      stabilityAmount,
-      changedPoolDeposit,
-      amountParsed,
-      changedBalance,
-      isZero,
+      newEthBalance,
+      newLusdBalance,
+      ethUserBalance,
+      changedBalance
     }
   },
 })
