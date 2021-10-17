@@ -69,5 +69,15 @@ export default {
     { key: 'link', type: 'token', symbol: 'LINK', name: 'ChainLink Token', address: '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4', decimals: 18, isStableCoin: false },
     { key: 'uni', type: 'token', symbol: 'UNI', name: 'Uniswap Token', address: '0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0', decimals: 18, isStableCoin: false },
     { key: 'wbtc', type: 'token', symbol: 'WBTC', name: 'Wrapped BTC', address: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f', decimals: 8, isStableCoin: false },
+  ]),
+  avalanche: createTokenUtils([
+    { key: 'avax', type: 'token', symbol: 'AVAX', name: 'Avalanche', address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', decimals: 18, isStableCoin: false },
+    { key: 'wavax', type: 'token', symbol: 'WAVAX', name: 'Wrapped AVAX', address: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', decimals: 18, isStableCoin: false },
+    { key: 'eth', type: 'token', symbol: 'ETH', name: 'Ethereum', address: '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB', decimals: 18, isStableCoin: false },
+    { key: 'usdt', type: 'token', symbol: 'USDT', name: 'Tether USD Coin', address: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118', decimals: 6, isStableCoin: true },
+    { key: 'aave', type: 'token', symbol: 'AAVE', name: 'Aave Token', address: '0x63a72806098Bd3D9520cC43356dD78afe5D386D9', decimals: 18, isStableCoin: false },
+    { key: 'usdc', type: 'token', symbol: 'USDC', name: 'USD Coin', address: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664', decimals: 6, isStableCoin: true },
+    { key: 'wbtc', type: 'token', symbol: 'WBTC', name: 'Wrapped BTC', address: '0x50b7545627a5162F82A992c33b87aDc75187B218', decimals: 8, isStableCoin: false },
+    { key: 'dai', type: 'token', symbol: 'DAI', name: 'DAI Stable', address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70', decimals: 18, isStableCoin: true },
   ])
 }

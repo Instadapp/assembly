@@ -1,6 +1,7 @@
 import { ref } from "@nuxtjs/composition-api";
 import { useFormatting } from "@/composables/useFormatting";
 import {
+  getAvalancheLink,
   getArbitrumLink,
   getEtherscanLink,
   getMaticLink,
@@ -99,6 +100,8 @@ export function useNotification() {
       href = getMaticLink(transactionHash);
     }else if (network === Network.Arbitrum) {
       href = getArbitrumLink(transactionHash);
+    }else if (network === Network.Avalanche) {
+      href = getAvalancheLink(transactionHash);
     } else {
       href = getEtherscanLink(transactionHash);
     }
@@ -122,6 +125,8 @@ export function useNotification() {
       href = getMaticLink(transactionHash);
     } else if (network === Network.Arbitrum) {
       href = getArbitrumLink(transactionHash);
+    } else if (network === Network.Avalanche) {
+      href = getAvalancheLink(transactionHash);
     } else {
       href = getEtherscanLink(transactionHash);
     }

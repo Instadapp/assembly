@@ -23,19 +23,22 @@ const balances = reactive({
   user: {
     mainnet: {},
     polygon: {},
-    arbitrum: {}
+    arbitrum: {},
+    avalanche: {}
   },
   dsa: {
     mainnet: {},
     polygon: {},
-    arbitrum: {}
+    arbitrum: {},
+    avalanche: {}
   }
 });
 
 const prices = reactive({
   mainnet: {},
   polygon: {},
-  arbitrum: {}
+  arbitrum: {},
+  avalanche: {}
 });
 
 export function useBalances() {
@@ -55,6 +58,9 @@ export function useBalances() {
     prices.arbitrum = await $axios.$get(
       "https://api.instadapp.io/defi/arbitrum/prices"
     );
+    prices.avalanche = await $axios.$get(
+      "https://api.instadapp.io/defi/avalanche/prices"
+    );
   });
   const fetchBalances = async (refresh = false) => {
     if (!balances.user || refresh) {
@@ -71,6 +77,10 @@ export function useBalances() {
         arbitrum:
           activeNetworkId.value === Network.Arbitrum
             ? await getBalances(account.value, Network.Arbitrum, library.value)
+            : {},
+        avalanche:
+          activeNetworkId.value === Network.Avalanche
+            ? await getBalances(account.value, Network.Avalanche, library.value)
             : {}
       };
     }
@@ -102,6 +112,10 @@ export function useBalances() {
                 Network.Arbitrum,
                 library.value
               )
+            : {},
+        avalanche:
+          activeNetworkId.value === Network.Avalanche
+            ? await getBalances(account.value, Network.Avalanche, library.value)
             : {}
       };
     }
