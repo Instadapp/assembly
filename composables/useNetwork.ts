@@ -3,6 +3,7 @@ import { computed, watchEffect, ref, watch } from "@nuxtjs/composition-api";
 import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
 import ArbitrumSVG from "~/assets/icons/arbitrum.svg?inline";
+import AvalancheSVG from "~/assets/icons/avalanche.svg?inline";
 
 import { useModal } from "./useModal";
 import { useNotification } from "./useNotification";
@@ -20,7 +21,7 @@ export const networks = [
   { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
   { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG },
   { id: "arbitrum", chainId: 42161, name: "Arbitrum", icon: ArbitrumSVG },
-  { id: "avalanche", chainId: 43114, name: "Avalanche", icon: ArbitrumSVG },
+  { id: "avalanche", chainId: 43114, name: "Avalanche", icon: AvalancheSVG },
 ];
 
 export const activeNetworkId = ref<Network>();
