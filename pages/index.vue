@@ -21,8 +21,8 @@
         </div>
 
         <h2 class="mt-4 font-semibold text-19">{{ app.name }}</h2>
-        <p class="mt-2 text-14 font-regular text-grey-dark opacity-90">
-          {{ app.description }}
+        <p class="mt-2 text-14 font-regular text-grey-dark opacity-90"
+        v-html="app.description">
         </p>
       </nuxt-link>
     </div>
@@ -37,6 +37,7 @@ import CompoundIcon from "~/assets/icons/compound.svg?inline";
 import MakerIcon from "~/assets/icons/makerdao.svg?inline";
 import OneInchIcon from "~/assets/icons/1inch.svg?inline";
 import LiquityIcon from "~/assets/icons/liquity.svg?inline";
+import BprotocolIcon from "~/assets/icons/b-protocol.svg?inline";
 import ReflexerIcon from "~/assets/icons/reflexer.svg?inline";
 import YearnIcon from "~/assets/icons/yearn.svg?inline";
 
@@ -76,6 +77,13 @@ const appsPerNetwork = {
       name: "Liquity",
       url: "/mainnet/liquity",
       description: "Collateralized LUSD Debt"
+    },
+    {
+      id: "bprotocol",
+      icon: BprotocolIcon,
+      name: "B.Protocol v2",
+      url: "/mainnet/bprotocol",
+      description: "Automated Rebalancing <br/>for Liquity Stability Pool"
     },
     {
       id: "reflexer",
@@ -124,7 +132,6 @@ export default defineComponent({
     const { activeNetworkId } = useNetwork();
 
     const apps = computed(() => appsPerNetwork[activeNetworkId.value]);
-
     return {
       apps
     };

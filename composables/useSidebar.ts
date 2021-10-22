@@ -37,6 +37,9 @@ import SidebarLiquityTrovePayback from '~/components/sidebar/context/liquity/Sid
 import SidebarLiquityPoolSupply from '~/components/sidebar/context/liquity/SidebarLiquityPoolSupply.vue'
 import SidebarLiquityPoolWithdraw from '~/components/sidebar/context/liquity/SidebarLiquityPoolWithdraw.vue'
 
+import SidebarBprotocolDeposit from '~/components/sidebar/context/bprotocol/SidebarBprotocolDeposit.vue'
+import SidebarBprotocolWithdraw from '~/components/sidebar/context/bprotocol/SidebarBprotocolWithdraw.vue'
+
 import SidebarReflexerCollateral from '~/components/sidebar/context/reflexer/SidebarReflexerCollateral.vue'
 import SidebarReflexerSupply from '~/components/sidebar/context/reflexer/SidebarReflexerSupply.vue'
 import SidebarReflexerWithdraw from '~/components/sidebar/context/reflexer/SidebarReflexerWithdraw.vue'
@@ -82,6 +85,9 @@ const sidebars = {
   '/mainnet/liquity#trove-payback': { component: SidebarLiquityTrovePayback },
   '/mainnet/liquity#pool-supply': { component: SidebarLiquityPoolSupply },
   '/mainnet/liquity#pool-withdraw': { component: SidebarLiquityPoolWithdraw },
+
+  "/mainnet/bprotocol#deposit": { component: SidebarBprotocolDeposit },
+  "/mainnet/bprotocol#withdraw": { component: SidebarBprotocolWithdraw },
 
   "/mainnet/reflexer": { component: null },
   '/mainnet/reflexer#collateral': { component: SidebarReflexerCollateral },

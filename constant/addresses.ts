@@ -1,6 +1,7 @@
 const addresses = {
   mainnet: {
     makerProxyRegistry: "0x4678f0a6958e4D2Bc4F1BAF7Bc52E8F3564f3fE4",
+    bprotocolBamm: "0x0d3AbAA7E088C2c82f54B2f47613DA438ea8C598",
     resolver: {
       aave: "0xA6Dc31dC10f8071c02099B05B76Ba15dfcD2B04c",
       aave_v2: "0xFb3a1D56eD56F046721B9aCa749895100754578b",
@@ -11,6 +12,7 @@ const addresses = {
       unipool: "0x22bddA39D14eD0aafeee36B6e784602fdDE64723",
       liquity: "0xDAf2A39503463B0F41f899EDD82213b3c96b6Cf8",
       reflexer: "0x016ca8d0993d1a7073b01802a2e22fd0df7e633a",
+      bprotocol: "0x3843019c19259117ed473947007bcafc5c0c7129",
       yearnV2: "0x3f6DCA8a0b7d04737BC3B2aEAbeB1C09431581f0"
     }
   },
