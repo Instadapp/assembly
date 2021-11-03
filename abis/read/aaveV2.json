@@ -1,168 +1,196 @@
-[{
-    "inputs": [{
-      "internalType": "address",
-      "name": "user",
-      "type": "address"
-    }, {
-      "internalType": "address[]",
-      "name": "tokens",
-      "type": "address[]"
-    }],
+[
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple[]",
+        "name": "",
+        "internalType": "struct AaveHelpers.AaveUserTokenData[]",
+        "components": [
+          {
+            "type": "uint256",
+            "name": "tokenPriceInEth",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "tokenPriceInUsd",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "supplyBalance",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "stableBorrowBalance",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "variableBorrowBalance",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "supplyRate",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "stableBorrowRate",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "userStableBorrowRate",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "variableBorrowRate",
+            "internalType": "uint256"
+          },
+          { "type": "bool", "name": "isCollateral", "internalType": "bool" },
+          {
+            "type": "tuple",
+            "name": "aaveTokenData",
+            "internalType": "struct AaveHelpers.AaveTokenData",
+            "components": [
+              { "type": "uint256", "name": "ltv", "internalType": "uint256" },
+              {
+                "type": "uint256",
+                "name": "threshold",
+                "internalType": "uint256"
+              },
+              {
+                "type": "uint256",
+                "name": "reserveFactor",
+                "internalType": "uint256"
+              },
+              {
+                "type": "bool",
+                "name": "usageAsCollEnabled",
+                "internalType": "bool"
+              },
+              {
+                "type": "bool",
+                "name": "borrowEnabled",
+                "internalType": "bool"
+              },
+              {
+                "type": "bool",
+                "name": "stableBorrowEnabled",
+                "internalType": "bool"
+              },
+              { "type": "bool", "name": "isActive", "internalType": "bool" },
+              { "type": "bool", "name": "isFrozen", "internalType": "bool" },
+              {
+                "type": "uint256",
+                "name": "totalSupply",
+                "internalType": "uint256"
+              },
+              {
+                "type": "uint256",
+                "name": "availableLiquidity",
+                "internalType": "uint256"
+              },
+              {
+                "type": "uint256",
+                "name": "totalStableDebt",
+                "internalType": "uint256"
+              },
+              {
+                "type": "uint256",
+                "name": "totalVariableDebt",
+                "internalType": "uint256"
+              },
+              {
+                "type": "uint256",
+                "name": "collateralEmission",
+                "internalType": "uint256"
+              },
+              {
+                "type": "uint256",
+                "name": "debtEmission",
+                "internalType": "uint256"
+              },
+              {
+                "type": "address",
+                "name": "aTokenAddress",
+                "internalType": "address"
+              },
+              {
+                "type": "address",
+                "name": "stableDebtTokenAddress",
+                "internalType": "address"
+              },
+              {
+                "type": "address",
+                "name": "variableDebtTokenAddress",
+                "internalType": "address"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "tuple",
+        "name": "",
+        "internalType": "struct AaveHelpers.AaveUserData",
+        "components": [
+          {
+            "type": "uint256",
+            "name": "totalCollateralETH",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "totalBorrowsETH",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "availableBorrowsETH",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "currentLiquidationThreshold",
+            "internalType": "uint256"
+          },
+          { "type": "uint256", "name": "ltv", "internalType": "uint256" },
+          {
+            "type": "uint256",
+            "name": "healthFactor",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "ethPriceInUsd",
+            "internalType": "uint256"
+          },
+          {
+            "type": "uint256",
+            "name": "pendingRewards",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
     "name": "getPosition",
-    "outputs": [{
-      "components": [{
-        "internalType": "uint256",
-        "name": "tokenPriceInEth",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "tokenPriceInUsd",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "supplyBalance",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "stableBorrowBalance",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "variableBorrowBalance",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "supplyRate",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "stableBorrowRate",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "userStableBorrowRate",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "variableBorrowRate",
-        "type": "uint256"
-      }, {
-        "internalType": "bool",
-        "name": "isCollateral",
-        "type": "bool"
-      }, {
-        "components": [{
-          "internalType": "uint256",
-          "name": "ltv",
-          "type": "uint256"
-        }, {
-          "internalType": "uint256",
-          "name": "threshold",
-          "type": "uint256"
-        }, {
-          "internalType": "uint256",
-          "name": "reserveFactor",
-          "type": "uint256"
-        }, {
-          "internalType": "bool",
-          "name": "usageAsCollEnabled",
-          "type": "bool"
-        }, {
-          "internalType": "bool",
-          "name": "borrowEnabled",
-          "type": "bool"
-        }, {
-          "internalType": "bool",
-          "name": "stableBorrowEnabled",
-          "type": "bool"
-        }, {
-          "internalType": "bool",
-          "name": "isActive",
-          "type": "bool"
-        }, {
-          "internalType": "bool",
-          "name": "isFrozen",
-          "type": "bool"
-        }, {
-          "internalType": "uint256",
-          "name": "totalSupply",
-          "type": "uint256"
-        }, {
-          "internalType": "uint256",
-          "name": "availableLiquidity",
-          "type": "uint256"
-        }, {
-          "internalType": "uint256",
-          "name": "totalStableDebt",
-          "type": "uint256"
-        }, {
-          "internalType": "uint256",
-          "name": "totalVariableDebt",
-          "type": "uint256"
-        }, {
-          "internalType": "uint256",
-          "name": "collateralEmission",
-          "type": "uint256"
-        }, {
-          "internalType": "uint256",
-          "name": "debtEmission",
-          "type": "uint256"
-        }],
-        "internalType": "struct AaveHelpers.AaveTokenData",
-        "name": "aaveTokenData",
-        "type": "tuple"
-      }],
-      "internalType": "struct AaveHelpers.AaveUserTokenData[]",
-      "name": "",
-      "type": "tuple[]"
-    }, {
-      "components": [{
-        "internalType": "uint256",
-        "name": "totalCollateralETH",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "totalBorrowsETH",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "availableBorrowsETH",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "currentLiquidationThreshold",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "ltv",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "healthFactor",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "ethPriceInUsd",
-        "type": "uint256"
-      }, {
-        "internalType": "uint256",
-        "name": "pendingRewards",
-        "type": "uint256"
-      }],
-      "internalType": "struct AaveHelpers.AaveUserData",
-      "name": "",
-      "type": "tuple"
-    }],
+    "inputs": [
+      { "type": "address", "name": "user", "internalType": "address" },
+      { "type": "address[]", "name": "tokens", "internalType": "address[]" }
+    ]
+  },
+  {
+    "type": "function",
     "stateMutability": "view",
-    "type": "function"
-  }, {
-    "inputs": [],
+    "outputs": [{ "type": "string", "name": "", "internalType": "string" }],
     "name": "name",
-    "outputs": [{
-      "internalType": "string",
-      "name": "",
-      "type": "string"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  }]
+    "inputs": []
+  }
+]

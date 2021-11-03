@@ -8,8 +8,13 @@ export function useLink() {
     if (activeNetworkId.value === "polygon") {
       return "https://polygonscan.com/address";
     }
+
     if (activeNetworkId.value === "arbitrum") {
       return "https://arbiscan.io/address";
+    }
+
+    if (activeNetworkId.value === "avalanche") {
+      return "https://cchain.explorer.avax.network/address";
     }
 
     return "https://etherscan.io/address";
@@ -26,5 +31,7 @@ export const getPolygonLink = transactionHash =>
   `https://polygonscan.com/tx/${transactionHash}`;
 export const getArbitrumLink = transactionHash =>
   `https://arbiscan.io/tx/${transactionHash}`;
+export const getAvalancheLink = transactionHash =>
+  `https://cchain.explorer.avax.network/tx/${transactionHash}`;
 export const getTenderlyLink = simulationId =>
   `https://dashboard.tenderly.co/public/InstaDApp/dsa-simulations/fork-simulation/${simulationId}?hideSidebar=true`;

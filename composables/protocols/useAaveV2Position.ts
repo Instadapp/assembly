@@ -13,6 +13,7 @@ import { usePosition } from "~/composables/usePosition";
 import { useToken } from "~/composables/useToken";
 import { useSorting } from "~/composables/useSorting";
 import useEventBus from "../useEventBus";
+import addresses from "~/constant/addresses";
 
 const {
   times,
@@ -70,13 +71,13 @@ export function useAaveV2Position(
   const { activeNetworkId } = useNetwork();
   const { activeAccount } = useDSA();
   const { getTokenByKey, allATokensV2 } = useToken();
-  const { byMaxSupplyOrBorrowDesc } = useSorting()
-  const { onEvent } = useEventBus()
-  
-  const resolver = computed(() =>
-    chainId.value === 1
-      ? "0xFb3a1D56eD56F046721B9aCa749895100754578b"
-      : "0xD6E0803d0eB34af8Ea135835512D7E77960b28F1"
+  const { byMaxSupplyOrBorrowDesc } = useSorting();
+  const { onEvent } = useEventBus();
+
+  const resolver = computed(
+    () =>
+      // @ts-ignore
+      addresses[activeNetworkId.value]?.resolver?.aave_v2
   );
 
   const fetchPosition = async () => {
@@ -96,6 +97,8 @@ export function useAaveV2Position(
     const aaveTokensArr = atokensV2[activeNetworkId.value].allTokens.map(
       a => tokens[activeNetworkId.value].getTokenByKey(a.root).address
     );
+
+    console.log(activeAccount.value.address, aaveTokensArr);
 
     const aaveRawData = await aaveResolverInstance.methods
       .getPosition(activeAccount.value.address, aaveTokensArr)
@@ -393,7 +396,10 @@ function calculateAavePosition(res: any[], network: Network = Network.Mainnet) {
         totalStableDebt,
         totalVariableDebt,
         collateralEmission,
-        debtEmission
+        debtEmission,
+        aTokenAddress,
+        stableDebtTokenAddress,
+        variableDebtTokenAddress
       ] = AaveTokenData;
       /* eslint-enable no-unused-vars */
 
@@ -473,6 +479,9 @@ function calculateAavePosition(res: any[], network: Network = Network.Mainnet) {
       dataPos.push({
         key: root,
         aTokenAddr: key,
+        aTokenAddress,
+        stableDebtTokenAddress,
+        variableDebtTokenAddress,
         aTokenBal: supplyBalanceInWei,
         aTokenKey: atoken.key,
         aDecimals: atoken.decimals.toString(),

@@ -3,7 +3,7 @@
   <div
     class="inline-flex items-center justify-center dark:opacity-90"
     :class="{
-      'h-10 w-10': !noHeight,
+      'h-10 w-10': !noHeight
     }"
   >
     <SVG1inch v-if="currency === '1inch'" class="h-full" />
@@ -77,6 +77,8 @@
     <SVGyfi v-else-if="currency === 'yfi'" class="h-full" />
     <SVGzil v-else-if="currency === 'zil'" class="h-full" />
     <SVGzrx v-else-if="currency === 'zrx'" class="h-full" />
+    <SVGavax v-else-if="currency === 'avax'" class="h-full" />
+    <SVGwavax v-else-if="currency === 'wavax'" class="h-full" />
 
     <div
       v-else
@@ -161,7 +163,8 @@ import SVGzrx from '@/assets/icons/currencies/zrx.svg?inline'
 import SVGCustom from '@/assets/icons/currencies/custom.svg?inline'
 import SVGlqty from '@/assets/icons/currencies/lqty.svg?inline'
 import SVGlusd from '@/assets/icons/currencies/lusd.svg?inline'
-
+import SVGavax from '@/assets/icons/currencies/avax.svg?inline'
+import SVGwavax from '@/assets/icons/currencies/wavax.svg?inline'
 export default defineComponent({
   props: {
     currency: { type: String, default: '' },
@@ -240,6 +243,8 @@ export default defineComponent({
     SVGlqty,
     SVGlusd,
     SVGCustom,
+    SVGavax,
+    SVGwavax,
   },
 })
 </script>

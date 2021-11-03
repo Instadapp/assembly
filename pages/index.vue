@@ -124,6 +124,15 @@ const appsPerNetwork = {
       url: "/1inch",
       description: "DEX Aggregator"
     }
+  ],
+  avalanche: [
+    {
+      id: "aave-v2",
+      icon: AaveIcon,
+      name: "Aave v2",
+      url: "/aave-v2",
+      description: "Lend and borrow straight from your Gnosis Safe"
+    }
   ]
 };
 

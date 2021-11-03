@@ -3,6 +3,7 @@ import { computed, watchEffect, ref, watch } from "@nuxtjs/composition-api";
 import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
 import ArbitrumSVG from "~/assets/icons/arbitrum.svg?inline";
+import AvalancheSVG from "~/assets/icons/avalanche.svg?inline";
 
 import { useModal } from "./useModal";
 import { useNotification } from "./useNotification";
@@ -12,13 +13,15 @@ import { useCookies } from "./useCookies";
 export enum Network {
   Mainnet = "mainnet",
   Polygon = "polygon",
-  Arbitrum = "arbitrum"
+  Arbitrum = "arbitrum",
+  Avalanche = "avalanche"
 }
 
 export const networks = [
   { id: "mainnet", chainId: 1, name: "Mainnet", icon: MainnetSVG },
   { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG },
-  { id: "arbitrum", chainId: 42161, name: "Arbitrum", icon: ArbitrumSVG }
+  { id: "arbitrum", chainId: 42161, name: "Arbitrum", icon: ArbitrumSVG },
+  { id: "avalanche", chainId: 43114, name: "Avalanche", icon: AvalancheSVG },
 ];
 
 export const activeNetworkId = ref<Network>();
@@ -135,12 +138,52 @@ export function useNetwork() {
     }
   }
 
+  async function switchToAvalanche() {
+    if (window.ethereum) {
+      const chainId = '0xa86a'
+
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId }],
+        })
+      } catch (switchError) {
+        // 4902 error code indicates that the chain has not been added to MetaMask.
+        if (switchError.code === 4902) {
+          try {
+            const chainData = {
+              chainId,
+              chainName: 'Avalanche Network',
+              nativeCurrency: {
+                name: 'Avalanche',
+                symbol: 'AVAX',
+                decimals: 18,
+              },
+              rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+              blockExplorerUrls: ['https://cchain.explorer.avax.network/'],
+            }
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [chainData, account.value],
+            })
+          } catch (addError) {
+            return Promise.reject(addError)
+          }
+        } else {
+          return Promise.reject(switchError)
+        }
+      }
+    }
+  }
+
   async function switchNetwork() {
     try {
       if (activeNetworkId.value === "mainnet") {
         await switchToMainnet();
       } else if (activeNetworkId.value === "arbitrum") {
         await switchToArbitrum();
+      } else if (activeNetworkId.value === "avalanche") {
+        await switchToAvalanche();
       } else {
         await switchToPolygon();
       }
