@@ -13,6 +13,7 @@ import { usePosition } from "~/composables/usePosition";
 import { useToken } from "~/composables/useToken";
 import { useSorting } from "~/composables/useSorting";
 import useEventBus from "../useEventBus";
+import addresses from "~/constant/addresses";
 
 const {
   times,
@@ -73,10 +74,10 @@ export function useAaveV2Position(
   const { byMaxSupplyOrBorrowDesc } = useSorting();
   const { onEvent } = useEventBus();
 
-  const resolver = computed(() =>
-    chainId.value === 1
-      ? "0xFb3a1D56eD56F046721B9aCa749895100754578b"
-      : "0xD6E0803d0eB34af8Ea135835512D7E77960b28F1"
+  const resolver = computed(
+    () =>
+      // @ts-ignore
+      addresses[activeNetworkId.value]?.resolver?.aave_v2
   );
 
   const fetchPosition = async () => {
@@ -398,7 +399,7 @@ function calculateAavePosition(res: any[], network: Network = Network.Mainnet) {
         debtEmission,
         aTokenAddress,
         stableDebtTokenAddress,
-        variableDebtTokenAddress,
+        variableDebtTokenAddress
       ] = AaveTokenData;
       /* eslint-enable no-unused-vars */
 
