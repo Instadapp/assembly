@@ -61,7 +61,7 @@ const appsPerNetwork = {
       id: "benqi",
       icon: CompoundIcon,
       name: "Benqi",
-      url: "/mainnet/benqi",
+      url: "/avalanche/benqi",
       description: "Money Market"
     },
     {

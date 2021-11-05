@@ -19,7 +19,7 @@
           <div
             class="w-12 h-12 rounded-full flex items-center justify-center bg-[#1874FF]"
           >
-            <CompoundIcon class="w-8 h-8 text-white" />
+            <BenqiIcon class="w-8 h-8 text-white" />
           </div>
         </div>
         <h1 class="ml-4 text-primary-black text-2xl font-semibold">Benqi</h1>
@@ -157,7 +157,7 @@
         class="mt-3 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xxl:gap-6 min-w-max-content px-1"
       >
         <div v-for="item in filteredPositions" :key="item.key">
-          <card-compound
+          <card-benqi
             :token-key="item.key"
             :token-id="item.tokenId"
             :supply="item.supply"
@@ -187,15 +187,15 @@ import { useFormatting } from "~/composables/useFormatting";
 import { useSearchFilter } from "~/composables/useSearchFilter";
 import { useStatus } from "~/composables/useStatus";
 import { useBigNumber } from "~/composables/useBigNumber";
-import CardCompound from "~/components/protocols/CardCompound.vue";
-import CompoundIcon from "~/assets/icons/compound.svg?inline";
+import CardBenqi from "~/components/protocols/CardBenqi.vue";
+import BenqiIcon from "~/assets/icons/benqi.svg?inline";
 import ButtonCTAOutlined from "~/components/common/input/ButtonCTAOutlined.vue";
 
 export default defineComponent({
   components: {
     BackIcon,
-    CardCompound,
-    CompoundIcon,
+    CardBenqi,
+    BenqiIcon,
     ButtonCTAOutlined,
   },
   setup() {
