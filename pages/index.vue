@@ -58,6 +58,13 @@ const appsPerNetwork = {
       description: "Money Market"
     },
     {
+      id: "benqi",
+      icon: CompoundIcon,
+      name: "Benqi",
+      url: "/mainnet/benqi",
+      description: "Money Market"
+    },
+    {
       id: "maker",
       icon: MakerIcon,
       name: "MakerDAO",

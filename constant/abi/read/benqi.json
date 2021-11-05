@@ -1,0 +1,397 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "qiAddress",
+        "type": "address[]"
+      }
+    ],
+    "name": "getBenqiData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "tokenPriceInAvax",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenPriceInUsd",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "exchangeRateStored",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "balanceOfUser",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowBalanceStoredUser",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalBorrows",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalSupplied",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowCap",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "supplyRatePerTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowRatePerTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralFactor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardSpeedQi",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardSpeedAvax",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isQied",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBorrowPaused",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct Helpers.BenqiData[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getComptroller",
+    "outputs": [
+      {
+        "internalType": "contract ComptrollerLensInterface",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOracleAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "qiAddress",
+        "type": "address[]"
+      }
+    ],
+    "name": "getPosition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "tokenPriceInAvax",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenPriceInUsd",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "exchangeRateStored",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "balanceOfUser",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowBalanceStoredUser",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalBorrows",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalSupplied",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowCap",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "supplyRatePerTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowRatePerTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralFactor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardSpeedQi",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardSpeedAvax",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isQied",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isBorrowPaused",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct Helpers.BenqiData[]",
+        "name": "",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "avaxAccrued",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "qiAccrued",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "delegate",
+            "type": "address"
+          },
+          {
+            "internalType": "uint96",
+            "name": "votes",
+            "type": "uint96"
+          }
+        ],
+        "internalType": "struct Helpers.MetadataExt",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract QiTokenInterface",
+        "name": "qiToken",
+        "type": "address"
+      }
+    ],
+    "name": "getPriceInAvax",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "priceInAVAX",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "priceInUSD",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getQiAVAXAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getQiToken",
+    "outputs": [
+      {
+        "internalType": "contract TokenInterface",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "contract ComptrollerLensInterface",
+        "name": "comptroller",
+        "type": "address"
+      },
+      {
+        "internalType": "contract TokenInterface",
+        "name": "qiToken",
+        "type": "address"
+      }
+    ],
+    "name": "getRewardsData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "avaxAccrued",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "qiAccrued",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "delegate",
+            "type": "address"
+          },
+          {
+            "internalType": "uint96",
+            "name": "votes",
+            "type": "uint96"
+          }
+        ],
+        "internalType": "struct Helpers.MetadataExt",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardAvax",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardQi",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

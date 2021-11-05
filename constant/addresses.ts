@@ -55,6 +55,7 @@ const addresses = {
       aave_v2: '0x43c51C24b49f7cF389D043e93533E5179870Eea3',
       accounts: '0x746e318e179CB0A359C1FeE8331A3F9bE309b3CE',
       balance: '0xE6F92a3eCAa618FC5D4Bf2a14090787715C115F0',
+      benqi: "0x1d29756e8f7b091cE6c11a35980dE79c7eDa5D1f",
     },
   },
 };
