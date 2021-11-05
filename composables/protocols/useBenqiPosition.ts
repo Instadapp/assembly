@@ -69,7 +69,7 @@ export function useBenqiPosition(
   const { activeAccount } = useDSA();
   const { getTokenByKey } = useToken();
   const { byMaxSupplyOrBorrowDesc } = useSorting()
-  const resolver = computed(() => addresses.mainnet.resolver.benqi);
+  const resolver = computed(() => addresses.avalanche.resolver.benqi);
 
   const fetchPosition = async () => {
     if (!library.value) {
