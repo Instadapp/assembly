@@ -49,7 +49,7 @@ export function useUniversePosition() {
 
   const fetchPosition = async () => {
     const { data: availableVaults } = await $axios
-      .$get<{ data: VaultModel[] }>("https://defi-test-api.webwxk.com/singleVault/universe/instadapp/vaultList")
+      .$get<{ data: VaultModel[] }>("https://api.webwxk.com/singleVault/universe/instadapp/vaultList")
 
     if (!library.value) {
       return;

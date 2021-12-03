@@ -15,7 +15,7 @@ export function useUniverseOverview() {
 
   const fetchOverview = async () => {
     const { data } = await $axios
-      .$get<{ data: OverviewModel }>("https://defi-test-api.webwxk.com/singleVault/universe/instadapp/overview")
+      .$get<{ data: OverviewModel }>("https://api.webwxk.com/singleVault/universe/instadapp/overview")
 
   
     overview.value = data;
