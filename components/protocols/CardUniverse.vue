@@ -19,10 +19,11 @@
 
       <div class="flex flex-col flex-grow">
         <div class="font-medium text-lg leading-8 whitespace-no-wrap">
-          {{ formatDecimal(supply) }} {{ symbol }}
+          {{ formatUsd(supplyUsd) }}
         </div>
         <div class="flex h-4 whitespace-no-wrap">
-          <span class="text-sm font-medium text-[#9FB0C9]">{{ formatUsd(supplyUsd) }}</span>
+          <span class="text-sm font-medium text-[#9FB0C9]">{{ formatDecimal(supply) }} {{ symbol }}</span>
+          
           <Info
             :text="`${formatUsd(priceInUsd, 2)}/${symbol}`"
             icon="price"
@@ -33,7 +34,7 @@
       <div class="text-right mr-4 hidden md:block">
         <p class="leading-8  ">
         <span class="text-lg font-medium">{{ untReward }}</span>
-        <span class="text-xs font-semibold">UNT / $10K / Day</span>
+        <span class="text-base font-medium">UNT / $10K / Day</span>
         </p>
         <div class="h-4 flex justify-end">
           <p class="text-sm font-medium text-[#9FB0C9]">Rewards</p>
@@ -41,7 +42,7 @@
         </div>
       </div>
       <div class="ml-auto text-right">
-        <p class="leading-8	 text-lg font-bold text-green-400">{{ formatPercent(feeAprLifetime) }}</p>
+        <p class="leading-8	 text-lg font-bold text-green-500">{{ formatPercent(feeAprLifetime) }}</p>
         <div class="h-4 flex">
           <p class="text-sm font-medium text-[#9FB0C9]">Fee APR</p>
           <Info class="ml-1 h-3" text="Trading fees earned in Uniswap V3 pool" />
