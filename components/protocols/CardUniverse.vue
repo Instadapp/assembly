@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="ml-auto text-right">
-        <p class="leading-8	 text-lg font-bold text-green-500">{{ formatPercent(feeAprLifetime) }}</p>
+        <p class="leading-8	 text-lg font-bold text-green-500">{{ formatPercent(feeAprLifetime, 2, true) }}</p>
         <div class="h-4 flex">
           <p class="text-sm font-medium text-[#9FB0C9]">Fee APR</p>
           <Info class="ml-1 h-3" text="Trading fees earned in Uniswap V3 pool" />

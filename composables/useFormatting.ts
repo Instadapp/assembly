@@ -32,9 +32,9 @@ export function useFormatting() {
     }
   }
 
-  function formatPercent(value: any, fractionDigits = 2) {
+  function formatPercent(value: any, fractionDigits = 2, noLimit = false) {
     if (isZero(value)) return "0%";
-    if (gt(value, 1)) return ">100%";
+    if (!noLimit && gt(value, 1)) return ">100%";
 
     const formatter = new Intl.NumberFormat(locale, {
       style: "percent",
