@@ -49,6 +49,9 @@ import SidebarReflexerPayback from '~/components/sidebar/context/reflexer/Sideba
 import SidebarYearnV2Supply from "~/components/sidebar/context/yearn-v2/SidebarYearnV2Supply.vue";
 import SidebarYearnV2Withdraw from '~/components/sidebar/context/yearn-v2/SidebarYearnV2Withdraw.vue'
 
+import SidebarUniverseSupply from "~/components/sidebar/context/universe/SidebarUniverseSupply.vue";
+import SidebarUniverseWithdraw from '~/components/sidebar/context/universe/SidebarUniverseWithdraw.vue'
+
 import SidebarStrategySelection from '~/components/sidebar/context/strategy/SidebarStrategySelection.vue'
 import SidebarStrategy from '~/components/sidebar/context/strategy/SidebarStrategy.vue'
 
@@ -70,6 +73,10 @@ const sidebars = {
   "/mainnet/compound#supply": { component: SidebarCompoundSupply },
   "/mainnet/compound#borrow": { component: SidebarCompoundBorrow },
   "/mainnet/compound#payback": { component: SidebarCompoundPayback },
+
+  "/mainnet/universe": { component: null },
+  "/mainnet/universe#supply": { component: SidebarUniverseSupply },
+  "/mainnet/universe#withdraw": { component: SidebarUniverseWithdraw },
 
   "/mainnet/maker": { component: null },
   '/mainnet/maker#collateral': { component: SidebarMakerdaoCollateral },

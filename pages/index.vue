@@ -40,6 +40,7 @@ import LiquityIcon from "~/assets/icons/liquity.svg?inline";
 import BprotocolIcon from "~/assets/icons/b-protocol.svg?inline";
 import ReflexerIcon from "~/assets/icons/reflexer.svg?inline";
 import YearnIcon from "~/assets/icons/yearn.svg?inline";
+import UniverseIcon from "~/assets/icons/universe.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [
@@ -98,7 +99,14 @@ const appsPerNetwork = {
       name: "Yearn",
       url: "/mainnet/yearn-v2",
       description: "Automated Yield Strategies"
-    }
+    },
+    {
+      id: "universe",
+      icon: UniverseIcon,
+      name: "Universe",
+      url: "/mainnet/universe",
+      description: "Maximizing your Uniswap V3 Return"
+    },
   ],
   polygon: [
     {
