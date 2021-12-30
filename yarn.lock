@@ -6472,10 +6472,10 @@ drbg.js@^1.0.1:
     create-hash "^1.1.2"
     create-hmac "^1.1.4"
 
-dsa-connect@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/dsa-connect/-/dsa-connect-0.5.1.tgz#a8be7c18ecc0857bf956000bf83e6b5aa57b2ab9"
-  integrity sha512-DK+kD+rcyQ6Y+01nvaSvR2TJP+guuHNRYeB8FiJvOGzt1LznhNVoKa5bZJ8c2qAxBBdjW36l6crqnE+YmMT1Rw==
+dsa-connect@^0.5.16:
+  version "0.5.16"
+  resolved "https://registry.yarnpkg.com/dsa-connect/-/dsa-connect-0.5.16.tgz#1fe128585993c9a1584d337f247b4e6eabe7fcdd"
+  integrity sha512-T2zeBKDZiNBg/51zIecrnEyQ5MnIkS0o0/6i5nv4K8gw6TLDctNIt2GHGcQCynK3or5o1cHdkOfFFGVNu6tFcA==
 
 duplexer3@^0.1.4:
   version "0.1.4"
