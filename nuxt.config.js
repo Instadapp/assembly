@@ -85,6 +85,7 @@ export default {
     // "~/plugins/web3modal.js",
     { src: '~/plugins/v-tooltip', mode: 'client' },
     { src: '~/plugins/v-clipboard2', mode: 'client' },
+    { src: '~/plugins/pwa-update', mode: 'client' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -100,7 +101,70 @@ export default {
     // Doc: https://github.com/nuxt-community/google-fonts-module
     "@nuxtjs/google-fonts",
     "@nuxtjs/svg",
+    '@nuxtjs/pwa',
   ],
+
+  pwa: {
+    meta: {
+      appleStatusBarStyle: 'default',
+    },
+
+    icon: false,
+
+    manifest: {
+      "short_name": "Assembly",
+      "name": "Instadapp - Assembly",
+      "description": "The Open Source Dashboard for the Instadapp Protocol",
+      "iconPath": "/android-icon-192x192.png",
+      "providedBy": {
+        "name": "InstaDApp Labs LLC",
+        "url": "https://instadapp.io/"
+      },
+      "start_url": "/",
+      "display": "minimal-ui",
+      "theme_color": "#3F75FF",
+      "background_color": "#ffffff",
+      "icons": [
+        {
+          "src": "\/android-icon-36x36.png",
+          "sizes": "36x36",
+          "type": "image\/png",
+          "density": "0.75"
+        },
+        {
+          "src": "\/android-icon-48x48.png",
+          "sizes": "48x48",
+          "type": "image\/png",
+          "density": "1.0"
+        },
+        {
+          "src": "\/android-icon-72x72.png",
+          "sizes": "72x72",
+          "type": "image\/png",
+          "density": "1.5"
+        },
+        {
+          "src": "\/android-icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image\/png",
+          "density": "2.0"
+        },
+        {
+          "src": "\/android-icon-144x144.png",
+          "sizes": "144x144",
+          "type": "image\/png",
+          "density": "3.0"
+        },
+        {
+          "src": "\/android-icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image\/png",
+          "density": "4.0"
+        }
+      ]
+    }
+
+  },
   googleFonts: {
     families: {
       Montserrat: [100, 200, 300, 400, 500, 600, 700, 800, 900]
