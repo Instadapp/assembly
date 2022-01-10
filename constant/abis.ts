@@ -3,6 +3,7 @@ import aaveV2ABI from "./abi/read/aaveV2.json";
 import accountsABI from "./abi/read/accounts.json";
 import balanceABI from "./abi/read/balance.json";
 import compoundABI from "./abi/read/compound.json";
+import benqiABI from "./abi/read/benqi.json";
 import makerABI from "./abi/read/maker.json";
 import makerProxyRegistryABI from "./abi/makerProxyRegistry.json";
 import unipoolABI from "./abi/read/unipool.json";
@@ -18,6 +19,7 @@ const abis = {
     accounts: accountsABI,
     balance: balanceABI,
     compound: compoundABI,
+    benqi: benqiABI,
     maker: makerABI,
     unipool: unipoolABI,
     liquity: liquityABI,

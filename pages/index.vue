@@ -140,6 +140,13 @@ const appsPerNetwork = {
       name: "Aave v2",
       url: "/aave-v2",
       description: "Lend and borrow straight from your Gnosis Safe"
+    },
+     {
+      id: "benqi",
+      icon: CompoundIcon,
+      name: "Benqi",
+      url: "/avalanche/benqi",
+      description: "Money Market"
     }
   ]
 };
