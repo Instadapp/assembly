@@ -107,6 +107,13 @@ const appsPerNetwork = {
       url: "/mainnet/universe",
       description: "Maximizing your Uniswap V3 Return"
     },
+     {
+      id: "ubiquity",
+      icon: UniverseIcon,
+      name: "Ubiquity DAO",
+      url: "/mainnet/ubiquity",
+      description: "The Metaverse Bank"
+    },
   ],
   polygon: [
     {
