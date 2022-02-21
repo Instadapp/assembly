@@ -5,6 +5,7 @@
       <h4 class="text-center text-[#1874FF] text-sm font-semibold">
         Created by the Ubiquity Team
       </h4>
+      
       <ul
         class="
           list-disc

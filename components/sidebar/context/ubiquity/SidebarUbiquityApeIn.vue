@@ -57,6 +57,7 @@
                         <DollarIcon class="ml-1" />
                         </div>
             </div>
+            
             </div>
            
         </div>

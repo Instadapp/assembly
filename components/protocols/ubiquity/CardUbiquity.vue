@@ -173,6 +173,7 @@
     >
       Stake and lookup tokens for UBQ Rewards
     </div>
+    
   </div>
 </template>
 
