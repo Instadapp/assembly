@@ -1,7 +1,7 @@
 export default {
   ssr: !process.env.VERCEL,
   // for netlify
-  ssr: true
+  ssr: true,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Assembly',
