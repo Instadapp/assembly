@@ -55,6 +55,9 @@ import SidebarUniverseWithdraw from '~/components/sidebar/context/universe/Sideb
 import SidebarStrategySelection from '~/components/sidebar/context/strategy/SidebarStrategySelection.vue'
 import SidebarStrategy from '~/components/sidebar/context/strategy/SidebarStrategy.vue'
 
+import SidebarUbiquityApeIn from '~/components/sidebar/context/ubiquity/SidebarUbiquityApeIn.vue';
+import SidebarUbiquityWithdraw from '~/components/sidebar/context/ubiquity/SidebarUbiquityWithdraw.vue';
+
 const sidebars = {
   "#overview" :  {component: SidebarOverview, back : false, close : true },
   "#deposit-overview": {component: SidebarDepositOverview, back: { hash: 'overview' }  },
@@ -107,6 +110,10 @@ const sidebars = {
   "/mainnet/yearn-v2": { component: null },
   "/mainnet/yearn-v2#supply": { component: SidebarYearnV2Supply },
   "/mainnet/yearn-v2#withdraw": { component: SidebarYearnV2Withdraw },
+
+
+  "/mainnet/ubiquity#apein": { component: SidebarUbiquityApeIn },
+  "/mainnet/ubiquity#withdraw": { component: SidebarUbiquityWithdraw },
 };
 
 const sidebar = ref(null);
