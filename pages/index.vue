@@ -41,6 +41,7 @@ import BprotocolIcon from "~/assets/icons/b-protocol.svg?inline";
 import ReflexerIcon from "~/assets/icons/reflexer.svg?inline";
 import YearnIcon from "~/assets/icons/yearn.svg?inline";
 import UniverseIcon from "~/assets/icons/universe.svg?inline";
+import UbiquityIcon from "~/assets/icons/ubiquity.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [
@@ -106,6 +107,13 @@ const appsPerNetwork = {
       name: "Universe",
       url: "/mainnet/universe",
       description: "Maximizing your Uniswap V3 Return"
+    },
+     {
+      id: "ubiquity",
+      icon: UbiquityIcon,
+      name: "Ubiquity DAO",
+      url: "/mainnet/ubiquity",
+      description: "The Metaverse Bank"
     },
   ],
   polygon: [
