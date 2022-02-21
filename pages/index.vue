@@ -41,6 +41,8 @@ import BprotocolIcon from "~/assets/icons/b-protocol.svg?inline";
 import ReflexerIcon from "~/assets/icons/reflexer.svg?inline";
 import YearnIcon from "~/assets/icons/yearn.svg?inline";
 import UniverseIcon from "~/assets/icons/universe.svg?inline";
+import UniswapIcon from "~/assets/logo/uniswap.svg?inline";
+import ParaswapIcon from "~/assets/logo/paraswap.svg?inline";
 
 const appsPerNetwork = {
   mainnet: [
@@ -129,6 +131,20 @@ const appsPerNetwork = {
       name: "1inch",
       url: "/1inch",
       description: "DEX Aggregator"
+    },
+    {
+      id: "paraswap",
+      icon: ParaswapIcon,
+      name: "Paraswap",
+      url: "/paraswap",
+      description: "Description??"
+    },
+    {
+      id: "uniswapv3",
+      icon: UniswapIcon,
+      name: "Uniswap v3",
+      url: "/uniswapv3",
+      description: "Description??",
     }
   ],
   arbitrum: [
