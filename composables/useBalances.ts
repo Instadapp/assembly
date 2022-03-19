@@ -38,7 +38,7 @@ export function useBalances() {
   const { by } = useSorting();
 
   onMounted(async () => {
-    prices.mainnet = await $axios.$get("https://api.internal.instadapp.io/defi/prices");
+    prices.mainnet = await $axios.$get("https://api.internal.instadapp.io/defi/mainnet/prices");
     prices.polygon = await $axios.$get(
       "https://api.internal.instadapp.io/defi/polygon/prices"
     );
