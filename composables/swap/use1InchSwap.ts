@@ -42,7 +42,7 @@ export const use1InchSwap = () => {
       activeAccount.value.version == 2
     ) {
       return {
-        connector: "1INCH-A",
+        connector: "1INCH-V4-A",
         method: "sell",
         args: [buyAddr, sellAddr, sellAmt, unitAmt, calldata, setId]
       };

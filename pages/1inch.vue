@@ -131,7 +131,7 @@ export default defineComponent({
       }
 
       const { data } = await axios.get(
-        `https://api.1inch.exchange/v3.0/${activeNetwork.value.chainId}/quote`,
+        `https://api.1inch.exchange/v4.0/${activeNetwork.value.chainId}/quote`,
         {
           params: {
             fromTokenAddress: sellToken.value.address,
@@ -156,7 +156,7 @@ export default defineComponent({
       }
 
       const { data } = await axios.get(
-        `https://api.1inch.exchange/v3.0/${activeNetwork.value.chainId}/swap`,
+        `https://api.1inch.exchange/v4.0/${activeNetwork.value.chainId}/swap`,
         {
           params: {
             fromTokenAddress: sellToken.value.address.toLowerCase(),

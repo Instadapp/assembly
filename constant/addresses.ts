@@ -58,6 +58,17 @@ const addresses = {
       balance: '0xE6F92a3eCAa618FC5D4Bf2a14090787715C115F0',
     },
   },
+  optimism: {
+    core: {
+      instaIndex: '0x6CE3e607C808b4f4C26B7F6aDAeB619e49CAbb25',
+      instaConnectorsV2: '0x127d8cD0E2b2E0366D522DeA53A787bfE9002C14',
+    },
+    resolver: {
+      accounts: '0x313FE505ad3ead0D35dD5d6687FB9C6B2469Db3d',
+      aave_v3: '0x7cdBD859f2EDA545289378112FD991571d6eb73e',
+      balance: '0xca5f37e6D8bB24c5A7958d5eccE7Bd9Aacc944f2',
+    },
+  },
 };
 
 export default addresses;

@@ -4,6 +4,7 @@ import MainnetSVG from "~/assets/icons/mainnet.svg?inline";
 import PolygonSVG from "~/assets/icons/polygon.svg?inline";
 import ArbitrumSVG from "~/assets/icons/arbitrum.svg?inline";
 import AvalancheSVG from "~/assets/icons/avalanche.svg?inline";
+import OptimismSVG from "~/assets/icons/optimism.svg?inline";
 
 import { useModal } from "./useModal";
 import { useNotification } from "./useNotification";
@@ -14,7 +15,8 @@ export enum Network {
   Mainnet = "mainnet",
   Polygon = "polygon",
   Arbitrum = "arbitrum",
-  Avalanche = "avalanche"
+  Avalanche = "avalanche",
+  Optimism = "optimism",
 }
 
 export const networks = [
@@ -22,6 +24,7 @@ export const networks = [
   { id: "polygon", chainId: 137, name: "Polygon", icon: PolygonSVG },
   { id: "arbitrum", chainId: 42161, name: "Arbitrum", icon: ArbitrumSVG },
   { id: "avalanche", chainId: 43114, name: "Avalanche", icon: AvalancheSVG },
+  { id: "optimism", chainId: 10, name: "Optimism", icon: OptimismSVG },
 ];
 
 export const activeNetworkId = ref<Network>();
@@ -176,6 +179,44 @@ export function useNetwork() {
     }
   }
 
+  async function switchToOptimism() {
+    if (window.ethereum) {
+      const chainId = '0xa'
+
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId }],
+        })
+      } catch (switchError) {
+        // 4902 error code indicates that the chain has not been added to MetaMask.
+        if (switchError.code === 4902) {
+          try {
+            const chainData = {
+              chainId,
+              chainName: 'Optimism Network',
+              nativeCurrency: {
+                name: 'Ethereum',
+                symbol: 'ETH',
+                decimals: 18,
+              },
+              rpcUrls: ['https://mainnet.optimism.io'],
+              blockExplorerUrls: ['https://optimistic.etherscan.io'],
+            }
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [chainData, account.value],
+            })
+          } catch (addError) {
+            return Promise.reject(addError)
+          }
+        } else {
+          return Promise.reject(switchError)
+        }
+      }
+    }
+  }
+
   async function switchNetwork() {
     try {
       if (activeNetworkId.value === "mainnet") {
@@ -184,6 +225,8 @@ export function useNetwork() {
         await switchToArbitrum();
       } else if (activeNetworkId.value === "avalanche") {
         await switchToAvalanche();
+      } else if (activeNetworkId.value === "optimism") {
+        await switchToOptimism();
       } else {
         await switchToPolygon();
       }
