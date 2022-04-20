@@ -1,0 +1,1222 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getConfig",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "data",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct UserConfigurationMap",
+        "name": "data",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getConfiguration",
+    "outputs": [
+      {
+        "internalType": "bool[]",
+        "name": "collateral",
+        "type": "bool[]"
+      },
+      {
+        "internalType": "bool[]",
+        "name": "borrowed",
+        "type": "bool[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "id",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address[]",
+        "name": "tokens",
+        "type": "address[]"
+      }
+    ],
+    "name": "getEmodeCategoryData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "uint16",
+                "name": "ltv",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint16",
+                "name": "liquidationThreshold",
+                "type": "uint16"
+              },
+              {
+                "internalType": "uint16",
+                "name": "liquidationBonus",
+                "type": "uint16"
+              },
+              {
+                "internalType": "address",
+                "name": "priceSource",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "label",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct EModeCategory",
+            "name": "data",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.EmodeData",
+        "name": "eModeData",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getEthPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "ethPrice",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getList",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "data",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "tokens",
+        "type": "address[]"
+      }
+    ],
+    "name": "getPosition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "totalCollateralBase",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalBorrowsBase",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableBorrowsBase",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentLiquidationThreshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ltv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "healthFactor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "eModeId",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "baseUnit",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "baseAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.BaseCurrency",
+            "name": "base",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.AaveV3UserData",
+        "name": "",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "supplyBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "stableBorrowBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "variableBorrowBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "supplyRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "stableBorrowRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "userStableBorrowRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "variableBorrowRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isCollateral",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bool",
+                "name": "usageAsCollateralEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "borrowEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "stableBorrowEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isActive",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isFrozen",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.Flags",
+            "name": "flag",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.AaveV3UserTokenData[]",
+        "name": "",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "asset",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "decimals",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ltv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "threshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reserveFactor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableLiquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalStableDebt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalVariableDebt",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "tokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "decimals",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.Token",
+                "name": "aToken",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "tokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "decimals",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.Token",
+                "name": "stableDebtToken",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "tokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "decimals",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.Token",
+                "name": "variableDebtToken",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.ReserveAddresses",
+            "name": "reserves",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "supplyCap",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "borrowCap",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "eModeCategory",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "debtCeiling",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "debtCeilingDecimals",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "liquidationFee",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "isolationBorrowEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isPaused",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.AaveV3Token",
+            "name": "token",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.AaveV3TokenData[]",
+        "name": "",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "underlyingAsset",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "rewardTokenSymbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "rewardTokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "emissionPerSecond",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "userUnclaimedRewards",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rewardTokenDecimals",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "precision",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.RewardsInfo[]",
+                "name": "rewardsTokenInfo",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.IncentivesData",
+            "name": "aIncentiveData",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "rewardTokenSymbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "rewardTokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "emissionPerSecond",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "userUnclaimedRewards",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rewardTokenDecimals",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "precision",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.RewardsInfo[]",
+                "name": "rewardsTokenInfo",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.IncentivesData",
+            "name": "vIncentiveData",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "rewardTokenSymbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "rewardTokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "emissionPerSecond",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "userUnclaimedRewards",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rewardTokenDecimals",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "precision",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.RewardsInfo[]",
+                "name": "rewardsTokenInfo",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.IncentivesData",
+            "name": "sIncentiveData",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.ReserveIncentiveData[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getPositionAll",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "totalCollateralBase",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalBorrowsBase",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableBorrowsBase",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentLiquidationThreshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ltv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "healthFactor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "eModeId",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "baseUnit",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "baseAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "string",
+                "name": "symbol",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.BaseCurrency",
+            "name": "base",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.AaveV3UserData",
+        "name": "",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "supplyBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "stableBorrowBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "variableBorrowBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "supplyRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "stableBorrowRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "userStableBorrowRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "variableBorrowRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isCollateral",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bool",
+                "name": "usageAsCollateralEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "borrowEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "stableBorrowEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isActive",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isFrozen",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.Flags",
+            "name": "flag",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.AaveV3UserTokenData[]",
+        "name": "",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "asset",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "decimals",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ltv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "threshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reserveFactor",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableLiquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalStableDebt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalVariableDebt",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "tokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "decimals",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.Token",
+                "name": "aToken",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "tokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "decimals",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.Token",
+                "name": "stableDebtToken",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "address",
+                    "name": "tokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "decimals",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.Token",
+                "name": "variableDebtToken",
+                "type": "tuple"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.ReserveAddresses",
+            "name": "reserves",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "supplyCap",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "borrowCap",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "eModeCategory",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "debtCeiling",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "debtCeilingDecimals",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "liquidationFee",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bool",
+                "name": "isolationBorrowEnabled",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isPaused",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.AaveV3Token",
+            "name": "token",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.AaveV3TokenData[]",
+        "name": "",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "underlyingAsset",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "rewardTokenSymbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "rewardTokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "emissionPerSecond",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "userUnclaimedRewards",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rewardTokenDecimals",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "precision",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.RewardsInfo[]",
+                "name": "rewardsTokenInfo",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.IncentivesData",
+            "name": "aIncentiveData",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "rewardTokenSymbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "rewardTokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "emissionPerSecond",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "userUnclaimedRewards",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rewardTokenDecimals",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "precision",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.RewardsInfo[]",
+                "name": "rewardsTokenInfo",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.IncentivesData",
+            "name": "vIncentiveData",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "rewardTokenSymbol",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "address",
+                    "name": "rewardTokenAddress",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "emissionPerSecond",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "userUnclaimedRewards",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "rewardTokenDecimals",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "precision",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct AaveV3Helper.RewardsInfo[]",
+                "name": "rewardsTokenInfo",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct AaveV3Helper.IncentivesData",
+            "name": "sIncentiveData",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct AaveV3Helper.ReserveIncentiveData[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getReservesList",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "data",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "self",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "reserveIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "isBorrowing",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "self",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "reserveIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "isUsingAsCollateral",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "self",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "reserveIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "isUsingAsCollateralOrBorrowing",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]

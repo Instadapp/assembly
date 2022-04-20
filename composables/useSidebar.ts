@@ -14,6 +14,11 @@ import SidebarAaveV2Withdraw from '~/components/sidebar/context/aaveV2/SidebarAa
 import SidebarAaveV2Borrow from '~/components/sidebar/context/aaveV2/SidebarAaveV2Borrow.vue'
 import SidebarAaveV2Payback from '~/components/sidebar/context/aaveV2/SidebarAaveV2Payback.vue'
 
+import SidebarAaveV3Supply from "~/components/sidebar/context/aaveV3/SidebarAaveV3Supply.vue";
+import SidebarAaveV3Withdraw from '~/components/sidebar/context/aaveV3/SidebarAaveV3Withdraw.vue'
+import SidebarAaveV3Borrow from '~/components/sidebar/context/aaveV3/SidebarAaveV3Borrow.vue'
+import SidebarAaveV3Payback from '~/components/sidebar/context/aaveV3/SidebarAaveV3Payback.vue'
+
 import SidebarOverview from '~/components/sidebar/context/overview/SidebarOverview.vue'
 import SidebarDepositOverview from '~/components/sidebar/context/SidebarDepositOverview.vue'
 import SidebarWithdraw from '~/components/sidebar/context/SidebarWithdraw.vue'
@@ -56,8 +61,8 @@ import SidebarStrategySelection from '~/components/sidebar/context/strategy/Side
 import SidebarStrategy from '~/components/sidebar/context/strategy/SidebarStrategy.vue'
 
 const sidebars = {
-  "#overview" :  {component: SidebarOverview, back : false, close : true },
-  "#deposit-overview": {component: SidebarDepositOverview, back: { hash: 'overview' }  },
+  "#overview": { component: SidebarOverview, back: false, close: true },
+  "#deposit-overview": { component: SidebarDepositOverview, back: { hash: 'overview' } },
   '#withdraw-token': { component: SidebarWithdraw, back: { hash: 'overview' } },
   '#strategies': { component: SidebarStrategySelection },
   '#strategy': { component: SidebarStrategy },
@@ -107,6 +112,12 @@ const sidebars = {
   "/mainnet/yearn-v2": { component: null },
   "/mainnet/yearn-v2#supply": { component: SidebarYearnV2Supply },
   "/mainnet/yearn-v2#withdraw": { component: SidebarYearnV2Withdraw },
+
+  "/aave-v3": { component: null },
+  "/aave-v3#supply": { component: SidebarAaveV3Supply },
+  "/aave-v3#borrow": { component: SidebarAaveV3Borrow },
+  "/aave-v3#payback": { component: SidebarAaveV3Payback },
+  "/aave-v3#withdraw": { component: SidebarAaveV3Withdraw },
 };
 
 const sidebar = ref(null);
@@ -130,15 +141,15 @@ export function init() {
 
       //@ts-ignore
       const [hash, params] = route.hash.split("?");
-      
-      if (hasPathChanged){
+
+      if (hasPathChanged) {
         router.push({ hash: null })
         return
       }
 
-       //@ts-ignore
+      //@ts-ignore
       sidebar.value = sidebars[route.path + hash] || sidebars[hash];
-        
+
       if (!sidebar.value) {
         props.value = {};
         return;

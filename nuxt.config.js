@@ -104,6 +104,16 @@ export default {
     '@nuxtjs/pwa',
   ],
 
+  svg: {
+    vueSvgLoader: {
+      svgo: {
+        plugins: [
+          { cleanupIDs: false },
+        ],
+      },
+    }
+  },
+
   pwa: {
     meta: {
       appleStatusBarStyle: 'default',

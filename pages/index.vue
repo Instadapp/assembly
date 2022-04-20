@@ -113,6 +113,13 @@ const appsPerNetwork = {
       name: "1inch",
       url: "/1inch",
       description: "DEX Aggregator"
+    },
+    {
+      id: "aave-v3",
+      icon: AaveIcon,
+      name: "Aave v3",
+      url: "/aave-v3",
+      description: "Lend and borrow straight from your Gnosis Safe"
     }
   ],
   arbitrum: [
@@ -122,6 +129,13 @@ const appsPerNetwork = {
       name: "1inch",
       url: "/1inch",
       description: "DEX Aggregator"
+    },
+    {
+      id: "aave-v3",
+      icon: AaveIcon,
+      name: "Aave v3",
+      url: "/aave-v3",
+      description: "Lend and borrow straight from your Gnosis Safe"
     }
   ],
   avalanche: [
@@ -130,6 +144,13 @@ const appsPerNetwork = {
       icon: AaveIcon,
       name: "Aave v2",
       url: "/aave-v2",
+      description: "Lend and borrow straight from your Gnosis Safe"
+    },
+    {
+      id: "aave-v3",
+      icon: AaveIcon,
+      name: "Aave v3",
+      url: "/aave-v3",
       description: "Lend and borrow straight from your Gnosis Safe"
     }
   ],
@@ -140,6 +161,13 @@ const appsPerNetwork = {
       name: "1inch",
       url: "/1inch",
       description: "DEX Aggregator"
+    },
+    {
+      id: "aave-v3",
+      icon: AaveIcon,
+      name: "Aave v3",
+      url: "/aave-v3",
+      description: "Lend and borrow straight from your Gnosis Safe"
     }
   ]
 };

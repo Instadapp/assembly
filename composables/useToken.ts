@@ -1,5 +1,6 @@
 import { computed } from "@nuxtjs/composition-api";
 import atokensV2 from "~/constant/atokensV2";
+import atokensV3 from "~/constant/atokensV3";
 import tokens from "~/constant/tokens";
 import { useBigNumber } from "./useBigNumber";
 import { useNetwork } from "./useNetwork";
@@ -14,6 +15,7 @@ export function useToken() {
     );
 
   const allATokensV2 = computed(() => atokensV2[activeNetworkId.value].allTokens);
+  const allATokensV3 = computed(() => atokensV3[activeNetworkId.value].allTokens);
 
   function valInt(val, decimals) {
     const num = toBN(val);
@@ -24,6 +26,7 @@ export function useToken() {
   return {
     getTokenByKey,
     allATokensV2,
+    allATokensV3,
     valInt
   };
 }

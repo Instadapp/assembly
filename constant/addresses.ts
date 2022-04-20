@@ -15,7 +15,9 @@ const addresses = {
       bprotocol: "0x3843019c19259117ed473947007bcafc5c0c7129",
       yearnV2: "0x3f6DCA8a0b7d04737BC3B2aEAbeB1C09431581f0",
       universe: "0xa7963898453c00b61cff8ce7e5b28c4e8bf1348f"
-    }
+    },
+    uiData: undefined,
+    poolDataProvider: undefined,
   },
 
   polygon: {
@@ -25,13 +27,16 @@ const addresses = {
     },
     resolver: {
       aave_v2: "0x1f5e200493adB54FEB4a7D734E48649143ecE2CA",
+      aave_v3: '0x7cdBD859f2EDA545289378112FD991571d6eb73e',
       accounts: "0xdF19Da523DA64bBE82eE0E4DFf00d676A8386474",
       balance: "0x04F8a41be023f839E709eeEaA0725FD766139A4d",
       merkleResolver: {
         aave_v2: "0x2a26228e607ffD2aB2bD3aA49cBae0eDC6469Bf8"
       },
       weth: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-    }
+    },
+    uiData: '0x8F1AD487C9413d7e81aB5B4E88B024Ae3b5637D0',
+    poolDataProvider: '0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb',
   },
   arbitrum: {
     core: {
@@ -41,11 +46,14 @@ const addresses = {
     resolver: {
       accounts: '0xdF19Da523DA64bBE82eE0E4DFf00d676A8386474',
       balance: '0x29572b16D306acd7ca0CBCA0F08C3EFF131fFDA5',
+      aave_v3: '0x7cdBD859f2EDA545289378112FD991571d6eb73e',
       uniswap_v3: '0x04F8a41be023f839E709eeEaA0725FD766139A4d',
       // uniswap_v3_staker: '0x1a96af80ED8753a77E23074De78480675049A3c9',
       nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88',
     },
     uniswapV3Staker: '0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d',
+    uiData: '0x3f960bB91e85Ae2dB561BDd01B515C5A5c65802b',
+    poolDataProvider: '0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb',
   },
   avalanche: {
     core: {
@@ -54,9 +62,12 @@ const addresses = {
     },
     resolver: {
       aave_v2: '0x43c51C24b49f7cF389D043e93533E5179870Eea3',
+      aave_v3: '0x7cdBD859f2EDA545289378112FD991571d6eb73e',
       accounts: '0x746e318e179CB0A359C1FeE8331A3F9bE309b3CE',
       balance: '0xE6F92a3eCAa618FC5D4Bf2a14090787715C115F0',
     },
+    uiData: '0xdBbFaFC45983B4659E368a3025b81f69Ab6E5093',
+    poolDataProvider: '0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb',
   },
   optimism: {
     core: {
@@ -68,6 +79,8 @@ const addresses = {
       aave_v3: '0x7cdBD859f2EDA545289378112FD991571d6eb73e',
       balance: '0xca5f37e6D8bB24c5A7958d5eccE7Bd9Aacc944f2',
     },
+    uiData: '0x64f558d4BFC1c03a8c8B2ff84976fF04c762b51f',
+    poolDataProvider: '0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb',
   },
 };
 
