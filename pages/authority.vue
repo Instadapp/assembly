@@ -87,7 +87,7 @@
               Account address
             </div>
             <div
-              class="mt-4 text-lg font-medium text-grey-dark flex items-center"
+              class="mt-4 text-lg font-medium text-grey-dark flex items-center break-word"
             >
               {{ activeAccount.address }}
 
