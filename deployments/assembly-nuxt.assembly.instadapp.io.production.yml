@@ -1,0 +1,109 @@
+# Deployment configuration for this application
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assembly-nuxt
+  namespace: default
+  labels:
+    app: assembly-nuxt
+spec:
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  replicas: 2
+  selector:
+    matchLabels:
+      app: assembly-nuxt
+  template:
+    metadata:
+      labels:
+        app: assembly-nuxt
+      annotations:
+        vault.security.banzaicloud.io/vault-addr: <VAULTADDR>
+        vault.security.banzaicloud.io/vault-namespace: <VAULTNS>
+        vault.security.banzaicloud.io/vault-serviceaccount: 'default'
+        vault.security.banzaicloud.io/vault-role: 'assembly-nuxt'
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: assembly-nuxt
+      containers:
+        - name: assembly-nuxt
+          image: <IMAGE>
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: '1'
+              memory: '1G'
+            limits:
+              cpu: '2'
+              memory: '5.5G'
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NUXT_HOST
+              value: 0.0.0.0
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: '5000'
+            - name: INFURA_ID
+              value: 'vault:frontend/assembly.instadapp.io/assembly-nuxt#INFURA_ID'
+            - name: PORTIS_ID
+              value: 'vault:frontend/assembly.instadapp.io/assembly-nuxt#PORTIS_ID'
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      imagePullSecrets:
+        - name: dockerconfigjson-github-com
+---
+# Service configuration for this application
+apiVersion: v1
+kind: Service
+metadata:
+  name: assembly-nuxt
+  namespace: default
+  labels:
+    app: assembly-nuxt
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+  selector:
+    app: assembly-nuxt
+---
+# Autoscaling configuration for this application
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: assembly-nuxt
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: assembly-nuxt
+  minReplicas: 2
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80

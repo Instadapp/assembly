@@ -1,0 +1,8 @@
+.git
+node_modules
+.nuxt
+npm-debug.log
+Dockerfile
+.github
+deployments
+ecosystem.config.js

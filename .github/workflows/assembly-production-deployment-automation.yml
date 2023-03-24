@@ -5,23 +5,132 @@ on:
     branches:
       - 'master'
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
-  build:
+  build_image:
+    name: Build Image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - uses: actions/checkout@v2
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@master
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v2
         with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 22
-          script: |
-            cd ${{ secrets.REMOTE_TARGET }} && \
-            git reset --hard && git clean -df && \
-            git pull && \
-            yarn install && \
-            yarn build --if-present && \
-            yarn generate --if-present && \
-            pm2 restart assembly --update-env
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            event=push,type=sha,format=short
+            event=tag,type=ref
+
+      - name: Fetch Version
+        id: version
+        run: echo "RELEASE_VERSION=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_OUTPUT
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha, scope=assembly-nuxt
+          cache-to: type=gha, scope=assembly-nuxt, mode=max
+
+      - name: Update Deployment file
+        run: |
+          #!/bin/bash
+
+          set -e
+          set -o pipefail
+
+          # Convert this to small case
+          MATCH="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          MATCH=${MATCH,,}
+
+          # Write the contents to a file
+          echo "${{ steps.meta.outputs.tags }}" > tmp
+
+          # Check if there is a vX.Y.Z | v.X.Y tag
+          TAG=$({ grep -Poh "$MATCH:v\d+.\d+.?(\d+)?" tmp || true; })
+
+          # If there is not, Go back to using sha-<short-commit-hash>
+          if [ -z "${TAG}" ]; then
+            TAG=$({ grep -Poh "$MATCH:sha-.+" tmp || true; })
+          fi
+
+          RESP=$({ grep -Poh '<IMAGE>' deployments/assembly-nuxt.assembly.instadapp.io.production.yml || true; })
+          if [ -z "${RESP}" ]; then
+            echo "deployments/assembly-nuxt.assembly.instadapp.io.production.yml does not contain <IMAGE> marker"
+            exit 1;
+          fi
+          sed -i "s|<IMAGE>|$TAG|" deployments/assembly-nuxt.assembly.instadapp.io.production.yml
+
+          RESP=$({ grep -Poh '<VAULTADDR>' deployments/assembly-nuxt.assembly.instadapp.io.production.yml || true; })
+          if [ -z "${RESP}" ]; then
+            echo "deployments/assembly-nuxt.assembly.instadapp.io.production.yml does not contain <VAULTADDR> marker"
+            exit 1;
+          fi
+          sed -i "s|<VAULTADDR>|${{ secrets.VAULT_ADDR }}|" deployments/assembly-nuxt.assembly.instadapp.io.production.yml
+
+          RESP=$({ grep -Poh '<VAULTNS>' deployments/assembly-nuxt.assembly.instadapp.io.production.yml || true; })
+          if [ -z "${RESP}" ]; then
+            echo "deployments/assembly-nuxt.assembly.instadapp.io.production.yml does not contain <VAULTNS> marker"
+            exit 1;
+          fi
+          sed -i "s|<VAULTNS>|${{ secrets.VAULT_NS }}|" deployments/assembly-nuxt.assembly.instadapp.io.production.yml
+
+      - name: Upload Deployment file
+        uses: actions/upload-artifact@v3
+        with:
+          name: k8s-deployment-config
+          path: deployments/assembly-nuxt.assembly.instadapp.io.production.yml
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment:
+      name: 'Production'
+      url: 'https://assembly.instadapp.io'
+    needs: build_image
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Fetch Deployment file
+        id: download
+        uses: actions/download-artifact@v3
+        with:
+          name: k8s-deployment-config
+      - name: Read CA Certificate
+        run: |
+          # Write CA to disk
+          #!/bin/sh
+          echo ${{ secrets.NYC_KUBERNETES_CERTIFICATE }} | base64 -d > ca.crt
+      - name: Deploy to NYC Cluster
+        run: kubectl apply -f ${{ steps.download.outputs.download-path }} --kubeconfig=/dev/null --server="${{ secrets.NYC_KUBERNETES_ADDRESS }}" --token="${{ secrets.NYC_KUBERNETES_TOKEN }}" --certificate-authority=ca.crt
+      - name: Verify NYC Deployment
+        run: kubectl rollout status deployment/assembly-nuxt --server="${{ secrets.NYC_KUBERNETES_ADDRESS }}" --token="${{ secrets.NYC_KUBERNETES_TOKEN }}" --certificate-authority=ca.crt
+      - name: Erase CA Certificate
+        run: |
+          # Erase CA from disk
+          #!/bin/sh
+          rm ca.crt
